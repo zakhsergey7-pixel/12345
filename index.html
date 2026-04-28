@@ -126,7 +126,7 @@
     width: 100%; height: 100%;
     border: none;
     z-index: -2;
-    filter: brightness(0.85);
+    filter: brightness(1.25);
 }
 
 .hero::before {
@@ -220,26 +220,32 @@
 }
 
 .hero-logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .hero-logo-img {
-    width: 420px; /* регулируй */
-    max-width: 90%;
+    width: 420px;
+    max-width: 82%;
     height: auto;
-
-    display: block;
-
-    /* чтобы выглядело премиально */
-    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6));
-    transition: transform 0.4s ease;
+    filter: brightness(1.05) drop-shadow(0 12px 40px rgba(0,0,0,0.65));
+    transition: transform 0.5s ease;
 }
 
 .hero-logo-img:hover {
     transform: scale(1.04);
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .hero-logo-img {
+        width: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-logo-img {
+        width: 260px;
+    }
 }
 
 /* === HERO LOGO TEXT (ORGANI CARE) === */
@@ -299,7 +305,7 @@
         }
         .slides {
             display: flex;
-            transition: transform 0.8s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 2s cubic-bezier(0.32, 0.72, 0, 1);
         }
         .slide {
             min-width: 100%;
@@ -344,7 +350,7 @@
             color: var(--accent);
             margin-bottom: 20px;
             display: inline-block;
-            background: rgba(196,81,255,0.1);
+            background: rgba(248, 247, 248, 0.1);
             padding: 6px 14px;
             border-radius: 40px;
         }
@@ -448,10 +454,7 @@
 }
 
 /* 3D эффект при наведении мыши */
-.service-card-new:hover {
-    box-shadow: 0 40px 120px rgba(0,0,0,0.8);
-    transform: translateY(-20px) rotateX(12deg) rotateY(12deg) scale(1.04);
-}
+
 
 
 
@@ -465,7 +468,7 @@
     line-height: 1;
     color: rgba(255,255,255,0.10);
     transition: all 0.4s ease;
-    transform: translateZ(40px);   /* выдвигаем вперёд в 3D */
+       /* выдвигаем вперёд в 3D */
 }
 
 .service-card-new:hover .card-number {
@@ -848,7 +851,7 @@
         .side-floating-img {
             max-width: 100%;
             width: 380px;
-            animation: floatSide 5s ease-in-out infinite;
+            animation: floatSide 3s ease-in-out infinite;
             display: block;
             border: none;
             outline: none;
@@ -1250,81 +1253,127 @@
     margin-top: 40px;
 }
 
+/* ==================== СЕРВИСНАЯ КУЛЬТУРА (без 3D) ==================== */
+/* ==================== СЕРВИСНАЯ КУЛЬТУРА (компактная версия) ==================== */
+/* ==================== СЕРВИСНАЯ КУЛЬТУРА — ОЧЕНЬ КОМПАКТНАЯ ==================== */
+.culture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 40px;
+}
+
 .culture-card {
-    background: rgba(28, 28, 28, 0.84);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 18px;
-    padding: 20px 22px;           /* ещё меньше отступов */
-    box-shadow: 0 16px 50px rgba(0,0,0,0.5);
-    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-    transform-style: preserve-3d;
-    position: relative;
-    overflow: hidden;
-    min-height: 98px;             /* очень компактно */
+    background: rgba(28, 28, 28, 0.90);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    transition: all 0.35s ease;
     cursor: pointer;
+    min-height: 68px;
 }
 
 .culture-card:hover {
-    transform: translateY(-12px) rotateX(8deg) rotateY(10deg) scale(1.03);
-    box-shadow: 0 30px 90px rgba(196, 81, 255, 0.35);
-    background: rgba(32, 32, 32, 0.92);
+    transform: translateY(-5px);
+    box-shadow: 0 14px 40px rgba(196, 81, 255, 0.30);
+    background: rgba(35, 35, 35, 0.95);
 }
 
 .card-number {
     position: absolute;
-    top: 18px;
-    right: 22px;
-    font-size: 54px;
+    top: 14px;
+    right: 18px;
+    font-size: 34px;
     font-weight: 900;
-    line-height: 1;
     background: linear-gradient(135deg, #c451ff, #a855f7);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    opacity: 0.16;
+    opacity: 0.14;
 }
 
 .culture-card:hover .card-number {
-    opacity: 0.33;
+    opacity: 0.22;
 }
 
 .card-content h3 {
-    font-size: 19.5px;            /* уменьшен шрифт заголовка */
+    font-size: 16.5px;
     font-weight: 700;
-    margin-bottom: 7px;
+    margin-bottom: 4px;
     line-height: 1.35;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-arrow {
+    font-size: 15px;
+    transition: transform 0.4s ease;
+    margin-left: 6px;
+}
+
+.culture-card:hover .toggle-arrow,
+.culture-card.active .toggle-arrow {
+    transform: rotate(180deg);
 }
 
 .card-desc {
-    font-size: 15.4px;            /* чуть меньше шрифт текста */
-    line-height: 1.62;
-    color: rgba(255,255,255,0.84);
+    font-size: 12.6px;
+    line-height: 1.2;
+    color: rgba(255,255,255,0.82);
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s ease;
 }
 
-.culture-card:hover .card-desc {
-    max-height: 310px;            /* увеличено для полного отображения длинного текста */
+.culture-card:hover .card-desc,
+.culture-card.active .card-desc {
+    max-height: 180px;
     opacity: 1;
-    margin-top: 11px;
+    margin-top: 8px;
 }
 
 /* Адаптив */
 @media (max-width: 768px) {
     .culture-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
-        margin-top: 30px;
+        gap: 
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .culture-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
+    
     .culture-card {
-        padding: 20px 20px;
-        min-height: 96px;
+        padding: 18px 20px;
+        min-height: 78px;
     }
-    .service-culture {
-        padding: 110px 20px 150px;
-    }
+}
+
+/* ==================== НАШИ УСЛУГИ (без 3D) ==================== */
+.service-card-new {
+    background: rgba(22, 22, 22, 0.88);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 28px;
+    padding: 50px 36px 54px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card-new:hover {
+    box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+    transform: translateY(-12px);   /* только лёгкий подъём */
+}
+
+/* Убираем 3D эффекты */
+.service-card-new {
+    transform-style: flat;
 }
 
 
@@ -1333,18 +1382,35 @@
 <body>
 
 <!-- HEADER -->
+<!-- HEADER -->
 <header class="header">
+    <div class="nav-container">
+        
+        <!-- Лого слева -->
+        <div class="logo">
+            <a href="/">
+                <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" 
+                     alt="ORGANI'CARE">
+            </a>
+        </div>
 
-    <div class="logo">
-        <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare">
+        <!-- Навигация справа -->
+        <nav class="nav">
+            <ul>
+                <li><a href="/">О нас</a></li>
+                <li><a href="/nutritionist">Лечебное питание</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+
+        <!-- Бургер для мобильных -->
+        <div class="burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
     </div>
-
-    <nav class="nav">
-        <a href="about.html">О нас</a>
-        <a href="nutritionist.html">Лечебное питание</a>
-        <a href="index.html">Главная</a>
-    </nav>
-
 </header>
 
 
@@ -1357,21 +1423,23 @@
         allowfullscreen>
     </iframe>
 
-    <div class="hero-content"> <!-- ВОТ ЭТО ДОБАВИТЬ -->
+    <div class="hero-content">
 
-        <div class="hero-brand">
-    <span>ORGANI</span><br>CARE
+    <div class="hero-logo">
+        <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" 
+             alt="ORGANI'CARE" 
+             class="hero-logo-img">
+    </div>
+
+    <p class="hero-subtitle">
+        Гастрономическая культура корпоративного и лечебного питания
+    </p>
+
+    <a href="#contacts" class="hero-btn">
+        Заказать пробную неделю
+    </a>
+
 </div>
-
-        <p class="hero-subtitle">
-            Гастрономическая культура корпоративного и лечебного питания
-        </p>
-
-        <a href="#contacts" class="hero-btn">
-            Заказать пробную неделю
-        </a>
-
-    </div> <!-- теперь закрытие корректно -->
 
 </section>
 <!-- TRUST -->
@@ -1387,7 +1455,8 @@
 </section>
 
 <!-- НАША МИССИЯ (ФОТО СТАТИЧНОЕ, БЕЗ РАМКИ) -->
-<section class="mission animate-section">
+<!-- НАША МИССИЯ -->
+<section class="mission animate-section" style="background: #ffffff;">
     <div class="mission-container">
         <div class="mission-left">
             <div class="mission-label">Философия бренда</div>
@@ -1396,18 +1465,18 @@
                 Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию.
             </div>
             <div class="mission-quote">
-                
                 <span>— Команда ORGANI'CARE</span>
             </div>
         </div>
         <div class="mission-right">
-            <!-- Фото: полностью статичное, без рамок, теней, скруглений и анимации -->
             <img src="https://sun9-24.userapi.com/s/v1/ig2/rykdEY1_k-RHXxhXVKkujIOF_qaA2_KyPwmv73vT-sFHS7imt9zqJln7qcn4YwEIQZw8T8SkaI_7xULELo768tkt.jpg?quality=95&as=32x37,48x56,72x84,108x126,160x187,240x281,360x421,480x561,540x631,640x748,720x842,1080x1263,1280x1496,1372x1604&from=bu&cs=1280x0" 
-                 class="mission-image" alt="Кухня ORGANI'CARE">
+                 class="mission-image" 
+                 alt="Кухня ORGANI'CARE">
         </div>
     </div>
 </section>
 
+<!-- === СЕРВИСНАЯ КУЛЬТУРА === -->
 <!-- === СЕРВИСНАЯ КУЛЬТУРА === -->
 <section class="service-culture animate-section" id="service-culture">
     <div class="service-culture-bg"></div>
@@ -1416,46 +1485,45 @@
         <div class="section-header">
             <div class="section-label">Сервисная культура</div>
             <h2>Мы делаем сервис частью философии</h2>
-           
         </div>
 
         <div class="culture-grid">
             <div class="culture-card">
-                <div class="card-number">01</div>
+                <div class="card-number"></div>
                 <div class="card-content">
-                    <h3>Индивидуальный подход</h3>
+                    <h3>Индивидуальный подход <span class="toggle-arrow">↓</span></h3>
                     <p class="card-desc">Возможность заказать конкретное блюдо под запрос пациента в рамках формата лечебного питания.</p>
                 </div>
             </div>
 
             <div class="culture-card">
-                <div class="card-number">02</div>
+                <div class="card-number"></div>
                 <div class="card-content">
-                    <h3>Быстрая обратная связь</h3>
+                    <h3>Быстрая обратная связь <span class="toggle-arrow">↓</span></h3>
                     <p class="card-desc">Личный менеджер в Telegram отвечает на вопросы по заказам за 15 минут. Обучаем менеджеров эмпатичности и софт-скиллам.</p>
                 </div>
             </div>
 
             <div class="culture-card">
-                <div class="card-number">03</div>
+                <div class="card-number"></div>
                 <div class="card-content">
-                    <h3>Меню в Telegram-боте с КБЖУ</h3>
+                    <h3>Меню в Telegram-боте с КБЖУ <span class="toggle-arrow">↓</span></h3>
                     <p class="card-desc">По QR-коду можно посмотреть меню на неделю, альтернативные блюда для специализированных диет, состав и КБЖУ блюд. Оставить отзыв о качестве.</p>
                 </div>
             </div>
 
             <div class="culture-card">
-                <div class="card-number">04</div>
+                <div class="card-number"></div>
                 <div class="card-content">
-                    <h3>Гарантия</h3>
+                    <h3>Гарантия <span class="toggle-arrow">↓</span></h3>
                     <p class="card-desc">Если блюдо не соответствует технологически заявленному и полученному ранее, мы привезём новое без вопросов или вычтем из стоимости услуг за месяц.</p>
                 </div>
             </div>
 
             <div class="culture-card">
-                <div class="card-number">05</div>
+                <div class="card-number"></div>
                 <div class="card-content">
-                    <h3>Экономия ресурса сотрудников пищеблока</h3>
+                    <h3>Экономия ресурса сотрудников пищеблока <span class="toggle-arrow">↓</span></h3>
                     <p class="card-desc">Мы берём на себя дополнительные расходы по фасовке каждого набора питания в индивидуальные пакеты с названием заказа, отправляем запасные комплекты за наш счёт, предупреждаем обо всех особенностях и дарим комплиментарные блюда и подарки пациентам на любое возражение по сервису.</p>
                 </div>
             </div>
