@@ -8,6 +8,7 @@
     <meta name="description" content="Доставка обедов в офис в Санкт-Петербурге. Закажите пробную неделю комплексных обедов ресторанного качества.">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --main: #3d3d3d;
@@ -28,7 +29,8 @@
             background: #fdfdfd;
         }
 
-        /* ==================== ОБЩИЕ АНИМАЦИИ ==================== */
+
+      /* ==================== ОБЩИЕ АНИМАЦИИ ==================== */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(60px); }
             to { opacity: 1; transform: translateY(0); }
@@ -356,7 +358,7 @@
         }
         .mission-left h2 {
             font-size: 48px;
-            font-weight: 800;
+            font-weight: 600;
             margin-bottom: 32px;
             line-height: 1.2;
             background: linear-gradient(135deg, #2d2d2d, #5a5a5a);
@@ -408,6 +410,7 @@
         /* ==================== SERVICES ==================== */
       
 /* ==================== SERVICES - 3D АНИМАЦИЯ ==================== */
+/* ==================== SERVICES - ПРЕМИУМ ВЕРСИЯ ==================== */
 .services {
     padding: 160px 20px;
     position: relative;
@@ -420,7 +423,7 @@
 
 .services h2 {
     font-size: 48px;
-    margin-bottom: 110px;
+    margin-bottom: 100px;
     position: relative;
     z-index: 2;
     color: #fff;
@@ -428,71 +431,72 @@
                  0 0 30px rgba(168,85,247,0.35);
 }
 
-/* 3D контейнер */
+/* Более компактная и премиальная сетка */
 .services-grid-new {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
-    gap: 32px;
-    max-width: 1340px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 20px;
-    perspective: 1400px;           /* важный параметр для 3D */
+    perspective: 1200px;
 }
 
 .service-card-new {
-    background: rgba(22, 22, 22, 0.88);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 28px;
-    padding: 50px 36px 54px;
-    box-shadow: 0 25px 65px rgba(0,0,0,0.6);
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    background: rgba(22, 22, 22, 0.92);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 38px 28px 42px;     /* уменьшил отступы */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    transform-style: preserve-3d;   /* включение 3D пространства */
+    height: 100%;
+    min-height: 260px;
 }
 
-/* 3D эффект при наведении мыши */
-
-
-
+/* Hover эффект — более утончённый */
+.service-card-new:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.65);
+    border-color: rgba(196, 81, 255, 0.25);
+}
 
 /* Номер карточки */
 .card-number {
     position: absolute;
-    top: 28px;
-    right: 32px;
-    font-size: 44px;
+    top: 24px;
+    right: 28px;
+    font-size: 38px;
     font-weight: 900;
     line-height: 1;
-    color: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.09);
     transition: all 0.4s ease;
-       /* выдвигаем вперёд в 3D */
 }
 
 .service-card-new:hover .card-number {
-    color: rgba(196, 81, 255, 0.35);
+    color: rgba(196, 81, 255, 0.25);
 }
 
-/* Заголовок и описание */
+/* Заголовок */
 .service-card-new h3 {
-    font-size: 26px;
+    font-size: 23px;           /* уменьшил */
     font-weight: 700;
-    line-height: 1.3;
-    margin: 0 0 22px 0;
+    line-height: 1.35;
+    margin: 0 0 18px 0;
     color: #ffffff;
     text-align: center;
-    transform: translateZ(30px);
 }
 
+/* Описание */
 .service-desc {
-    font-size: 16.8px;
-    line-height: 1.58;
-    color: rgba(255,255,255,0.78);
+    font-size: 15.5px;         /* уменьшил */
+    line-height: 1.55;
+    color: rgba(255,255,255,0.82);
     flex-grow: 1;
     text-align: center;
-    transform: translateZ(20px);
 }
 
 /* Адаптив */
@@ -505,67 +509,12 @@
 @media (max-width: 680px) {
     .services-grid-new {
         grid-template-columns: 1fr;
-        gap: 26px;
+        gap: 24px;
     }
     .service-card-new {
-        padding: 46px 30px 50px;
+        padding: 34px 24px 38px;
+        min-height: 240px;
     }
-}
-
-/* Заголовок ветки */
-.branch-header {
-    margin-bottom: 42px;
-}
-
-.branch-icon {
-    font-size: 52px;
-    margin-bottom: 16px;
-    display: block;
-}
-
-.branch-header h3 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: white;
-}
-
-.branch-subtitle {
-    font-size: 17px;
-    color: rgba(255,255,255,0.75);
-    font-weight: 500;
-}
-
-/* Список услуг внутри ветки */
-.branch-items {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    text-align: left;
-}
-
-.branch-item {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
-    padding: 18px 24px;
-    border-radius: 16px;
-    font-size: 17.5px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.branch-item:hover {
-    background: rgba(196,81,255,0.15);
-    border-color: var(--accent);
-    transform: translateX(8px);
-    box-shadow: 0 8px 25px rgba(196,81,255,0.2);
-}
-
-/* Дополнительный акцент для лечебного питания */
-.services-branch:first-child .branch-icon {
-    filter: hue-rotate(10deg) saturate(1.3);
 }
 
         /* ==================== DIFFERENCE ==================== */
@@ -669,15 +618,24 @@
         .info-connector::after { right: -7px; }
 
 /* ==================== GUARANTEE ==================== */
+/* ==================== GUARANTEE ==================== */
+/* ==================== GUARANTEE ==================== */
 .guarantee {
     padding: 160px 20px;
     text-align: center;
     color: white;
     position: relative;
     overflow: hidden;
-
     background: url('https://sun9-35.userapi.com/s/v1/ig2/EjsvDVCGPeTp8nKUcX3zT5e0iwaKLeMHFiG3OX7G30p3LJ2WoJgaryDiCZFK37YiK6r-JpsbgVU4tQxXKKTgJ97O.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x240,480x319,540x359,640x426,720x479,1080x719,1280x852,1440x958,2000x1331&from=bu&cs=1280x0')
     center/cover no-repeat fixed;
+}
+
+.guarantee {
+    padding-bottom: 220px; /* было 160 */
+}
+
+.service-culture {
+    padding-top: 220px; /* было 140 */
 }
 
 .guarantee::before {
@@ -691,50 +649,32 @@
 .guarantee-container {
     position: relative;
     z-index: 2;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .guarantee h2 {
     font-size: 48px;
-    margin-bottom: 40px;
-
-    text-shadow:
+    margin-bottom: 50px;
+    text-shadow: 
         0 4px 20px rgba(0,0,0,0.9),
         0 0 30px rgba(168,85,247,0.35);
 }
 
-.guarantee p {
-    font-size: 20px;
-    line-height: 1.8;
-    color: rgba(255,255,255,0.9);
-}
 .guarantee-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
-    margin-top: 60px;
+    gap: 32px;
+    margin-top: 40px;
 }
 
 .g-item {
-    padding: 30px 10px;
+    padding: 24px 16px;
     text-align: center;
 
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-
-    position: relative;
-}
-
-/* тонкая линия сверху вместо "галочек" */
-.g-item::before {
-    content: '';
-    width: 40px;
-    height: 2px;
-    background: rgba(255,255,255,0.5);
-    display: block;
-    margin: 0 auto 18px;
 }
 
 .guarantee.visible .g-item {
@@ -742,59 +682,29 @@
     transform: translateY(0);
 }
 
-.guarantee.visible .g-item:nth-child(1) { transition-delay: 0.1s; }
-.guarantee.visible .g-item:nth-child(2) { transition-delay: 0.25s; }
-.guarantee.visible .g-item:nth-child(3) { transition-delay: 0.4s; }
+.guarantee.visible .g-item:nth-child(1) { transition-delay: 0.05s; }
+.guarantee.visible .g-item:nth-child(2) { transition-delay: 0.15s; }
+.guarantee.visible .g-item:nth-child(3) { transition-delay: 0.25s; }
+.guarantee.visible .g-item:nth-child(4) { transition-delay: 0.35s; }
 
 .g-item h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
+    font-size: 19px;           /* уменьшенный размер */
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.35;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
 }
 
 .g-item p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.6;
+    font-size: 14.5px;         /* уменьшенный размер */
+    line-height: 1.55;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
 }
 
-/* subtle hover */
+/* Лёгкий hover эффект без сильного изменения фона */
 .g-item:hover {
     transform: translateY(-4px);
-}
-.g-item:hover {
-    transform: translateY(-6px) scale(1.02);
-    background: rgba(255,255,255,0.12);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-}
-
-.g-icon {
-    width: 54px;
-    height: 54px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 16px;
-
-    background: linear-gradient(135deg, #a855f7, #6d28d9);
-    color: white;
-
-    font-size: 22px;
-    font-weight: bold;
-
-    margin: 0 auto 20px;
-}
-
-.g-item h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.g-item p {
-    font-size: 15px;
-    color: rgba(255,255,255,0.85);
 }
         /* ==================== SOCIAL ==================== */
         .social {
@@ -850,7 +760,7 @@
         }
         .side-floating-img {
             max-width: 100%;
-            width: 380px;
+            width: 580px;
             animation: floatSide 3s ease-in-out infinite;
             display: block;
             border: none;
@@ -870,50 +780,41 @@
         }
 
         /* ==================== CONTACTS ==================== */
+        
         .contacts {
-            padding: 140px 20px;
-            background: linear-gradient(145deg, #f9f7fe 0%, #f1edfc 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .contacts::before {
-            content: '';
-            position: absolute;
-            top: -80px;
-            right: -80px;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(196,81,255,0.08) 0%, rgba(196,81,255,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .contacts::after {
-            content: '';
-            position: absolute;
-            bottom: -60px;
-            left: -60px;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(147,51,255,0.06) 0%, rgba(147,51,255,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .contacts-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            position: relative;
-            z-index: 2;
-        }
-        .contact-card {
-            background: var(--card-bg);
-            border-radius: 32px;
-            padding: 48px 44px;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.12), 0 0 0 1px rgba(196,81,255,0.08);
-        }
+    min-height: 100vh;
+}
+
+.contacts-wrapper {
+    display: flex;
+    justify-content: center; /* по горизонтали */
+    align-items: center;     /* по вертикали */
+    min-height: 100vh;
+}
+
+.contact-card {
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+
+    padding: 48px 42px;
+    border-radius: 28px;
+
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(196, 81, 255, 0.12);
+
+    box-shadow:
+        0 20px 60px -25px rgba(0,0,0,0.25),
+        0 0 0 1px rgba(255,255,255,0.6) inset;
+
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
         .contact-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 45px 70px -25px rgba(0,0,0,0.18), 0 0 0 1px rgba(196,81,255,0.2);
@@ -1232,7 +1133,7 @@
 
 .service-culture h2 {
     font-size: 46px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 1.2;
     margin-bottom: 20px;
 }
@@ -1376,6 +1277,313 @@
     transform-style: flat;
 }
 
+/* ==================== COST BLOCK ==================== */
+/* ==================== COST BLOCK — ANIMATED PREMIUM ==================== */
+
+.cost-block {
+    padding: 220px 20px;
+    background: linear-gradient(180deg, #ffffff 0%, #f3efff 100%);
+    position: relative;
+    z-index: 5;
+    margin-top: 140px;
+
+    opacity: 0;
+    transform: translateY(80px) scale(0.96);
+    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cost-block {
+    padding: 220px 20px;
+    margin-top: 140px;
+}
+
+/* АКТИВАЦИЯ (когда появился на экране) */
+.cost-block.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* верхний разделитель */
+.cost-block::after {
+    content: '';
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.15), transparent);
+}
+
+/* GLOW (изначально выключен) */
+.cost-block::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: radial-gradient(circle, rgba(196,81,255,0.25) 0%, transparent 70%);
+    filter: blur(70px);
+    opacity: 0;
+    transition: all 1.4s ease;
+    z-index: 0;
+}
+
+/* GLOW включается при появлении */
+.cost-block.visible::before {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* карточка */
+.cost-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 90px 70px;
+
+    background: #ffffff;
+    border-radius: 42px;
+
+    box-shadow:
+        0 60px 120px rgba(0,0,0,0.15),
+        0 0 0 1px rgba(196,81,255,0.12);
+
+    text-align: center;
+    position: relative;
+    z-index: 2;
+
+    transform: translateY(40px);
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* карточка появляется чуть позже */
+.cost-block.visible .cost-container {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* label */
+.cost-label {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+
+    background: rgba(196,81,255,0.12);
+    padding: 8px 20px;
+    border-radius: 40px;
+
+    margin-bottom: 20px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.6s ease;
+}
+
+.cost-block.visible .cost-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* заголовок */
+.cost-block h2 {
+    font-size: 46px;
+    font-weight: 800;
+    margin-bottom: 24px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.6s ease 0.1s;
+}
+
+.cost-block.visible h2 {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* текст */
+.cost-block p {
+    font-size: 20px;
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto 45px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.6s ease 0.2s;
+}
+
+.cost-block.visible p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* кнопка */
+.cost-block .cta-btn {
+    padding: 24px 64px;
+    font-size: 20px;
+    border-radius: 80px;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: 0.6s ease 0.3s;
+}
+
+.cost-block.visible .cta-btn {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.cost-block .cta-btn:hover {
+    transform: translateY(-6px) scale(1.05);
+}
+
+
+
+.cta-features {
+    list-style: none;
+    margin: 40px 0 45px;
+    padding: 0;
+}
+
+.cta-features li {
+    font-size: 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #2c2c2c;
+    font-weight: 500;
+    justify-content: center;
+}
+
+.check-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #c451ff20, #9333ff20);
+    border-radius: 10px;
+    color: var(--accent-dark);
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
+    color: white;
+    padding: 20px 52px;
+    border-radius: 60px;
+    font-size: 19px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    margin-bottom: 20px;
+}
+
+.cta-btn:hover {
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(147,51,255,0.4);
+}
+
+.contact-note {
+    font-size: 14px;
+    color: #888;
+    margin-top: 20px;
+}
+
+/* === STICKY COST BAR === */
+.sticky-cost {
+    bottom: 20px !important;
+}
+.sticky-cost {
+    z-index: 9999;
+}
+.sticky-cost {
+    position: fixed;
+    bottom: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 920px;
+
+    background: rgba(25, 25, 25, 0.92);
+    backdrop-filter: blur(14px);
+
+    border-radius: 18px;
+    padding: 16px 22px;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+
+    z-index: 999;
+    transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* появление */
+.sticky-cost.show {
+    bottom: 20px;
+}
+
+/* контейнер */
+.sticky-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* текст */
+.sticky-text strong {
+    display: block;
+    font-size: 16px;
+    color: white;
+}
+
+.sticky-text span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+}
+
+/* кнопка */
+.sticky-btn {
+    background: linear-gradient(135deg, #c451ff, #9333ff);
+    color: white;
+    padding: 12px 26px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.sticky-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* мобильная версия */
+@media (max-width: 600px) {
+    .sticky-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sticky-btn {
+        width: 100%;
+    }
+}
+
 
     </style>
 </head>
@@ -1397,9 +1605,9 @@
         <!-- Навигация справа -->
         <nav class="nav">
             <ul>
-               <a href="about.html">О нас</a>
-                <a href="nutritionist.html">Лечебное питание</a>
-                <li><a href="#contacts">Контакты</a></li>
+                <a href="/about">О нас</a>
+                <a href="/nutritionist">Лечебное питание</a>
+                <a href="#contacts">Контакты</a>
             </ul>
         </nav>
 
@@ -1460,7 +1668,7 @@
     <div class="mission-container">
         <div class="mission-left">
             <div class="mission-label">Философия бренда</div>
-            <h2>Наша миссия</h2>
+            <h2>НАША МИССИЯ</h2>
             <div class="mission-desc">
                 Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию.
             </div>
@@ -1476,7 +1684,103 @@
     </div>
 </section>
 
-<!-- === СЕРВИСНАЯ КУЛЬТУРА === -->
+<!-- DIFFERENCE -->
+<section class="difference animate-section">
+    <div class="difference-container">
+        <h2>В ЧЁМ НАШЕ ОТЛИЧИЕ?</h2>
+        <div class="infographic" id="infographic">
+            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-86.userapi.com/s/v1/ig2/o0jTN3M66XvaQjH7dm7IeNyj_gvbqQFqRYaJD66bT6XyP3cxE3RrUujc0ojaT1vQiCOWyxtneA9MZQwuDQYa4vut.jpg?quality=95&as=32x47,48x70,72x105,108x157,160x233,240x350,360x525,480x699,540x787,640x932,720x1049,1080x1574,1280x1865,1440x2098,1757x2560&from=bu&cs=1280x0" alt="Современная гастрономия"></div><div class="info-content"><h3>Современная гастрономия</h3><p>Европейский вкус от шеф-повара Four Seasons. Авторские блюда — результат 10 лет изучения клиентских предпочтений.</p></div></div>
+            <div class="info-connector"></div>
+            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-1.userapi.com/s/v1/ig2/pFwAuo2981rtRy7FJCBjNVCTN9A_B0Ph2zzjFCCAkPYeXl4VrDC8Cii8-voE2tm4uFOGL6WHpv-SBW8TXIRXpgFG.jpg?quality=95&as=32x29,48x43,72x65,108x97,160x144,240x215,360x323,480x431,540x484,640x574,720x646,1080x969,1280x1148,1440x1292,1693x1519&from=bu&cs=1280x0" alt="Готовим из-под ножа"></div><div class="info-content"><h3>Готовим из-под ножа</h3><p>Цикл заготовок не более 12 часов. Рыбные и мясные блюда, салаты готовим перед отдачей</p></div></div>
+            <div class="info-connector"></div>
+            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-66.userapi.com/s/v1/ig2/dDoM1iTqogXoU2fy140Whghcn6HXAdeNq2AmxmuQrh22POG3LbVqCgpYt4mKNvnMj-rUaE3bHIsVtxWXBOwQr8Jk.jpg?quality=95&as=32x44,48x66,72x99,108x149,160x221,240x331,360x497,480x662,540x745,640x883,720x993,1080x1490,1280x1766,1440x1986,1856x2560&from=bu&cs=1280x0" alt="Сервис — как культура"></div><div class="info-content"><h3>Сервис — как культура</h3><p>Забота о наших клиентах — это не просто слова. Это ежедневная философия всей команды ORGANI'CARE.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES - 3D АНИМАЦИЯ -->
+<section class="services animate-section">
+    <h2>НАШИ УСЛУГИ</h2>
+
+    <div class="services-grid-new">
+
+        <!-- 1 -->
+        <div class="service-card-new" data-tilt>
+            <div class="card-number"></div>
+            <h3>Открытие кухни в клинике</h3>
+            <p class="service-desc">Организация пищеблока на территории медицинского учреждения. Наши повара готовят в клинике лечебное питание для пациентов</p>
+        </div>
+
+        <!-- 2 -->
+        <div class="service-card-new" data-tilt>
+            <div class="card-number"></div>
+            <h3>Доставка лечебного питания в роддома</h3>
+            <p class="service-desc">Доставка лечебного питания в индивидуальной упаковке для ваших пациентов</p>
+        </div>
+
+        <!-- 3 -->
+        <div class="service-card-new" data-tilt>
+            <div class="card-number"></div>
+            <h3>Организация буфета в клинике</h3>
+            <p class="service-desc">Открытие буфета-столовой на территории клиники, кофейни, фингер-фуд, wellness питание</p>
+        </div>
+
+        <!-- 4 - Корпоративное питание -->
+        <div class="service-card-new corporate" data-tilt>
+            <div class="card-number"></div>
+            <h3>Корпоративное питание</h3>
+            <p class="service-desc">Питание для сотрудников компаний, организация школьного питания, микромаркеты</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guarantee animate-section">
+  <div class="guarantee-container">
+    <h2>МЫ ГАРАНТИРУЕМ</h2>
+
+    <div class="guarantee-grid">
+
+        <div class="g-item">
+            <h3>Гастровпечатление</h3>
+            <p>Авторские блюда с европейским вкусом, приготовления из-под ножа</p>
+        </div>
+
+        <div class="g-item">
+            <h3>Забота</h3>
+            <p>Гибкость меню, возможность заказать в зависимости исключений, расширенная фасовка, опыт обработки заказа</p>
+        </div>
+
+        <div class="g-item">
+            <h3>Персонализация с инновацией</h3>
+            <p>Telegram-бот для первичного опроса пациентов на  вкусовые предпочтения и подбор блюд. Возможность исключать продукты из рациона через Telegram бот. Реакция на каждый запрос персонального менеджера в течении 10 минут</p>
+        </div>
+        <div class="g-item">
+            <h3>Сервисная культура</h3>
+            <p>Предугадывание потребностей и запросов</p>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<section class="contacts animate-section" id="contacts">
+    <div class="contacts-wrapper">
+        <div class="contact-card">
+            
+            
+        <div class="contact-card">
+            
+            <h2>УЗНАЙ СТОИМОСТЬ ПИТАНИЯ НА ОДНОГО ЧЕЛОВЕКА</h2>
+            <p style="color:#555; margin-bottom:28px; font-size:16px; line-height:1.5;">Оставьте заявку и мы рассчитаем стоимость питания для вашей компании на одного сотрудника.</p>
+            
+            <a href="#" onclick="alert('Форма заявки открыта (в реальном проекте здесь будет модальное окно)')" class="cta-btn">Оставить заявку<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            <div class="contact-note">Ответим в течение 1 рабочего часа</div>
+        </div>
+    </div>
+</section>
+
 <!-- === СЕРВИСНАЯ КУЛЬТУРА === -->
 <section class="service-culture animate-section" id="service-culture">
     <div class="service-culture-bg"></div>
@@ -1484,7 +1788,7 @@
     <div class="service-culture-container">
         <div class="section-header">
             <div class="section-label">Сервисная культура</div>
-            <h2>Мы делаем сервис частью философии</h2>
+            <h2>МЫ ДЕЛАЕМ СЕРВИС ЧАСТЬЮ ФИЛОСОФИИ</h2>
         </div>
 
         <div class="culture-grid">
@@ -1531,111 +1835,17 @@
     </div>
 </section>
 
-<!-- DIFFERENCE -->
-<section class="difference animate-section">
-    <div class="difference-container">
-        <h2>В чём наше отличие?</h2>
-        <div class="infographic" id="infographic">
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-86.userapi.com/s/v1/ig2/o0jTN3M66XvaQjH7dm7IeNyj_gvbqQFqRYaJD66bT6XyP3cxE3RrUujc0ojaT1vQiCOWyxtneA9MZQwuDQYa4vut.jpg?quality=95&as=32x47,48x70,72x105,108x157,160x233,240x350,360x525,480x699,540x787,640x932,720x1049,1080x1574,1280x1865,1440x2098,1757x2560&from=bu&cs=1280x0" alt="Современная гастрономия"></div><div class="info-content"><h3>Современная гастрономия</h3><p>Европейский вкус от шеф-повара Four Seasons. Авторские блюда — результат 10 лет изучения клиентских предпочтений.</p></div></div>
-            <div class="info-connector"></div>
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-1.userapi.com/s/v1/ig2/pFwAuo2981rtRy7FJCBjNVCTN9A_B0Ph2zzjFCCAkPYeXl4VrDC8Cii8-voE2tm4uFOGL6WHpv-SBW8TXIRXpgFG.jpg?quality=95&as=32x29,48x43,72x65,108x97,160x144,240x215,360x323,480x431,540x484,640x574,720x646,1080x969,1280x1148,1440x1292,1693x1519&from=bu&cs=1280x0" alt="Готовим из-под ножа"></div><div class="info-content"><h3>Готовим из-под ножа</h3><p>Цикл заготовок не более 12 часов. Термически готовим утром рыбные блюда, с утра перед отдачей нарезаем салаты.</p></div></div>
-            <div class="info-connector"></div>
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-66.userapi.com/s/v1/ig2/dDoM1iTqogXoU2fy140Whghcn6HXAdeNq2AmxmuQrh22POG3LbVqCgpYt4mKNvnMj-rUaE3bHIsVtxWXBOwQr8Jk.jpg?quality=95&as=32x44,48x66,72x99,108x149,160x221,240x331,360x497,480x662,540x745,640x883,720x993,1080x1490,1280x1766,1440x1986,1856x2560&from=bu&cs=1280x0" alt="Сервис — как культура"></div><div class="info-content"><h3>Сервис — как культура</h3><p>Забота о наших клиентах — это не просто слова. Это ежедневная философия всей команды ORGANI'CARE.</p></div></div>
-        </div>
-    </div>
-</section>
 
-<!-- GUARANTEE -->
-<section class="guarantee animate-section">
-  <div class="guarantee-container">
-    <h2>Мы гарантируем</h2>
-
-    <div class="guarantee-grid">
-
-        <div class="g-item">
-            <h3>Персонализация</h3>
-            <p>Меню адаптируется под задачи бизнеса и особенности сотрудников</p>
-        </div>
-
-        <div class="g-item">
-            <h3>Качество</h3>
-            <p>Контроль на каждом этапе: от закупки до подачи</p>
-        </div>
-
-        <div class="g-item">
-            <h3>Сервис</h3>
-            <p>Высокий уровень обслуживания и внимание к деталям</p>
-        </div>
-
-    </div>
-</div>
-</section>
-
-<!-- SERVICES - 3D АНИМАЦИЯ -->
-<section class="services animate-section">
-    <h2>Наши услуги</h2>
-
-    <div class="services-grid-new">
-
-        <!-- 1 -->
-        <div class="service-card-new" data-tilt>
-            <div class="card-number"></div>
-            <h3>Открытие кухни в клинике</h3>
-            <p class="service-desc">Организация пищеблока на территории медицинского учреждения. Наши повара готовят в клинике питание для пациентов</p>
-        </div>
-
-        <!-- 2 -->
-        <div class="service-card-new" data-tilt>
-            <div class="card-number"></div>
-            <h3>Доставка лечебного питания в роддома</h3>
-            <p class="service-desc">Доставка лечебного питания в индивидуальной упаковке для ваших пациентов</p>
-        </div>
-
-        <!-- 3 -->
-        <div class="service-card-new" data-tilt>
-            <div class="card-number"></div>
-            <h3>Организация буфета в клинике</h3>
-            <p class="service-desc">Открытие буфета-столовой на территории клиники</p>
-        </div>
-
-        <!-- 4 - Корпоративное питание -->
-        <div class="service-card-new corporate" data-tilt>
-            <div class="card-number"></div>
-            <h3>Корпоративное питание</h3>
-            <p class="service-desc">Питание для сотрудников компаний, организация школьного питания, микромаркеты</p>
-        </div>
-
-    </div>
-</section>
 
 <!-- SOCIAL -->
 <section class="social animate-section">
     <div class="social-container">
-        <div class="social-left"><h2>Наши соц. сети</h2><p>Подписывайся и смотри больше live-фотографий блюд корпоративного питания и кейтеринга</p><div class="social-icons"><a href="https://vk.com/organi.care" target="_blank"><img src="https://static.tildacdn.com/tild3632-6132-4432-b936-346237393162/vk.png" alt="VK"></a><a href="https://www.instagram.com/organi_care/" target="_blank"><img src="https://static.tildacdn.com/tild6536-3734-4733-b331-376564616665/instagram_2.png" alt="Instagram"></a><a href="https://web.telegram.org/z/#5665927340" target="_blank"><img src="https://static.tildacdn.com/tild6464-3436-4638-b663-363338343733/free-icon-telegram-1.png" alt="Telegram"></a></div></div>
+        <div class="social-left"><h2>НАШИ СОЦ.СЕТИ</h2><p>Подписывайся и смотри больше live-фотографий блюд корпоративного питания и кейтеринга</p><div class="social-icons"><a href="https://vk.com/organi.care" target="_blank"><img src="https://static.tildacdn.com/tild3632-6132-4432-b936-346237393162/vk.png" alt="VK"></a><a href="https://www.instagram.com/organi_care/" target="_blank"><img src="https://static.tildacdn.com/tild6536-3734-4733-b331-376564616665/instagram_2.png" alt="Instagram"></a><a href="https://web.telegram.org/z/#5665927340" target="_blank"><img src="https://static.tildacdn.com/tild6464-3436-4638-b663-363338343733/free-icon-telegram-1.png" alt="Telegram"></a></div></div>
         <div class="social-right"><img src="https://optim.tildacdn.com/tild3063-3662-4638-b738-656463353361/-/format/webp/3.png.webp" class="side-floating-img" alt="Анимация блюд"></div>
     </div>
 </section>
 
-<!-- CONTACTS -->
-<section class="contacts animate-section" id="contacts">
-    <div class="contacts-wrapper">
-        <div class="contact-card">
-            <h2>Свяжитесь с нами</h2>
-            <div class="info-row"><div class="business-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6L12 13 2 6M22 6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6l10 7 10-7z"/></svg></div><div class="info-content-block"><div class="info-label">Организация питания</div><div class="info-value"><a href="mailto:iron@organicare.ru">iron@organicare.ru</a></div></div></div>
-            <div class="info-row"><div class="business-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l9-6 9 6v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M9 22V12h6v10"/></svg></div><div class="info-content-block"><div class="info-label">Администрация</div><div class="info-value"><a href="mailto:lead@organicare.ru">lead@organicare.ru</a></div></div></div>
-            <div class="info-row"><div class="business-icon"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div><div class="info-content-block"><div class="info-label">Финансовый отдел</div><div class="info-value"><a href="mailto:book@organicare.ru">book@organicare.ru</a></div></div></div>
-          
-            <div class="info-row phone-row"><div class="business-icon"><svg viewBox="0 0 24 24" stroke="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div class="info-content-block"><div class="info-label">Телефон для связи</div><div class="info-value"><a href="tel:+78127507000">8 (812) 750-70-00</a></div></div></div>
-        </div>
-        <div class="contact-card">
-            <h2>Узнать стоимость питания</h2>
-            <p style="color:#555; margin-bottom:28px; font-size:16px; line-height:1.5;">Оставьте заявку и мы рассчитаем корпоративное питание для вашей компании на одного сотрудника.</p>
-            <ul class="cta-features"><li><span class="check-mark">✓</span> Индивидуальный расчет меню</li><li><span class="check-mark">✓</span> Бесплатная консультация технолога</li><li><span class="check-mark">✓</span> Пробная неделя питания</li></ul>
-            <a href="#" onclick="alert('Форма заявки открыта (в реальном проекте здесь будет модальное окно)')" class="cta-btn">Оставить заявку<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-            <div class="contact-note">Ответим в течение 1 рабочего часа</div>
-        </div>
-    </div>
-</section>
+
 
 <!-- FOOTER -->
 <footer>
@@ -1658,6 +1868,29 @@
     const infographic = document.getElementById('infographic');
     if(infographic) new IntersectionObserver(([e]) => { if(e.isIntersecting) infographic.classList.add('visible'); }, { threshold: 0.3 }).observe(infographic);
     document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const target = document.querySelector(this.getAttribute('href')); if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); } }); });
+    const sticky = document.getElementById('stickyCost');
+const triggerSection = document.querySelector('.services');
+const footer = document.querySelector('footer');
+
+if (sticky && triggerSection && footer) {
+    window.addEventListener('scroll', () => {
+
+        const triggerTop = triggerSection.getBoundingClientRect().top;
+        const footerTop = footer.getBoundingClientRect().top;
+
+        if (triggerTop < window.innerHeight * 0.5) {
+            sticky.classList.add('show');
+        } else {
+            sticky.classList.remove('show');
+        }
+
+        if (footerTop < window.innerHeight) {
+            sticky.classList.remove('show');
+        }
+
+    });
+}
+document.getElementById('stickyCost').classList.add('show');
 </script>
 </body>
 </html>
