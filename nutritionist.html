@@ -199,32 +199,74 @@ header {
     color:#555;
 }
 
-.diet-section{
-    padding:120px 20px;
-    background:#ffffff;
+.diet-horizontal {
+    padding: 140px 20px;
+    background: #ffffff;
 }
 
-.container{
-    max-width:1100px;
-    margin:0 auto;
+.diet-title {
+    text-align: center;
+    font-size: 38px;
+    margin-bottom: 70px;
+    color: #1f1f1f;
 }
 
-.title{
-    font-size:38px;
-    text-align:center;
-    margin-bottom:10px;
-    color:#1f1f1f;
-    letter-spacing:-0.5px;
+/* горизонтальный ряд */
+.diet-row {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
 }
 
-.subtitle{
-    text-align:center;
-    color:#666;
-    max-width:700px;
-    margin:0 auto 60px;
-    font-size:17px;
+/* карточка */
+.diet-item {
+    min-width: 200px;
+    flex: 1;
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #eee;
+    padding: 26px;
+    cursor: pointer;
+
+    transition: all 0.35s ease;
+    position: relative;
 }
 
+/* верхняя линия (инфографика стиль) */
+.diet-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, #6d28d9, #c451ff);
+    border-radius: 18px 18px 0 0;
+}
+
+.diet-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+}
+
+/* заголовок */
+.diet-head {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2b2b2b;
+}
+
+/* скрытый текст */
+.diet-content {
+    max-height: 0;
+    overflow: hidden;
+    font-size: 14.5px;
+    color: #666;
+    line-height: 1.6;
+    transition: all 0.4s ease;
+    margin-top: 0;
+}
 .diet-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -310,6 +352,34 @@ header {
     transition: opacity 0.6s ease, transform 0.6s ease;
     will-change: transform, opacity;
 }
+/* активное состояние */
+.diet-item.active .diet-content {
+    max-height: 200px;
+    margin-top: 14px;
+}
+
+/* плавность */
+.diet-item.active {
+    background: #faf9ff;
+    border-color: #e9e4ff;
+}
+
+.diet-secondary {
+    background: #fafafa;
+    padding-top: 80px;
+}
+
+/* более спокойная линия */
+.diet-secondary .diet-item::before {
+    background: linear-gradient(90deg, #d6d6d6, #eeeeee);
+}
+
+/* чуть мягче активное состояние */
+.diet-secondary .diet-item.active {
+    background: #ffffff;
+    border-color: #ddd;
+}
+
 
 /* состояние при исчезновении */
 .fade-out{
@@ -1195,9 +1265,9 @@ footer a{color:#e6b5ff;text-decoration:none}
             </div>
 
             <div class="food-card">
-                <img src="https://cdn.gamma.app/ktpqsddnt96zivx/49e2f92ce05d414292a7bac2624f8f8e/original/9b49d6b1-f38b-4bcb-9353-d3e233b0f2f3.jfif" alt="">
+                <img src="https://sun9-86.vkuserphoto.ru/s/v1/ig2/o0jTN3M66XvaQjH7dm7IeNyj_gvbqQFqRYaJD66bT6XyP3cxE3RrUujc0ojaT1vQiCOWyxtneA9MZQwuDQYa4vut.jpg?quality=95&as=32x47,48x70,72x105,108x157,160x233,240x350,360x525,480x699,540x787,640x932,720x1049,1080x1574,1280x1865,1440x2098,1757x2560&from=bu&cs=1280x0" alt="">
                 <div class="food-caption">
-                    <p>Запечённая тыква с мёдом и творожным сыром</p>
+                    <p>Овощной боул</p>
                 </div>
             </div>
 
@@ -1336,99 +1406,105 @@ footer a{color:#e6b5ff;text-decoration:none}
 </section>
 
 
-<section class="diet-timeline">
-    <div class="timeline-container">
-
-        <h2 class="timeline-title">Наши специализированные диеты</h2>
-
-        <div class="timeline">
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-card">
-                    <h3>Стол №5</h3>
-                    <p>
-                        Диета для восстановления после операций и при проблемах с пищеварением. 
-                        Максимально щадящая, пюреобразная и приготовленная на пару.
-                    </p>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-card">
-                    <h3>Стол №9</h3>
-                    <p>
-                        Разработана для пациентов с сахарным диабетом. Контроль сахара и углеводов, 
-                        низкое содержание жиров, исключение сладких фруктов и продуктов.
-                    </p>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-card">
-                    <h3>Педиатрия</h3>
-                    <p>
-                        Особое меню для детей от 0 до 17 лет, исключающее молочные продукты, 
-                        свежие овощи и фрукты для минимизации аллергических рисков.
-                    </p>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-card">
-                    <h3>Стол №15</h3>
-                    <p>
-                        Общий стол. Физиологически полноценное питание без ограничения продуктов, 
-                        но с исключением острых, жирных и трудноперевариваемых блюд.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</section>           
-
-           <section class="diet-section">
+<section class="diet-horizontal">
     <div class="container">
 
-        <p class="subtitle">
-            Расширенный перечень диет для индивидуального подхода к каждому пациенту
-        </p>
+        <h2 class="diet-title">Наши специализированные диеты</h2>
 
-        <div class="diet-grid">
+        <div class="diet-row">
 
-            <div class="diet-card">
-                <div class="icon"></div>
-                <h3>Аглютеновая диета</h3>
-                <p>Полностью исключает глютен (пшеница, рожь, ячмень). Применяется при целиакии и чувствительности к глютену.</p>
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    <span>Стол №5</span>
+                </div>
+                <div class="diet-content">
+                    Диета для восстановления после операций и при проблемах с ЖКТ.
+                    Щадящая, пюреобразная, приготовленная на пару.
+                </div>
             </div>
 
-            <div class="diet-card">
-                <div class="icon"></div>
-                <h3>Безлактозная диета</h3>
-                <p>Исключает лактозу и молочные продукты. Используются растительные альтернативы и безлактозные продукты.</p>
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    <span>Стол №9</span>
+                </div>
+                <div class="diet-content">
+                    Для пациентов с сахарным диабетом.
+                    Контроль углеводов, снижение сахара и жиров.
+                </div>
             </div>
 
-            <div class="diet-card">
-                <div class="icon"></div>
-                <h3>Высокобелковая диета (ВБД)</h3>
-                <p>Повышенное содержание белка для восстановления тканей, реабилитации и спортивных нагрузок.</p>
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    <span>Педиатрия</span>
+                </div>
+                <div class="diet-content">
+                    Питание для детей 0–17 лет.
+                    Минимизация аллергенов, мягкая адаптация рациона.
+                </div>
             </div>
 
-            <div class="diet-card">
-                <div class="icon"></div>
-                <h3>Низкокалорийная диета (НКД)</h3>
-                <p>Сниженная калорийность при сохранении баланса нутриентов для контроля веса и метаболических задач.</p>
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    <span>Стол №15</span>
+                </div>
+                <div class="diet-content">
+                    Общий рацион без строгих ограничений.
+                    Исключаются тяжёлые, острые и жирные блюда.
+                </div>
             </div>
 
         </div>
+
+    </div>
+</section>          
+
+            <section class="diet-horizontal diet-secondary">
+    <div class="container">
+
+        <h2 class="diet-title">Расширенный перечень диет</h2>
+
+        <div class="diet-row">
+
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    Аглютеновая диета
+                </div>
+                <div class="diet-content">
+                    Полностью исключает глютен (пшеница, рожь, ячмень). Применяется при целиакии и чувствительности к глютену.
+                </div>
+            </div>
+
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    Безлактозная диета
+                </div>
+                <div class="diet-content">
+                    Исключает лактозу и молочные продукты. Используются растительные альтернативы и безлактозные продукты.
+                </div>
+            </div>
+
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    Высокобелковая диета (ВБД)
+                </div>
+                <div class="diet-content">
+                    Повышенное содержание белка для восстановления тканей, реабилитации и спортивных нагрузок.
+                </div>
+            </div>
+
+            <div class="diet-item" onclick="toggleDiet(this)">
+                <div class="diet-head">
+                    Низкокалорийная диета (НКД)
+                </div>
+                <div class="diet-content">
+                    Сниженная калорийность при сохранении баланса нутриентов для контроля веса и метаболических задач.
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </section>
-
 <!-- PRINCIPLES -->
 
     <div class="section-title">Наш подход</div>
@@ -1546,7 +1622,19 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(animateHero, 400);
 });
 </script>
+<script>
+function toggleDiet(el) {
+    const items = document.querySelectorAll('.diet-item');
+    
+    items.forEach(item => {
+        if (item !== el) {
+            item.classList.remove('active');
+        }
+    });
 
+    el.classList.toggle('active');
+}
+</script>
 
 </body>
 </html>
