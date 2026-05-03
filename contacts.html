@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты — ORGANI'CARE</title>
+    <meta name="description" content="Контакты ORGANI'CARE: доставка корпоративного и лечебного питания в Санкт-Петербурге.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f6f6f6;
+            --dark: #2f2f2f;
+            --text: #3d3d3d;
+            --accent: #c451ff;
+            --accent-dark: #9333ff;
+            --card: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--dark);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 80px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .logo img { height: 28px; }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            margin-left: 26px;
+        }
+
+        section { padding: 120px 20px 100px; }
+
+        h2 { 
+            font-size: 42px; 
+            text-align: center; 
+            margin-bottom: 70px; 
+        }
+
+        .contacts-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 28px;
+            padding: 48px 42px;
+            box-shadow: 0 20px 60px -25px rgba(0,0,0,0.25);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
+            color: white;
+            padding: 17px 40px;
+            border-radius: 60px;
+            font-size: 17px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+
+        .cta-btn:hover {
+            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+            transform: translateY(-3px);
+        }
+
+        .cta-btn svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .policy {
+            font-size: 13px;
+            color: #777;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .policy a { color: var(--accent-dark); }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: #3d3d3d;
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .contacts-wrapper { grid-template-columns: 1fr; gap: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare">
+        </div>
+        <nav class="nav">
+            <a href="index.html">Главная</a>
+             <a href="about.html">О нас</a>
+                <a href="nutritionist.html">Лечебное питание</a>
+                <a href="contacts.html">Контакты</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Контакты</h2>
+        
+        <div class="contacts-wrapper">
+            
+            <!-- Левая колонка -->
+            <div class="contact-card">
+                <h3>Связаться с нами</h3>
+                <p style="margin: 20px 0 40px; font-size: 17px;">У вас есть вопросы или предложения? Мы всегда готовы помочь!</p>
+                
+                <p><strong>Телефон:</strong><br>
+                <span style="font-size:28px; font-weight:700; color:var(--accent-dark);">8 (812) 750-70-00</span></p>
+
+                <p style="margin-top:30px;"><strong>По вопросам организации питания:</strong><br>
+                <a href="mailto:iron@organicare.ru">iron@organicare.ru</a></p>
+
+                <p><strong>HR:</strong><br><a href="mailto:lead@organicare.ru">lead@organicare.ru</a></p>
+                <p><strong>Администрация:</strong><br><a href="mailto:book@organicare.ru">book@organicare.ru</a></p>
+            </div>
+
+            <!-- Правая колонка — Форма -->
+            <div class="contact-card">
+                <h2>Оставить заявку</h2>
+                <p style="color:#555; margin-bottom:32px;">Мы свяжемся с вами в ближайшее время</p>
+                
+                <form>
+                    <div class="form-group">
+                        <label class="required">Имя</label>
+                        <input type="text" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Телефон</label>
+                        <input type="tel" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Компания / Организация</label>
+                        <input type="text" placeholder="Название компании">
+                    </div>
+                    <div class="form-group">
+                        <label>Сообщение</label>
+                        <textarea rows="4" placeholder="Напишите ваш запрос..."></textarea>
+                    </div>
+
+                    <button type="submit" class="cta-btn">
+                        Отправить
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none">
+                            <path d="M5 12h14M13 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <div class="policy">
+                        Нажимая кнопку, вы соглашаетесь с нашей 
+                        <a href="https://organicare.ru/privacy_policy" target="_blank">политикой в отношении обработки персональных данных</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>© 2026 ORGANI'CARE</div>
+    </footer>
+
+</body>
+</html>
