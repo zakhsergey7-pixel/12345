@@ -12,7 +12,8 @@
     --bg: #f6f6f6;
     --dark: #2f2f2f;
     --text: #3d3d3d;
-    --accent: #fa73dd;
+    --accent: #c451ff;
+    --accent-dark: #9333ff;
     --card: #ffffff;
 }
 
@@ -292,10 +293,12 @@ h2 {
             gap: 12px;
             background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
             color: white;
-            padding: 18px 44px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 14px 32px;     /* уменьшили высоту и ширину */
+    font-size: 16px;        /* чуть меньше текст */
+    border-radius: 50px;    /* можно оставить или уменьшить */
+    /* width: 100%; */      /* можно закомментировать, если не нужна на всю ширину */
+    max-width: 1250px;       /* ограничить максимальную ширину (рекомендую) */
+    margin: 0 auto;         /* центрировать, если убрали width: 100% */
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             box-shadow: 0 8px 22px rgba(0,0,0,0.1);
@@ -356,9 +359,10 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 
     <nav class="nav">
-        <a href="about.html">О нас</a>
+       <a href="index.html">Главная</a>
+             <a href="about.html">О нас</a>
                 <a href="nutritionist.html">Лечебное питание</a>
-                <a href="index.html">Главная</a>
+                <a href="contacts.html">Контакты</a>
     </nav>
 
 </header>
@@ -471,6 +475,14 @@ footer a{color:#e6b5ff;text-decoration:none}
         </div>
     </div>
 </section>
+
+<!-- FOOTER -->
+<footer>
+    <div>© 2026 ORGANI'CARE</div>
+    <div style="margin-top:10px;">
+        <a href="/">На главную</a>
+    </div>
+</footer>
 
 <script>
 let current = 0;
