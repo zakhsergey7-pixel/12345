@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>О нас — ORGANI'CARE</title>
+<title>Лечебное питание — ORGANI'CARE</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
 
@@ -12,7 +12,8 @@
     --bg: #f6f6f6;
     --dark: #2f2f2f;
     --text: #3d3d3d;
-    --accent: #c7f54a;
+    --accent: #c451ff;
+    --accent-dark: #9333ff;
     --card: #ffffff;
 }
 
@@ -1107,17 +1108,19 @@ header {
             font-weight: 700;
             font-size: 16px;
         }
-        .cta-btn {
+         .cta-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
             color: white;
-            padding: 18px 44px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 14px 32px;     /* уменьшили высоту и ширину */
+    font-size: 16px;        /* чуть меньше текст */
+    border-radius: 50px;    /* можно оставить или уменьшить */
+    /* width: 100%; */      /* можно закомментировать, если не нужна на всю ширину */
+    max-width: 1100px;       /* ограничить максимальную ширину (рекомендую) */
+    margin: 0 auto;         /* центрировать, если убрали width: 100% */
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             box-shadow: 0 8px 22px rgba(0,0,0,0.1);
@@ -1178,13 +1181,12 @@ footer a{color:#e6b5ff;text-decoration:none}
         <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare">
     </div>
 
-     <nav class="nav">
-            <ul>
-                <a href="about.html">О нас</a>
+    <nav class="nav">
+        <a href="index.html">Главная</a>
+             <a href="about.html">О нас</a>
                 <a href="nutritionist.html">Лечебное питание</a>
-                <a href="index.html">Главная</a>
-            </ul>
-        </nav>
+                <a href="contacts.html">Контакты</a>
+    </nav>
 
 </header>
 
@@ -1568,7 +1570,7 @@ footer a{color:#e6b5ff;text-decoration:none}
 <footer>
     <div>© 2026 ORGANI'CARE</div>
     <div style="margin-top:10px;">
-        <a href="/">На главную</a>
+        <a href="index.html">На главную</a>
     </div>
 </footer>
 
