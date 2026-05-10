@@ -26,50 +26,35 @@ body {
 
 /* HEADER */
 header {
-    background: var(--dark);
+    background: rgba(47,47,47,0.97);
+    backdrop-filter: blur(12px);
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    z-index: 1000;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 24px;
-    box-sizing: border-box;
+    top: 0; left: 0; width: 100%; z-index: 1000;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.15);
 }
-
-/* логотип слева */
+.nav-container {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; height: 80px;
+}
+.logo a { display: block; line-height: 0; }
 .logo img {
-    height: 28px;
-    width: auto;
-    display: block;
+    height: 58px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* меню справа */
-.nav {
-    display: flex;
-    gap: 26px;
-    align-items: center;
+.logo:hover img { transform: scale(1.08) rotate(8deg); }
+nav ul { display: flex; list-style: none; gap: 28px; margin: 0; padding: 0; }
+nav a {
+    color: #fff; text-decoration: none; font-weight: 500; font-size: 14px;
+    position: relative; transition: color 0.3s;
 }
-
-.nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 14px;
-    opacity: 0.85;
-    transition: 0.2s;
+nav a::after {
+    content: ''; position: absolute; width: 0; height: 2px;
+    bottom: -2px; left: 0; background: var(--accent); transition: width 0.3s;
 }
-
-.nav a:hover {
-    opacity: 1;
-}
-
-/* ЛОГО СПРАВА */
+nav a:hover { color: #e6b5ff; }
+nav a:hover::after { width: 100%; }
+.burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.burger span { width: 28px; height: 3px; background: #e6b5ff; transition: 0.4s; }
 
 
 /* BASE SECTION STYLE */
@@ -274,6 +259,19 @@ h2 {
     display: none;
 }
 
+/* текст лидеров — абзацы с отступом */
+.leader p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4a4a4a;
+    text-align: left;
+    margin-top: 16px;
+}
+.leader p + p {
+    margin-top: 14px;
+    text-indent: 1.5em;
+}
+
 /* роль */
 .role {
     display: block;
@@ -286,56 +284,87 @@ h2 {
 }
 
 /* CTA */
- .cta-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
-            color: white;
-            padding: 14px 32px;     /* уменьшили высоту и ширину */
-    font-size: 16px;        /* чуть меньше текст */
-    border-radius: 50px;    /* можно оставить или уменьшить */
-    /* width: 100%; */      /* можно закомментировать, если не нужна на всю ширину */
-    max-width: 1250px;       /* ограничить максимальную ширину (рекомендую) */
-    margin: 0 auto;         /* центрировать, если убрали width: 100% */
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 8px 22px rgba(0,0,0,0.1);
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            justify-content: center;
-        }
-        .cta-btn:hover {
-            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px -8px rgba(147,51,255,0.35);
-        }
-        .cta-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: white;
-            fill: none;
-            stroke-width: 2;
-            transition: transform 0.3s;
-        }
-        .cta-btn:hover svg {
-            transform: translateX(6px);
-        }
-        .contact-note {
-            font-size: 13px;
-            color: #999;
-            margin-top: 24px;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
+/* CONTACTS / COST BLOCK */
+.contacts {
+    background: linear-gradient(180deg, #ffffff 0%, #f3efff 100%);
+}
 
+.contacts-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
 
-        .fade-only {
+.contact-card {
+    max-width: 620px;
+    width: 100%;
+    text-align: center;
+    padding: 64px 56px;
+    border-radius: 42px;
+    background: #ffffff;
+    border: 1px solid rgba(196, 81, 255, 0.12);
+    box-shadow:
+        0 60px 120px rgba(0,0,0,0.12),
+        0 0 0 1px rgba(196,81,255,0.10);
     position: relative;
-    z-index: 2;
-    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.contact-card h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    color: #2d2d2d;
+}
+
+/* CTA */
+.cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
+    color: white;
+    padding: 20px 52px;
+    border-radius: 60px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border: none;
+    cursor: pointer;
+    width: auto;
+    max-width: none;
+    margin: 0 auto;
+}
+
+.cta-btn:hover {
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    transform: translateY(-3px);
+    box-shadow: 0 20px 30px -8px rgba(147,51,255,0.35);
+}
+
+.cta-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    transition: transform 0.3s;
+}
+
+.cta-btn:hover svg {
+    transform: translateX(6px);
+}
+
+.contact-note {
+    font-size: 13px;
+    color: #999;
+    margin-top: 24px;
+    text-align: center;
+    letter-spacing: 0.3px;
 }
 
 /* FOOTER */
@@ -352,20 +381,33 @@ footer a{color:#e6b5ff;text-decoration:none}
 
 <body>
 
-<header class="header">
-
-    <div class="logo">
-        <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare">
+<header>
+    <div class="nav-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="ORGANI'CARE">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="nutritionist.html">Лечебное питание</a></li>
+                <li><a href="corporate.html">Корпоративное питание</a></li>
+                <li><a href="canteen.html">Столовые</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="burger" id="burger"><span></span><span></span><span></span></div>
     </div>
-
-    <nav class="nav">
-       <a href="index.html">Главная</a>
-             <a href="about.html">О нас</a>
-                <a href="nutritionist.html">Лечебное питание</a>
-                <a href="contacts.html">Контакты</a>
-    </nav>
-
 </header>
+
+<section class="mission">
+    <h2>Наша миссия</h2>
+    <div class="mission-desc">
+        Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию
+    </div>
+</section>
 
 <section class="trust">
     <h2>НАМ ДОВЕРЯЮТ</h2>
@@ -382,14 +424,6 @@ footer a{color:#e6b5ff;text-decoration:none}
     <span onclick="goToSlide(1)"></span>
     <span onclick="goToSlide(2)"></span>
 </div>
-</section>
-</section>
-
-<section class="mission">
-    <h2>Наша миссия</h2>
-    <div class="mission-desc">
-        Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию
-    </div>
 </section>
 
 <section class="today">
@@ -434,8 +468,9 @@ footer a{color:#e6b5ff;text-decoration:none}
     Лия Дубровина<br>
     <span class="role">Основатель OrganiCare</span>
 </h3>
-             <p> В 2016 году благодаря идеям и стремлениям Лии появился продукт OrganiCare, за несколько лет из небольшой кухни она развила проект до современного производства. Получился трансформированный продукт индустриального питания, ресторанного качества
-и индивидуальной линии питания для каждого клиента. Личным примером вдохновляет людей преодолевать сложности и любить себя </p>
+            <p>В 2016 году благодаря идеям и стремлениям Лии появился продукт OrganiCare — за несколько лет из небольшой кухни она развила проект до современного производства.</p>
+            <p>Получился трансформированный продукт индустриального питания, ресторанного качества и индивидуальной линии питания для каждого клиента.</p>
+            <p>Личным примером вдохновляет людей преодолевать сложности и любить себя.</p>
         </div>
 
         <div class="leader">
@@ -444,7 +479,9 @@ footer a{color:#e6b5ff;text-decoration:none}
     Сергей Захаров<br>
     <span class="role">COO</span>
 </h3>
-            <p>Сергей — руководитель с 10-летним опытом в dark kitchen. Выводил производства в топ-3 по эффективности в сети из 25 площадок и увеличивал обороты х2. Уже в 24 года был назначен генеральным директором производственной точки в крупной сети доставки готовой еды. Управлял 8 производствами с оборотом 50 млн ₽ в месяц. Баланс трудолюбия, живого ума и жажды совершить невозможное. Верит в победу, настраивает процессы и вдохновляет команду личным примером, создавая сильную корпоративную культуру и уникальный опыт взаимодействия</p>
+            <p>Сергей — руководитель с 10-летним опытом в dark kitchen. Выводил производства в топ-3 по эффективности в сети из 25 площадок и увеличивал обороты ×2.</p>
+            <p>Уже в 24 года был назначен генеральным директором производственной точки в крупной сети доставки готовой еды. Управлял 8 производствами с оборотом 50 млн ₽ в месяц.</p>
+            <p>Баланс трудолюбия, живого ума и жажды совершить невозможное. Верит в победу, настраивает процессы и вдохновляет команду личным примером, создавая сильную корпоративную культуру и уникальный опыт взаимодействия.</p>
         </div>
 
         <div class="leader">
@@ -453,9 +490,9 @@ footer a{color:#e6b5ff;text-decoration:none}
     Юрий Сорокин<br>
     <span class="role">Шеф-повар</span>
 </h3>
-            <p>Шеф-повар. Юрий опытный шеф-повар, одарённый гастрономическим талантом. 8 лет работал руководителем в Отеле Four Seasons Lion Palace St. Petersburg 5
-и отвечал за управление вкусом в рамках европейской гастрономии.
-Под руководством шефа команда поваров Organi Care готовит блюда современной гастрономии, а Юрий ищет новые сочетания вкусов для меню лечебного питания, отдавая честь иностранной культуре и поддерживая идеологию продукта компании</p>
+            <p>Юрий — опытный шеф-повар, одарённый гастрономическим талантом. 8 лет работал руководителем в Отеле Four Seasons Lion Palace St. Petersburg 5★ и отвечал за управление вкусом в рамках европейской гастрономии.</p>
+            <p>Под руководством шефа команда поваров Organi Care готовит блюда современной гастрономии.</p>
+            <p>Юрий ищет новые сочетания вкусов для меню лечебного питания, отдавая честь иностранной культуре и поддерживая идеологию продукта компании.</p>
         </div>
     </div>
 </section>
@@ -463,14 +500,12 @@ footer a{color:#e6b5ff;text-decoration:none}
 <section class="contacts animate-section" id="contacts">
     <div class="contacts-wrapper">
         <div class="contact-card">
-            
-            
-        <div class="contact-card">
-            
             <h2>УЗНАЙ СТОИМОСТЬ ПИТАНИЯ НА ОДНОГО ЧЕЛОВЕКА</h2>
             <p style="color:#555; margin-bottom:28px; font-size:16px; line-height:1.5;">Оставьте заявку и мы рассчитаем стоимость питания для вашей компании на одного сотрудника.</p>
-            
-            <a href="#" onclick="alert('Форма заявки открыта (в реальном проекте здесь будет модальное окно)')" class="cta-btn">Оставить заявку<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            <a href="#" onclick="alert('Форма заявки открыта (в реальном проекте здесь будет модальное окно)')" class="cta-btn">
+                Оставить заявку
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
             <div class="contact-note">Ответим в течение 1 рабочего часа</div>
         </div>
     </div>
