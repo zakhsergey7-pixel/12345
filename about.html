@@ -252,24 +252,15 @@ nav a:hover::after { width: 100%; }
     color: #2d2d2d;
 }
 .cta-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
-    color: white;
-    padding: 20px 52px;
-    border-radius: 60px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    margin: 30px auto 0;
-    transition: all 0.4s;
+    display:inline-flex; align-items:center; justify-content:center; gap:12px;
+    background:linear-gradient(135deg,#3d3d3d,#2a2a2a); color:#fff;
+    padding:20px 52px; border-radius:60px; font-size:18px; font-weight:600;
+    text-decoration:none; cursor:pointer; border:none;
+    transition:all 0.4s cubic-bezier(0.2,0.9,0.4,1.1); box-shadow:0 10px 30px rgba(0,0,0,0.12);
 }
-.cta-btn:hover {
-    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-    transform: translateY(-3px);
-}
+.cta-btn:hover { background:linear-gradient(135deg,var(--accent-dark),var(--accent)); transform:translateY(-3px); box-shadow:0 20px 30px -8px rgba(147,51,255,0.35); }
+.cta-btn svg { width:20px; height:20px; stroke:#fff; fill:none; stroke-width:2; transition:transform 0.3s; }
+.cta-btn:hover svg { transform:translateX(6px); }
 .contact-note {
     font-size: 13px;
     color: #999;
