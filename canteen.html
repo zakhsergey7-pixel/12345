@@ -62,16 +62,25 @@ nav a:hover::after { width:100%; }
     background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.68) 100%);
     z-index:2;
 }
-.hero-content { position:relative; z-index:3; max-width:880px; padding:0 20px; margin-top:-60px; }
+.hero-content { position:relative; z-index:3; max-width:920px; padding:0 20px; margin-top:-80px; }
 .hero-label { display:inline-block; font-size:13px; letter-spacing:3px; color:#e6b5ff; margin-bottom:18px; text-transform:uppercase; font-weight:600; }
+.hero-text {
+    opacity: 0;
+    transform: translateY(80px);
+    transition: all 1.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.hero-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 .hero h1 {
-    font-size:clamp(44px,7vw,78px); font-weight:700; line-height:1.05;
-    letter-spacing:-2px; margin-bottom:24px;
+    font-size:clamp(48px,7.5vw,82px); font-weight:400; line-height:1.05;
+    letter-spacing:-2.5px; margin-bottom:28px;
     text-shadow:0 6px 35px rgba(0,0,0,0.75);
 }
 .hero p {
-    font-size:clamp(17px,2.2vw,21px); line-height:1.65; font-weight:500;
-    text-shadow:0 3px 20px rgba(0,0,0,0.65); margin-bottom:40px;
+    font-size:clamp(18px,2.3vw,22.5px); line-height:1.65; font-weight:500;
+    text-shadow:0 3px 20px rgba(0,0,0,0.7); margin-bottom:40px;
 }
 .hero-btn {
     display:inline-flex; align-items:center; gap:12px;
@@ -90,9 +99,32 @@ nav a:hover::after { width:100%; }
 }
 .section-title {
     text-align:center; font-size:clamp(28px,4vw,40px); font-weight:700;
-    color:#1f1f1f; margin-bottom:16px; letter-spacing:-0.02em;
+    color:#1f1f1f; margin-bottom:16px; letter-spacing:0.03em;
+    text-transform: uppercase;
 }
 .section-sub { text-align:center; font-size:17px; color:#666; margin-bottom:60px; max-width:680px; margin-left:auto; margin-right:auto; }
+
+/* ===== SCROLL ANIMATION ===== */
+.animate-section { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+.animate-section.visible { opacity:1; transform:translateY(0); }
+
+/* ===== FEEDBACK WIDGET ===== */
+.fb-widget{position:fixed;bottom:32px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+.fb-toggle{display:inline-flex;align-items:center;gap:0;background:linear-gradient(135deg,#2f2f2f,#1a1a1a);color:#fff;border:none;border-radius:60px;padding:14px 18px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.25),0 0 0 1px rgba(196,81,255,0.2);transition:all 0.4s cubic-bezier(0.2,0.9,0.4,1.1);overflow:hidden;max-width:54px;white-space:nowrap;}
+.fb-toggle:hover{max-width:220px;background:linear-gradient(135deg,#9333ff,#c451ff);box-shadow:0 12px 35px rgba(147,51,255,0.4);padding:14px 22px;gap:10px;}
+.fb-icon{flex-shrink:0;display:flex;align-items:center;} .fb-icon svg{width:22px;height:22px;}
+.fb-label{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;opacity:0;max-width:0;overflow:hidden;transition:opacity 0.3s ease 0.1s,max-width 0.4s cubic-bezier(0.2,0.9,0.4,1.1);letter-spacing:0.3px;}
+.fb-toggle:hover .fb-label{opacity:1;max-width:160px;}
+.fb-panel{width:320px;background:#fff;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(196,81,255,0.1);overflow:hidden;transform:translateY(20px) scale(0.92);opacity:0;pointer-events:none;transition:all 0.4s cubic-bezier(0.2,0.9,0.4,1.1);transform-origin:bottom right;}
+.fb-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+.fb-panel-header{background:linear-gradient(135deg,#2f2f2f,#1a1a1a);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:600;}
+.fb-close{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.7);padding:2px;display:flex;transition:color 0.2s;} .fb-close:hover{color:#fff;} .fb-close svg{width:18px;height:18px;}
+.fb-panel-body{padding:20px;display:flex;flex-direction:column;gap:12px;}
+.fb-input{width:100%;padding:11px 14px;border:1.5px solid #e8e8e8;border-radius:12px;font-family:'Montserrat',sans-serif;font-size:14px;color:#2f2f2f;background:#fafafa;transition:border-color 0.2s,background 0.2s;box-sizing:border-box;outline:none;resize:none;}
+.fb-input:focus{border-color:#9333ff;background:#fff;} .fb-textarea{min-height:90px;}
+.fb-send{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#2f2f2f,#1a1a1a);color:#fff;border:none;border-radius:50px;padding:13px 20px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.35s cubic-bezier(0.2,0.9,0.4,1.1);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
+.fb-send:hover{background:linear-gradient(135deg,#9333ff,#c451ff);transform:translateY(-2px);box-shadow:0 12px 28px rgba(147,51,255,0.35);} .fb-send svg{width:16px;height:16px;}
+.fb-success{display:none;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:#16a34a;padding:10px 14px;background:#f0fdf4;border-radius:12px;} .fb-success svg{width:20px;height:20px;flex-shrink:0;}
 
 /* ===== SERVICE DESCRIPTION ===== */
 .service-section { background:#fff; padding:100px 20px; }
@@ -211,21 +243,23 @@ footer a { color:#e6b5ff; text-decoration:none; }
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-        <div class="hero-label"></div>
-        <h1>Открытие<br>буфета-столовой</h1>
-        <p>Проектируем, оснащаем и запускаем столовую на вашей территории —<br>под ключ, с нашей командой поваров</p>
-        <a href="#contact" class="hero-btn">
-            Свяжитесь с нами
-            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
+        <div class="hero-text">
+            <div class="hero-label"></div>
+            <h1>ОТКРЫТИЕ<br>БУФЕТА-СТОЛОВОЙ</h1>
+            <p>Проектируем, оснащаем и запускаем столовую на вашей территории —<br>под ключ, с нашей командой поваров</p>
+            <a href="#contact" class="hero-btn">
+                Свяжитесь с нами
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+        </div>
     </div>
 </section>
 
 <!-- SERVICE DESCRIPTION -->
-<section class="service-section">
+<section class="service-section animate-section">
     <div class="service-container">
         <span class="section-label-tag">Что мы делаем</span>
-        <h2 class="section-title" style="margin-bottom:10px;">Состав услуги</h2>
+        <h2 class="section-title" style="margin-bottom:10px;">СОСТАВ УСЛУГИ</h2>
 
         <p class="service-lead">
             Мы берём на себя полный цикл запуска буфета или столовой на вашей территории: 
@@ -276,10 +310,10 @@ footer a { color:#e6b5ff; text-decoration:none; }
 </section>
 
 <!-- GALLERY / EXAMPLES -->
-<section class="gallery-section">
+<section class="gallery-section animate-section">
     <div class="gallery-container">
         <span class="section-label-tag">Наши проекты</span>
-        <h2 class="section-title" style="margin-bottom:10px;">Примеры столовых и пищеблоков</h2>
+        <h2 class="section-title" style="margin-bottom:10px;">ПРИМЕРЫ СТОЛОВЫХ И ПИЩЕБЛОКОВ</h2>
         <p class="section-sub">Примеры объектов, где мы спроектировали и запустили корпоративное питание</p>
 
         <div class="gallery-grid">
@@ -337,10 +371,10 @@ footer a { color:#e6b5ff; text-decoration:none; }
 </section>
 
 <!-- CTA -->
-<section class="cta-section" id="contact">
+<section class="cta-section animate-section" id="contact">
     <div class="contacts-wrapper">
         <div class="contact-card">
-            <h2>Свяжитесь с нами</h2>
+            <h2>СВЯЖИТЕСЬ С НАМИ</h2>
             <p>Расскажите о вашем объекте — и мы предложим решение. Консультация бесплатна, оценка проекта в течение 1 рабочего дня.</p>
             <a href="contacts.html" class="cta-btn">
                 Оставить заявку
@@ -360,6 +394,62 @@ footer a { color:#e6b5ff; text-decoration:none; }
 const burger = document.getElementById('burger');
 const navUl = document.querySelector('nav ul');
 if(burger) burger.addEventListener('click', () => { burger.classList.toggle('active'); navUl && navUl.classList.toggle('open'); });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const heroText = document.querySelector('.hero-text');
+    const heroBg = document.querySelector('.hero-bg');
+    function animateHero() { if (heroText) heroText.classList.add('visible'); }
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (heroBg) heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+        if (scrollY < 100 && heroText) heroText.classList.add('visible');
+    });
+    setTimeout(animateHero, 400);
+
+    // Scroll animations
+    const sections = document.querySelectorAll('.animate-section');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    sections.forEach(s => observer.observe(s));
+});
+</script>
+
+<!-- FEEDBACK WIDGET -->
+<div class="fb-widget">
+    <button class="fb-toggle" id="fbToggle" aria-label="Оставить обратную связь">
+        <span class="fb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="fb-label">Обратная связь</span>
+    </button>
+    <div class="fb-panel" id="fbPanel">
+        <div class="fb-panel-header"><span>Оставьте отзыв</span><button class="fb-close" id="fbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="fb-panel-body">
+            <input class="fb-input" id="fbName" type="text" placeholder="Ваше имя">
+            <input class="fb-input" id="fbPhone" type="tel" placeholder="+7 (___) ___-__-__">
+            <textarea class="fb-input fb-textarea" id="fbMessage" placeholder="Ваш отзыв..."></textarea>
+            <button class="fb-send" id="fbSend">Отправить отзыв <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+            <div class="fb-success" id="fbSuccess"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14.5 15 9"/></svg>Отзыв отправлен! Спасибо.</div>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    const toggle=document.getElementById('fbToggle'),panel=document.getElementById('fbPanel'),close=document.getElementById('fbClose'),send=document.getElementById('fbSend'),success=document.getElementById('fbSuccess');
+    toggle.addEventListener('click',()=>panel.classList.toggle('open'));
+    close.addEventListener('click',()=>panel.classList.remove('open'));
+    send.addEventListener('click',()=>{
+        const name=document.getElementById('fbName').value.trim(),phone=document.getElementById('fbPhone').value.trim(),message=document.getElementById('fbMessage').value.trim();
+        document.getElementById('fbName').style.borderColor=name?'#e8e8e8':'#ef4444';
+        document.getElementById('fbMessage').style.borderColor=message?'#e8e8e8':'#ef4444';
+        if(!name||!message)return;
+        const subject=encodeURIComponent("Обратная связь с сайта ORGANI'CARE");
+        const body=encodeURIComponent(`Имя: ${name}\nТелефон: ${phone||'не указан'}\n\nОтзыв:\n${message}`);
+        window.location.href=`mailto:iron@organicare.ru?subject=${subject}&body=${body}`;
+        send.style.display='none';success.style.display='flex';
+        setTimeout(()=>{panel.classList.remove('open');setTimeout(()=>{send.style.display='';success.style.display='none';document.getElementById('fbName').value='';document.getElementById('fbPhone').value='';document.getElementById('fbMessage').value='';},500);},2000);
+    });
+})();
 </script>
 </body>
 </html>
