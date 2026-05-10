@@ -229,6 +229,7 @@ nav a:hover::after { width: 100%; }
 /* CONTACTS */
 .contacts {
     background: linear-gradient(180deg, #ffffff 0%, #f3efff 100%);
+    padding: 100px 20px;
 }
 .contacts-wrapper {
     display: flex;
@@ -277,12 +278,12 @@ footer {
 footer a { color: #e6b5ff; text-decoration: none; }
 
 /* АНИМАЦИИ */
-section {
+.animate-section {
     opacity: 0;
     transform: translateY(40px);
-    transition: all 0.8s ease;
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
-section.visible {
+.animate-section.visible {
     opacity: 1;
     transform: translateY(0);
 }
@@ -290,7 +291,122 @@ h2 {
     font-size: 40px;
     text-align: center;
     margin-bottom: 60px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
+
+/* ===== FEEDBACK WIDGET ===== */
+.fb-widget {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+}
+.fb-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 14px 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 1px rgba(196,81,255,0.2);
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    overflow: hidden;
+    max-width: 54px;
+    white-space: nowrap;
+}
+.fb-toggle:hover {
+    max-width: 220px;
+    background: linear-gradient(135deg, #9333ff, #c451ff);
+    box-shadow: 0 12px 35px rgba(147,51,255,0.4);
+    padding: 14px 22px;
+    gap: 10px;
+}
+.fb-icon { flex-shrink: 0; display: flex; align-items: center; }
+.fb-icon svg { width: 22px; height: 22px; }
+.fb-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease 0.1s, max-width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    letter-spacing: 0.3px;
+}
+.fb-toggle:hover .fb-label { opacity: 1; max-width: 160px; }
+.fb-panel {
+    width: 320px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(196,81,255,0.1);
+    overflow: hidden;
+    transform: translateY(20px) scale(0.92);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transform-origin: bottom right;
+}
+.fb-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+.fb-panel-header {
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+.fb-close { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.7); padding: 2px; display: flex; transition: color 0.2s; }
+.fb-close:hover { color: #fff; }
+.fb-close svg { width: 18px; height: 18px; }
+.fb-panel-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.fb-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #2f2f2f;
+    background: #fafafa;
+    transition: border-color 0.2s, background 0.2s;
+    box-sizing: border-box;
+    outline: none;
+    resize: none;
+}
+.fb-input:focus { border-color: #9333ff; background: #fff; }
+.fb-textarea { min-height: 90px; }
+.fb-send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.fb-send:hover { background: linear-gradient(135deg, #9333ff, #c451ff); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(147,51,255,0.35); }
+.fb-send svg { width: 16px; height: 16px; }
+.fb-success { display: none; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: #16a34a; padding: 10px 14px; background: #f0fdf4; border-radius: 12px; }
+.fb-success svg { width: 20px; height: 20px; flex-shrink: 0; }
 </style>
 </head>
 
@@ -316,14 +432,14 @@ h2 {
     </div>
 </header>
 
-<section class="mission">
+<section class="mission animate-section">
     <h2>НАША МИССИЯ</h2>
     <div class="mission-desc">
         Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию
     </div>
 </section>
 
-<section class="trust">
+<section class="trust animate-section">
     <h2>НАМ ДОВЕРЯЮТ</h2>
 
     <div class="slider-wrapper">
@@ -356,8 +472,8 @@ h2 {
     </div>
 </section>
 
-<section class="today">
-    <h2>Organi'Care сегодня</h2>
+<section class="today animate-section">
+    <h2>ORGANI'CARE СЕГОДНЯ</h2>
     <div class="today-infographic">
         <div class="info-card">
             <div class="num" data-target="10">10</div>
@@ -377,15 +493,15 @@ h2 {
     </div>
 </section>
 
-<section class="team-text">
+<section class="team-text animate-section">
     <p>
         В нашем штате собрались люди разных профессий — это квалифицированные повара горячих и холодных цехов,
         кондитеры, управляющий, менеджеры и бухгалтера, сотрудники отдела доставки, клининга и безопасности
     </p>
 </section>
 
-<section class="leaders">
-    <h2>Лидеры компании</h2>
+<section class="leaders animate-section">
+    <h2>ЛИДЕРЫ КОМПАНИИ</h2>
     <div class="leaders-grid">
         <div class="leader">
             <img src="https://optim.tildacdn.com/tild6563-6261-4739-b735-323935383463/-/resize/373x/-/format/webp/340A0523.jpg.webp">
@@ -413,7 +529,7 @@ h2 {
     </div>
 </section>
 
-<section class="contacts" id="contacts">
+<section class="contacts animate-section" id="contacts">
     <div class="contacts-wrapper">
         <div class="contact-card">
             <h2>УЗНАЙ СТОИМОСТЬ ПИТАНИЯ НА ОДНОГО ЧЕЛОВЕКА</h2>
@@ -438,27 +554,57 @@ h2 {
 let current = 0;
 const slides = document.getElementById('slides');
 const total = slides.children.length;
-
-function goToSlide(i){
-    current = i;
-    slides.style.transform = `translateX(-${i * 100}%)`;
-}
-function autoSlide(){
-    current = (current + 1) % total;
-    goToSlide(current);
-}
+function goToSlide(i){ current = i; slides.style.transform = `translateX(-${i * 100}%)`; }
+function autoSlide(){ current = (current + 1) % total; goToSlide(current); }
 setInterval(autoSlide, 4000);
 
-// Анимация появления секций
-const sections = document.querySelectorAll('section');
+// Scroll animations
+const sections = document.querySelectorAll('.animate-section');
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('visible');
     });
-}, { threshold: 0.15 });
-
+}, { threshold: 0.12 });
 sections.forEach(s => observer.observe(s));
 </script>
 
+<!-- FEEDBACK WIDGET -->
+<div class="fb-widget" id="fbWidget">
+    <button class="fb-toggle" id="fbToggle" aria-label="Оставить обратную связь">
+        <span class="fb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="fb-label">Обратная связь</span>
+    </button>
+    <div class="fb-panel" id="fbPanel">
+        <div class="fb-panel-header">
+            <span>Оставьте отзыв</span>
+            <button class="fb-close" id="fbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="fb-panel-body">
+            <input class="fb-input" id="fbName" type="text" placeholder="Ваше имя">
+            <input class="fb-input" id="fbPhone" type="tel" placeholder="+7 (___) ___-__-__">
+            <textarea class="fb-input fb-textarea" id="fbMessage" placeholder="Ваш отзыв..."></textarea>
+            <button class="fb-send" id="fbSend">Отправить отзыв <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+            <div class="fb-success" id="fbSuccess"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14.5 15 9"/></svg>Отзыв отправлен! Спасибо.</div>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    const toggle=document.getElementById('fbToggle'),panel=document.getElementById('fbPanel'),close=document.getElementById('fbClose'),send=document.getElementById('fbSend'),success=document.getElementById('fbSuccess');
+    toggle.addEventListener('click',()=>panel.classList.toggle('open'));
+    close.addEventListener('click',()=>panel.classList.remove('open'));
+    send.addEventListener('click',()=>{
+        const name=document.getElementById('fbName').value.trim(),phone=document.getElementById('fbPhone').value.trim(),message=document.getElementById('fbMessage').value.trim();
+        document.getElementById('fbName').style.borderColor=name?'#e8e8e8':'#ef4444';
+        document.getElementById('fbMessage').style.borderColor=message?'#e8e8e8':'#ef4444';
+        if(!name||!message)return;
+        const subject=encodeURIComponent("Обратная связь с сайта ORGANI'CARE");
+        const body=encodeURIComponent(`Имя: ${name}\nТелефон: ${phone||'не указан'}\n\nОтзыв:\n${message}`);
+        window.location.href=`mailto:iron@organicare.ru?subject=${subject}&body=${body}`;
+        send.style.display='none';success.style.display='flex';
+        setTimeout(()=>{panel.classList.remove('open');setTimeout(()=>{send.style.display='';success.style.display='none';document.getElementById('fbName').value='';document.getElementById('fbPhone').value='';document.getElementById('fbMessage').value='';},500);},2000);
+    });
+})();
+</script>
 </body>
 </html>
