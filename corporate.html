@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Корпоративное питание — ORGANI'CARE</title>
+<meta name="description" content="Корпоративное питание от ORGANI'CARE: комплексные обеды ресторанного качества для офисов и предприятий Санкт-Петербурга.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f6f6f6;
+    --dark: #2f2f2f;
+    --text: #3d3d3d;
+    --accent: #c451ff;
+    --accent-dark: #9333ff;
+    --card: #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; overflow-x:hidden; }
+
+/* ===== HEADER ===== */
+header {
+    background: rgba(47,47,47,0.97);
+    backdrop-filter: blur(12px);
+    position: fixed;
+    top:0; left:0; width:100%; z-index:1000;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+}
+.nav-container {
+    max-width:1280px; margin:0 auto; padding:0 24px;
+    display:flex; align-items:center; justify-content:space-between; height:80px;
+}
+.logo a { display:block; line-height:0; }
+.logo img { height:58px; transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+.logo:hover img { transform:scale(1.08) rotate(8deg); }
+nav ul { display:flex; list-style:none; gap:28px; margin:0; padding:0; }
+nav a {
+    color:#fff; text-decoration:none; font-weight:500; font-size:14px;
+    position:relative; transition:color 0.3s;
+}
+nav a::after {
+    content:''; position:absolute; width:0; height:2px;
+    bottom:-2px; left:0; background:var(--accent); transition:width 0.3s;
+}
+nav a:hover { color:#e6b5ff; }
+nav a:hover::after { width:100%; }
+.burger { display:none; cursor:pointer; flex-direction:column; gap:5px; }
+.burger span { width:28px; height:3px; background:#e6b5ff; transition:0.4s; }
+
+/* ===== HERO ===== */
+.hero {
+    position:relative; min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; color:#fff; text-align:center;
+}
+.hero-bg {
+    position:absolute; inset:0;
+    background: url('https://sun9-66.vkuserphoto.ru/s/v1/ig2/HmaJ723dDJ3UekgQyfRK6STS6pz7OWwBppkPvrSoOAHOzAGZTzuPaEyZRO-zP24NOyDnyY4V1L-le3hDhzAOswdD.jpg?quality=95&as=32x48,48x72,72x108,108x162,160x240,240x360,360x540,480x720,540x810,640x960,720x1080,1080x1620,1280x1920,1440x2160,1707x2560&from=bu&cs=1280x0')
+    center/cover no-repeat; z-index:1;
+}
+.hero::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.62) 100%);
+    z-index:2;
+}
+.hero-content { position:relative; z-index:3; max-width:920px; padding:0 20px; margin-top:-60px; }
+.hero-label {
+    display:inline-block; font-size:13px; letter-spacing:3px; color:#e6b5ff;
+    margin-bottom:1px; text-transform:uppercase; font-weight:600;
+}
+.hero h1 {
+    font-size:clamp(46px,7vw,80px); font-weight:700; line-height:1.05;
+    letter-spacing:-2px; margin-bottom:24px;
+    text-shadow:0 6px 35px rgba(0,0,0,0.75);
+}
+.hero p {
+    font-size:clamp(17px,2.2vw,21px); line-height:1.65; font-weight:500;
+    text-shadow:0 3px 20px rgba(0,0,0,0.65); margin-bottom:40px;
+}
+.hero-btn {
+    display:inline-flex; align-items:center; gap:12px;
+    background:linear-gradient(135deg,#6d28d9,#a855f7);
+    color:#fff; text-decoration:none;
+    padding:20px 48px; border-radius:60px; font-size:17px; font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    transition:all 0.4s cubic-bezier(0.2,0.9,0.4,1);
+}
+.hero-btn:hover { transform:translateY(-4px); box-shadow:0 25px 55px rgba(168,85,247,0.45); }
+.hero-btn svg { width:18px; height:18px; stroke:currentColor; stroke-width:2.5; fill:none; transition:transform 0.3s; }
+.hero-btn:hover svg { transform:translateX(5px); }
+
+/* ===== SECTIONS ===== */
+.section { max-width:1140px; margin:0 auto; padding:100px 20px; }
+.section-title {
+    text-align:center; font-size:clamp(28px,4vw,40px); font-weight:700;
+    color:#1f1f1f; margin-bottom:16px; letter-spacing:-0.02em;
+}
+.section-sub {
+    text-align:center; font-size:17px; color:#666; margin-bottom:60px; max-width:620px; margin-left:auto; margin-right:auto;
+}
+.section-label-tag {
+    display:block; text-align:center; font-size:13px; letter-spacing:3px;
+    color:var(--accent-dark); margin-bottom:12px; text-transform:uppercase; font-weight:600;
+}
+
+/* ===== MENU / SCHEDULE ===== */
+.menu-section { background:#fff; padding:100px 0; }
+.days-grid {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:12px;
+    max-width:1200px; margin:0 auto; padding:0 20px;
+}
+.day-card {
+    background:#fff; border-radius:18px; border:1px solid #eee;
+    box-shadow:0 10px 40px rgba(0,0,0,0.05); overflow:hidden;
+    transition:all 0.35s ease; position:relative;
+}
+.day-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,#6d28d9,#c451ff);
+}
+.day-card:hover { transform:translateY(-5px); box-shadow:0 25px 60px rgba(0,0,0,0.09); }
+.day-header {
+    background:linear-gradient(135deg,#2f2f2f,#3d3d3d);
+    color:#fff; padding:16px 14px; text-align:center;
+}
+.day-name { font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.day-short { font-size:11px; color:#e6b5ff; margin-top:3px; }
+.meal-slot { padding:14px; border-bottom:1px solid #f5f5f5; }
+.meal-slot:last-child { border-bottom:none; }
+.meal-type { font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--accent-dark); text-transform:uppercase; margin-bottom:6px; }
+.meal-placeholder {
+    height:36px; background:#f9f9f9; border-radius:8px;
+    border:1px dashed #e0e0e0; display:flex; align-items:center; justify-content:center;
+}
+.meal-placeholder span { font-size:11px; color:#bbb; }
+
+/* ===== PRICING ===== */
+.pricing-section { background:linear-gradient(180deg,#f9f6ff,#f6f6f6); padding:100px 0; }
+.pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:28px; max-width:1000px; margin:0 auto; padding:0 20px; }
+.price-card {
+    background:#fff; border-radius:24px; padding:42px 36px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.07); border:1px solid #f0eef2;
+    text-align:center; transition:all 0.4s; position:relative; overflow:hidden;
+}
+.price-card.featured {
+    background:linear-gradient(155deg,#2f2f2f,#1a1a1a); color:#fff;
+    box-shadow:0 30px 80px rgba(0,0,0,0.2);
+    transform:scale(1.04);
+}
+.price-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,#6d28d9,#c451ff);
+}
+.price-card.featured::before { background:linear-gradient(90deg,#c451ff,#a855f7); }
+.price-badge {
+    display:inline-block; background:linear-gradient(135deg,#c451ff,#9333ff);
+    color:#fff; font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px;
+    letter-spacing:1px; text-transform:uppercase; margin-bottom:18px;
+}
+.price-name { font-size:22px; font-weight:700; margin-bottom:10px; }
+.price-card.featured .price-name { color:#fff; }
+.price-desc { font-size:14px; color:#888; margin-bottom:28px; line-height:1.6; }
+.price-card.featured .price-desc { color:#ccc; }
+.price-amount { font-size:42px; font-weight:900; color:#1f1f1f; letter-spacing:-1px; }
+.price-card.featured .price-amount { color:#fff; }
+.price-unit { font-size:14px; color:#aaa; margin-bottom:28px; }
+.price-features { text-align:left; margin-bottom:32px; }
+.price-features li { list-style:none; padding:8px 0; font-size:14px; color:#555; border-bottom:1px solid #f5f5f5; display:flex; align-items:center; gap:10px; }
+.price-card.featured .price-features li { color:#ddd; border-color:#333; }
+.price-features li::before { content:'✓'; color:var(--accent); font-weight:700; flex-shrink:0; }
+.price-cta {
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    background:linear-gradient(135deg,#3d3d3d,#2a2a2a); color:#fff;
+    padding:16px 36px; border-radius:50px; font-size:15px; font-weight:600;
+    text-decoration:none; width:100%; transition:all 0.4s;
+}
+.price-cta:hover { background:linear-gradient(135deg,var(--accent-dark),var(--accent)); transform:translateY(-2px); }
+.price-card.featured .price-cta { background:linear-gradient(135deg,#c451ff,#9333ff); }
+.price-card.featured .price-cta:hover { background:linear-gradient(135deg,#a855f7,#c451ff); }
+.price-tbd { font-size:28px; font-weight:900; color:#1f1f1f; }
+.price-card.featured .price-tbd { color:#fff; }
+
+/* ===== CTA ===== */
+.cta-section { background:#fff; padding:100px 20px; }
+.contacts-wrapper { display:flex; justify-content:center; align-items:center; }
+.contact-card {
+    max-width:640px; width:100%; text-align:center; padding:64px 56px; border-radius:42px;
+    background:#fff; border:1px solid rgba(196,81,255,0.12);
+    box-shadow:0 60px 120px rgba(0,0,0,0.1), 0 0 0 1px rgba(196,81,255,0.08);
+}
+.contact-card h2 { font-size:28px; font-weight:800; margin-bottom:16px; line-height:1.3; color:#2d2d2d; }
+.contact-card p { color:#555; margin-bottom:32px; font-size:16px; line-height:1.6; }
+.cta-btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:12px;
+    background:linear-gradient(135deg,#3d3d3d,#2a2a2a); color:#fff;
+    padding:20px 52px; border-radius:60px; font-size:18px; font-weight:600;
+    text-decoration:none; cursor:pointer; border:none;
+    transition:all 0.4s cubic-bezier(0.2,0.9,0.4,1.1);
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+.cta-btn:hover { background:linear-gradient(135deg,var(--accent-dark),var(--accent)); transform:translateY(-3px); box-shadow:0 20px 30px -8px rgba(147,51,255,0.35); }
+.cta-btn svg { width:20px; height:20px; stroke:#fff; fill:none; stroke-width:2; transition:transform 0.3s; }
+.cta-btn:hover svg { transform:translateX(6px); }
+.contact-note { font-size:13px; color:#999; margin-top:20px; }
+
+/* ===== FOOTER ===== */
+footer { text-align:center; padding:60px 20px; background:#3d3d3d; color:#fff; }
+footer a { color:#e6b5ff; text-decoration:none; }
+
+/* ===== MEDIA ===== */
+@media(max-width:1100px) { .days-grid { grid-template-columns:repeat(4,1fr); } }
+@media(max-width:760px) { .days-grid { grid-template-columns:repeat(2,1fr); } .contact-card { padding:48px 28px; } }
+@media(max-width:480px) { .days-grid { grid-template-columns:1fr 1fr; } .price-card.featured { transform:scale(1); } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="nav-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="ORGANI'CARE">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="nutritionist.html">Лечебное питание</a></li>
+                <li><a href="corporate.html">Корпоративное питание</a></li>
+                <li><a href="canteen.html">Столовые</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-label"></div>
+        <h1>Корпоративное<br>питание</h1>
+        <p>Комплексные обеды ресторанного качества — каждый день,<br>без хлопот для вашей команды</p>
+        <a href="#trial" class="hero-btn">
+            Закажи пробную неделю
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+    </div>
+</section>
+
+<!-- MENU SECTION -->
+<section class="menu-section">
+    <span class="section-label-tag">Рацион питания</span>
+    <h2 class="section-title" style="margin-bottom:10px;">Состав рациона на день</h2>
+    <p class="section-sub">Меню обновляется еженедельно. Здесь будет размещено актуальное меню на каждый день.</p>
+
+    <div class="days-grid">
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Понедельник</div>
+                <div class="day-short">ПН</div>
+            </div>
+            <div class="meal-slot">
+                <div class="meal-type">Завтрак</div>
+                <div class="meal-placeholder"><span>—</span></div>
+            </div>
+            <div class="meal-slot">
+                <div class="meal-type">Обед</div>
+                <div class="meal-placeholder"><span>—</span></div>
+            </div>
+            <div class="meal-slot">
+                <div class="meal-type">Полдник</div>
+                <div class="meal-placeholder"><span>—</span></div>
+            </div>
+            <div class="meal-slot">
+                <div class="meal-type">Ужин</div>
+                <div class="meal-placeholder"><span>—</span></div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Вторник</div>
+                <div class="day-short">ВТ</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Среда</div>
+                <div class="day-short">СР</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Четверг</div>
+                <div class="day-short">ЧТ</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Пятница</div>
+                <div class="day-short">ПТ</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Суббота</div>
+                <div class="day-short">СБ</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-name">Воскресенье</div>
+                <div class="day-short">ВС</div>
+            </div>
+            <div class="meal-slot"><div class="meal-type">Завтрак</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Обед</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Полдник</div><div class="meal-placeholder"><span>—</span></div></div>
+            <div class="meal-slot"><div class="meal-type">Ужин</div><div class="meal-placeholder"><span>—</span></div></div>
+        </div>
+
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+    <div style="max-width:1000px; margin:0 auto; padding:0 20px;">
+        <span class="section-label-tag">Стоимость</span>
+        <h2 class="section-title" style="margin-bottom:10px;">Цены на комплексные обеды</h2>
+        <p class="section-sub">Рассчитываем стоимость индивидуально — под количество сотрудников, формат и состав рациона</p>
+    </div>
+
+    <div class="pricing-grid">
+
+        <div class="price-card">
+            <div class="price-name">Обед</div>
+            <p class="price-desc">Суп + горячее + напиток. Идеально для небольших команд</p>
+            <div class="price-tbd">По запросу</div>
+            <div class="price-unit">за одного сотрудника / день</div>
+            <ul class="price-features">
+                <li>Суп дня</li>
+                <li>Горячее блюдо с гарниром</li>
+                <li>Хлеб</li>
+                <li>Напиток</li>
+            </ul>
+            <a href="#trial" class="price-cta">Узнать стоимость</a>
+        </div>
+
+        <div class="price-card featured">
+            <div class="price-badge">Популярный</div>
+            <div class="price-name">Комплекс</div>
+            <p class="price-desc">Полный рацион на рабочий день — от завтрака до ужина</p>
+            <div class="price-tbd">По запросу</div>
+            <div class="price-unit">за одного сотрудника / день</div>
+            <ul class="price-features">
+                <li>Завтрак</li>
+                <li>Суп + горячее с гарниром</li>
+                <li>Полдник / десерт</li>
+                <li>Ужин</li>
+                <li>Напитки</li>
+            </ul>
+            <a href="#trial" class="price-cta">Узнать стоимость</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-name">Премиум</div>
+            <p class="price-desc">Авторские блюда, расширенный выбор и персональный менеджер</p>
+            <div class="price-tbd">По запросу</div>
+            <div class="price-unit">за одного сотрудника / день</div>
+            <ul class="price-features">
+                <li>Расширенное меню</li>
+                <li>Авторские блюда шефа</li>
+                <li>Учёт диетических предпочтений</li>
+                <li>Персональный менеджер</li>
+                <li>Telegram-бот с КБЖУ</li>
+            </ul>
+            <a href="#trial" class="price-cta">Узнать стоимость</a>
+        </div>
+
+    </div>
+</section>
+
+<!-- CTA / TRIAL -->
+<section class="cta-section" id="trial">
+    <div class="contacts-wrapper">
+        <div class="contact-card">
+            <h2>Закажи неделю пробного питания</h2>
+            <p>Попробуйте наш формат без обязательств: одна пробная неделя комплексных обедов ресторанного качества. Оставьте заявку — менеджер рассчитает стоимость под вашу команду.</p>
+            <a href="contacts.html" class="cta-btn">
+                Оставить заявку
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <div class="contact-note">Ответим в течение 1 рабочего часа</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div>© 2026 ORGANI'CARE</div>
+    <div style="margin-top:10px;"><a href="index.html">На главную</a></div>
+</footer>
+
+<script>
+const burger = document.getElementById('burger');
+const navUl = document.querySelector('nav ul');
+if(burger) burger.addEventListener('click', () => { burger.classList.toggle('active'); navUl && navUl.classList.toggle('open'); });
+</script>
+</body>
+</html>
