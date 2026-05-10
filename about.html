@@ -53,87 +53,75 @@ nav a::after {
 }
 nav a:hover { color: #e6b5ff; }
 nav a:hover::after { width: 100%; }
-.burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
-.burger span { width: 28px; height: 3px; background: #e6b5ff; transition: 0.4s; }
 
-
-/* BASE SECTION STYLE */
-section {
-    padding: 110px 20px;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.8s ease;
-}
-
-section.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-h2 {
-    font-size: 40px;
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-/* TRUST */
-.trust {
-    background: #fff;
-}
-
-.slider-wrapper {
-    max-width: 100%;
-    overflow: hidden;
-}
-
-.slides {
-    display: flex;
-    width: 100%;
-}
-
-
-
-.slide {
-    min-width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-}
-
-.slide img {
-    width: 120px;
-    opacity: 0.7;
-}
-
-/* MISSION */
+/* MISSION — только здесь большое фоновое изображение */
 .mission {
-    background: url('https://sun9-78.vkuserphoto.ru/s/v1/ig2/Hu73K_3jG0UQN9Dxbeun-sBnCyAfekzwmZ6CO-9zyg8Lfj29hO-28667CvtMMLOTx1XrIs2PizsXZiZ8mExePE2D.jpg?quality=95&as=32x48,48x73,72x109,108x163,160x242,240x363,360x544,480x726,540x817,640x968,720x1089,1080x1633,1280x1935,1440x2177,1693x2560&from=bu&cs=1280x0') center/cover no-repeat;
-    color: #fff;
+    background: url('https://sun9-24.vkuserphoto.ru/s/v1/ig2/Qo9m1VEm0PHA3G8YLLioZR7-OCCwsUdZ8CYAnXwDQ_NoDQcJsEMyCiuuXKdCmZPWKveEJ2c5Lg15w5GQvXvp5ZqT.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,1920x1080&from=bu&cs=1280x0') center/cover no-repeat;
     position: relative;
+    color: #fff;
+    padding: 160px 20px 160px;     /* ← Увеличил высоту */
+    min-height: 75vh;               /* ← Минимальная высота экрана */
+    text-align: center;
 }
 .mission::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.55);
 }
 .mission > * {
     position: relative;
     z-index: 2;
 }
+.mission h2 {
+    font-size: 44px;
+    margin-bottom: 40px;
+    text-shadow: 0 3px 15px rgba(0,0,0,0.7);
+}
 .mission-desc {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
-    font-size: 20px;
-    line-height: 1.6;
-    text-align: center;
+    font-size: 21px;
+    line-height: 1.65;
+}
+
+/* TRUST — обычный белый фон */
+.trust {
+    background: #fff;
+    padding: 100px 20px 80px;
+}
+.trust h2 {
+    color: #2f2f2f;
+}
+
+/* Слайдер */
+.slider-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+}
+.slides {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s ease;
+}
+.slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+.slide img {
+    width: 130px;
+    height: auto;
+    opacity: 0.9;
 }
 
 /* TODAY */
 .today {
     text-align: center;
+    padding: 110px 20px;
 }
-
 .today-infographic {
     display: flex;
     justify-content: center;
@@ -141,57 +129,31 @@ h2 {
     flex-wrap: wrap;
     margin-top: 40px;
 }
-
 .info-card {
     min-width: 220px;
     max-width: 260px;
     text-align: center;
-    position: relative;
 }
-
 .num {
     font-size: 54px;
     font-weight: 900;
     color: #2f2f2f;
-    letter-spacing: -1px;
 }
-
 .label {
     margin-top: 10px;
     font-size: 15px;
-    opacity: 0.7;
-    line-height: 1.5;
+    opacity: 0.75;
 }
-
 .line {
     width: 40px;
     height: 2px;
     background: #eeade9;
     margin: 18px auto 0;
-    border-radius: 2px;
     transition: 0.3s;
 }
+.info-card:hover .line { width: 70px; }
 
-.info-card:hover .line {
-    width: 70px;
-}
-
-/* TEAM */
- .team-text {
-    position: relative;
-    padding: 120px 20px;
-    text-align: center;
-    font-size: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 20px;
-
-    background: url('https://sun9-81.userapi.com/s/v1/ig2/m5DyAYerna8j0RXQnPxytOl0ArtBWdZ1jluH3arAgE_xKipWhUX_onlQhPjYb-Ghw5X4r5Od-rMaXa90oV9dBgKt.jpg?quality=95&as=32x16,48x24,72x36,108x54,160x80,240x120,360x180,480x240,540x270,640x320,720x360,1080x540,1280x640,1440x720,2160x1080&from=bu&cs=1280x0') center/cover no-repeat;
-    color: white;
-    overflow: hidden;
-}
-
-/* затемнение фона */
+/* TEAM TEXT */
 .team-text {
     position: relative;
     padding: 120px 20px;
@@ -200,37 +162,27 @@ h2 {
     max-width: 900px;
     margin: 0 auto;
     border-radius: 20px;
-
     background: url('https://sun9-81.userapi.com/s/v1/ig2/m5DyAYerna8j0RXQnPxytOl0ArtBWdZ1jluH3arAgE_xKipWhUX_onlQhPjYb-Ghw5X4r5Od-rMaXa90oV9dBgKt.jpg?quality=95&as=32x16,48x24,72x36,108x54,160x80,240x120,360x180,480x240,540x270,640x320,720x360,1080x540,1280x640,1440x720,2160x1080&from=bu&cs=1280x0') center/cover no-repeat;
     color: white;
     overflow: hidden;
 }
-
-/* тёмный фон (мягкий) */
 .team-text::before {
     content: '';
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
 }
-
-/* аккуратная плашка ТОЛЬКО под текст */
 .team-text p {
     position: relative;
     z-index: 2;
     display: inline-block;
-
     max-width: 780px;
     margin: 0 auto;
-
-    padding: 18px 26px;
+    padding: 28px 32px;
     border-radius: 14px;
-
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-
-    line-height: 1.6;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    line-height: 1.65;
 }
 
 /* LEADERS */
@@ -238,8 +190,10 @@ h2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
-
 .leader img {
     width: 100%;
     border-radius: 14px;
@@ -247,32 +201,11 @@ h2 {
     object-fit: cover;
     margin-bottom: 15px;
 }
-
 .leader h3 {
     text-align: center;
     margin: 0;
     font-weight: 700;
 }
-
-/* имя */
-.leader h3 br {
-    display: none;
-}
-
-/* текст лидеров — абзацы с отступом */
-.leader p {
-    font-size: 15px;
-    line-height: 1.7;
-    color: #4a4a4a;
-    text-align: left;
-    margin-top: 16px;
-}
-.leader p + p {
-    margin-top: 14px;
-    text-indent: 1.5em;
-}
-
-/* роль */
 .role {
     display: block;
     margin-top: 6px;
@@ -282,20 +215,27 @@ h2 {
     color: #7a7a7a;
     text-transform: uppercase;
 }
+.leader p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4a4a4a;
+    margin-top: 16px;
+}
+.leader p + p {
+    margin-top: 14px;
+    text-indent: 1.5em;
+}
 
-/* CTA */
-/* CONTACTS / COST BLOCK */
+/* CONTACTS */
 .contacts {
     background: linear-gradient(180deg, #ffffff 0%, #f3efff 100%);
 }
-
 .contacts-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 60vh;
 }
-
 .contact-card {
     max-width: 620px;
     width: 100%;
@@ -304,21 +244,13 @@ h2 {
     border-radius: 42px;
     background: #ffffff;
     border: 1px solid rgba(196, 81, 255, 0.12);
-    box-shadow:
-        0 60px 120px rgba(0,0,0,0.12),
-        0 0 0 1px rgba(196,81,255,0.10);
-    position: relative;
+    box-shadow: 0 60px 120px rgba(0,0,0,0.12);
 }
-
 .contact-card h2 {
     font-size: 28px;
     font-weight: 800;
-    margin-bottom: 20px;
-    line-height: 1.3;
     color: #2d2d2d;
 }
-
-/* CTA */
 .cta-btn {
     display: inline-flex;
     align-items: center;
@@ -331,51 +263,43 @@ h2 {
     font-size: 18px;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    border: none;
-    cursor: pointer;
-    width: auto;
-    max-width: none;
-    margin: 0 auto;
+    margin: 30px auto 0;
+    transition: all 0.4s;
 }
-
 .cta-btn:hover {
     background: linear-gradient(135deg, var(--accent-dark), var(--accent));
     transform: translateY(-3px);
-    box-shadow: 0 20px 30px -8px rgba(147,51,255,0.35);
 }
-
-.cta-btn svg {
-    width: 20px;
-    height: 20px;
-    stroke: white;
-    fill: none;
-    stroke-width: 2;
-    transition: transform 0.3s;
-}
-
-.cta-btn:hover svg {
-    transform: translateX(6px);
-}
-
 .contact-note {
     font-size: 13px;
     color: #999;
     margin-top: 24px;
-    text-align: center;
-    letter-spacing: 0.3px;
 }
 
 /* FOOTER */
-footer{
-    text-align:center;
-    padding:60px 20px;
-    background:#3d3d3d;
-    color:#fff;
-    margin-top:60px;
+footer {
+    text-align: center;
+    padding: 60px 20px;
+    background: #3d3d3d;
+    color: #fff;
 }
-footer a{color:#e6b5ff;text-decoration:none}
+footer a { color: #e6b5ff; text-decoration: none; }
+
+/* АНИМАЦИИ */
+section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+}
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+h2 {
+    font-size: 40px;
+    text-align: center;
+    margin-bottom: 60px;
+}
 </style>
 </head>
 
@@ -398,7 +322,6 @@ footer a{color:#e6b5ff;text-decoration:none}
                 <li><a href="contacts.html">Контакты</a></li>
             </ul>
         </nav>
-        <div class="burger" id="burger"><span></span><span></span><span></span></div>
     </div>
 </header>
 
@@ -414,41 +337,52 @@ footer a{color:#e6b5ff;text-decoration:none}
 
     <div class="slider-wrapper">
         <div class="slides" id="slides">
-            <div class="slide"><div class="client"><img src="https://thb.tildacdn.com/tild3065-3137-4266-b037-316434393431/dx_primary_logo_on_w.png" alt="Devexperts"></div><div class="client"><img src="https://thb.tildacdn.com/tild3266-6437-4666-b430-653733313737/OW_Logotype_RGB_99x2.png" alt="Openway"></div><div class="client"><img src="https://thb.tildacdn.com/tild3861-3236-4632-b538-666333303763/Playrix-Logowine.png" alt="Playrix"></div><div class="client"><img src="https://thb.tildacdn.com/tild3231-3764-4666-b937-663564646466/arrival-logo-1300x70.png" alt="Arrival"></div><div class="client"><img src="https://thb.tildacdn.com/tild3037-3964-4465-b336-326235626665/5076328F-1C74-4BEC-B.jpeg" alt="DLT"></div><div class="client"><img src="https://thb.tildacdn.com/tild3837-3364-4638-b261-343334383661/ya.png" alt="Ava Clinic"></div></div>
-            <div class="slide"><div class="client"><img src="https://thb.tildacdn.com/tild3230-6336-4537-b733-306563333130/_--04.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild6262-3937-4139-b131-326230643462/AAF57E73-D785-47E0-8.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3363-3938-4561-a663-376165376365/4.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3834-6366-4732-b739-303064353561/2.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3561-3865-4537-b063-626435616537/_-.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild6463-3565-4133-b932-623061313139/_--01.png" alt=""></div></div>
-            <div class="slide"><div class="client"><img src="https://thb.tildacdn.com/tild3561-6136-4639-a532-633731316630/_--07.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3531-3461-4462-b038-626133343238/_--02.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild6537-3737-4037-a134-303735336632/_--03.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3332-6337-4533-b034-333539343162/5.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild6336-3666-4230-a435-656535653036/_--05.png" alt=""></div><div class="client"><img src="https://thb.tildacdn.com/tild3732-3237-4234-b962-366331666366/3.png" alt=""></div></div>
+            <div class="slide">
+                <div class="client"><img src="https://thb.tildacdn.com/tild3065-3137-4266-b037-316434393431/dx_primary_logo_on_w.png" alt="Devexperts"></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3266-6437-4666-b430-653733313737/OW_Logotype_RGB_99x2.png" alt="Openway"></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3861-3236-4632-b538-666333303763/Playrix-Logowine.png" alt="Playrix"></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3231-3764-4666-b937-663564646466/arrival-logo-1300x70.png" alt="Arrival"></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3037-3964-4465-b336-326235626665/5076328F-1C74-4BEC-B.jpeg" alt="DLT"></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3837-3364-4638-b261-343334383661/ya.png" alt="Ava Clinic"></div>
+            </div>
+            <div class="slide">
+                <div class="client"><img src="https://thb.tildacdn.com/tild3230-6336-4537-b733-306563333130/_--04.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild6262-3937-4139-b131-326230643462/AAF57E73-D785-47E0-8.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3363-3938-4561-a663-376165376365/4.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3834-6366-4732-b739-303064353561/2.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3561-3865-4537-b063-626435616537/_-.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild6463-3565-4133-b932-623061313139/_--01.png" alt=""></div>
+            </div>
+            <div class="slide">
+                <div class="client"><img src="https://thb.tildacdn.com/tild3561-6136-4639-a532-633731316630/_--07.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3531-3461-4462-b038-626133343238/_--02.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild6537-3737-4037-a134-303735336632/_--03.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3332-6337-4533-b034-333539343162/5.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild6336-3666-4230-a435-656535653036/_--05.png" alt=""></div>
+                <div class="client"><img src="https://thb.tildacdn.com/tild3732-3237-4234-b962-366331666366/3.png" alt=""></div>
+            </div>
         </div>
     </div>
-    <div class="slider-dots">
-    <span onclick="goToSlide(0)"></span>
-    <span onclick="goToSlide(1)"></span>
-    <span onclick="goToSlide(2)"></span>
-</div>
 </section>
 
 <section class="today">
     <h2>Organi'Care сегодня</h2>
-
     <div class="today-infographic">
-
         <div class="info-card">
             <div class="num" data-target="10">10</div>
             <div class="label">лет на рынке</div>
             <div class="line"></div>
         </div>
-
         <div class="info-card">
             <div class="num" data-target="2016">2016</div>
             <div class="label">с года основания индустриального питания</div>
             <div class="line"></div>
         </div>
-
         <div class="info-card">
             <div class="num">∞</div>
             <div class="label">доверие клиник, школ и IT-компаний</div>
             <div class="line"></div>
         </div>
-
     </div>
 </section>
 
@@ -464,10 +398,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     <div class="leaders-grid">
         <div class="leader">
             <img src="https://optim.tildacdn.com/tild6563-6261-4739-b735-323935383463/-/resize/373x/-/format/webp/340A0523.jpg.webp">
-            <h3>
-    Лия Дубровина<br>
-    <span class="role">Основатель OrganiCare</span>
-</h3>
+            <h3>Лия Дубровина<br><span class="role">Основатель OrganiCare</span></h3>
             <p>В 2016 году благодаря идеям и стремлениям Лии появился продукт OrganiCare — за несколько лет из небольшой кухни она развила проект до современного производства.</p>
             <p>Получился трансформированный продукт индустриального питания, ресторанного качества и индивидуальной линии питания для каждого клиента.</p>
             <p>Личным примером вдохновляет людей преодолевать сложности и любить себя.</p>
@@ -475,29 +406,23 @@ footer a{color:#e6b5ff;text-decoration:none}
 
         <div class="leader">
             <img src="https://optim.tildacdn.com/tild3635-6537-4430-b135-636164333139/-/resize/391x/-/format/webp/340A1229_3.jpg.webp">
-            <h3>
-    Сергей Захаров<br>
-    <span class="role">COO</span>
-</h3>
+            <h3>Сергей Захаров<br><span class="role">COO</span></h3>
             <p>Сергей — руководитель с 10-летним опытом в dark kitchen. Выводил производства в топ-3 по эффективности в сети из 25 площадок и увеличивал обороты ×2.</p>
             <p>Уже в 24 года был назначен генеральным директором производственной точки в крупной сети доставки готовой еды. Управлял 8 производствами с оборотом 50 млн ₽ в месяц.</p>
-            <p>Баланс трудолюбия, живого ума и жажды совершить невозможное. Верит в победу, настраивает процессы и вдохновляет команду личным примером, создавая сильную корпоративную культуру и уникальный опыт взаимодействия.</p>
+            <p>Баланс трудолюбия, живого ума и жажды совершить невозможное. Верит в победу, настраивает процессы и вдохновляет команду личным примером.</p>
         </div>
 
         <div class="leader">
             <img src="https://optim.tildacdn.com/tild3264-3565-4561-a264-396637303666/-/resize/371x/-/format/webp/340A1146_1.jpg.webp">
-            <h3>
-    Юрий Сорокин<br>
-    <span class="role">Шеф-повар</span>
-</h3>
-            <p>Юрий — опытный шеф-повар, одарённый гастрономическим талантом. 8 лет работал руководителем в Отеле Four Seasons Lion Palace St. Petersburg 5★ и отвечал за управление вкусом в рамках европейской гастрономии.</p>
+            <h3>Юрий Сорокин<br><span class="role">Шеф-повар</span></h3>
+            <p>Юрий — опытный шеф-повар, одарённый гастрономическим талантом. 8 лет работал руководителем в Отеле Four Seasons Lion Palace St. Petersburg 5★.</p>
             <p>Под руководством шефа команда поваров Organi Care готовит блюда современной гастрономии.</p>
-            <p>Юрий ищет новые сочетания вкусов для меню лечебного питания, отдавая честь иностранной культуре и поддерживая идеологию продукта компании.</p>
+            <p>Юрий ищет новые сочетания вкусов для меню лечебного питания.</p>
         </div>
     </div>
 </section>
 
-<section class="contacts animate-section" id="contacts">
+<section class="contacts" id="contacts">
     <div class="contacts-wrapper">
         <div class="contact-card">
             <h2>УЗНАЙ СТОИМОСТЬ ПИТАНИЯ НА ОДНОГО ЧЕЛОВЕКА</h2>
@@ -511,7 +436,6 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
     <div>© 2026 ORGANI'CARE</div>
     <div style="margin-top:10px;">
@@ -524,39 +448,26 @@ let current = 0;
 const slides = document.getElementById('slides');
 const total = slides.children.length;
 
-// переключение
 function goToSlide(i){
     current = i;
     slides.style.transform = `translateX(-${i * 100}%)`;
 }
-
-// автопрокрутка
 function autoSlide(){
     current = (current + 1) % total;
     goToSlide(current);
 }
-
-// каждые 4 секунды
 setInterval(autoSlide, 4000);
 
-// scroll animation (как у тебя было)
+// Анимация появления секций
 const sections = document.querySelectorAll('section');
-
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-        if(entry.isIntersecting){
-            entry.target.classList.add('visible');
-        } else {
-            entry.target.classList.remove('visible');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('visible');
     });
 }, { threshold: 0.15 });
 
 sections.forEach(s => observer.observe(s));
-
-
 </script>
-
 
 </body>
 </html>
