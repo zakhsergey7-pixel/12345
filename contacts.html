@@ -27,33 +27,59 @@
         }
 
         header {
-            background: var(--dark);
+            background: rgba(47,47,47,0.97);
+            backdrop-filter: blur(12px);
             position: fixed;
             top: 0; left: 0; right: 0;
             height: 80px;
             z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.15);
         }
-
-        .logo img { height: 28px; }
-
+        .nav-container {
+            max-width: 1280px; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; height: 80px;
+        }
+        .logo a { display: block; line-height: 0; }
+        .logo img { 
+            height: 58px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .logo:hover img { transform: scale(1.08) rotate(8deg); }
+        nav ul { display: flex; list-style: none; gap: 28px; margin: 0; padding: 0; }
         .nav a {
             color: #fff;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
-            margin-left: 26px;
+            position: relative;
+            transition: color 0.3s ease;
         }
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: -2px; left: 0;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav a:hover { color: #e6b5ff; }
+        .nav a:hover::after { width: 100%; }
 
         section { padding: 120px 20px 100px; }
 
-        h2 { 
+        h2, h3 { 
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #1f1f1f;
+            margin-bottom: 0;
+        }
+
+        h2.page-title { 
             font-size: 42px; 
             text-align: center; 
-            margin-bottom: 70px; 
+            margin-bottom: 70px;
+            letter-spacing: -0.02em;
         }
 
         .contacts-wrapper {
@@ -72,22 +98,33 @@
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #888;
         }
 
         input, textarea {
             width: 100%;
-            padding: 14px 18px;
+            padding: 10px 14px;
             border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-dark);
         }
 
         .required::after {
@@ -148,25 +185,31 @@
 
     <!-- HEADER -->
     <header>
-        <div class="logo">
-            <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html"><img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="OrganiCare"></a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="nutritionist.html">Лечебное питание</a></li>
+                    <li><a href="corporate.html">Корпоративное питание</a></li>
+                    <li><a href="canteen.html">Столовые</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav class="nav">
-            <a href="index.html">Главная</a>
-             <a href="about.html">О нас</a>
-                <a href="nutritionist.html">Лечебное питание</a>
-                <a href="contacts.html">Контакты</a>
-        </nav>
     </header>
 
     <section>
-        <h2>Контакты</h2>
+        <h2 class="page-title">Контакты</h2>
         
         <div class="contacts-wrapper">
             
             <!-- Левая колонка -->
             <div class="contact-card">
-                <h3>Связаться с нами</h3>
+                <h3 style="margin-bottom:8px;">Связаться с нами</h3>
                 <p style="margin: 20px 0 40px; font-size: 17px;">У вас есть вопросы или предложения? Мы всегда готовы помочь!</p>
                 
                 <p><strong>Телефон:</strong><br>
@@ -181,7 +224,7 @@
 
             <!-- Правая колонка — Форма -->
             <div class="contact-card">
-                <h2>Оставить заявку</h2>
+                <h3 style="margin-bottom:8px;">Оставить заявку</h3>
                 <p style="color:#555; margin-bottom:32px;">Мы свяжемся с вами в ближайшее время</p>
                 
                 <form>
