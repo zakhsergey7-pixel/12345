@@ -164,7 +164,8 @@ header {
     font-weight:700;
     color:#1f1f1f;
     margin-bottom:60px;
-    letter-spacing:-0.02em;
+    letter-spacing:0.03em;
+    text-transform: uppercase;
 }
 
 .section-header{
@@ -187,7 +188,17 @@ header {
     font-weight: 700;
     color: #1f1f1f;
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+/* Unified subheading style */
+.section-title,
+.diet-title,
+h2.section-title,
+h2.diet-title {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 /* CARDS */
@@ -230,7 +241,8 @@ header {
     font-weight: 700;
     margin-bottom: 50px;
     color: #1f1f1f;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
 }
 
 /* горизонтальный ряд */
@@ -277,9 +289,32 @@ header {
     font-size: 18px;
     font-weight: 600;
     color: #2b2b2b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
 }
 
-/* скрытый текст */
+/* стрелка-подсказка */
+.diet-head::after {
+    content: '↓';
+    font-size: 16px;
+    color: #9333ff;
+    transition: transform 0.35s ease;
+    flex-shrink: 0;
+}
+
+.diet-item.active .diet-head::after {
+    transform: rotate(180deg);
+}
+
+/* рамка при наведении намекает на кликабельность */
+.diet-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+    border-color: #d4b8ff;
+    cursor: pointer;
+}
 .diet-content {
     max-height: 0;
     overflow: hidden;
@@ -1221,6 +1256,129 @@ footer{
     margin-top:60px;
 }
 footer a{color:#e6b5ff;text-decoration:none}
+
+/* ===== UNIFIED SCROLL ANIMATION ===== */
+.animate-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.animate-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== FEEDBACK WIDGET ===== */
+.fb-widget {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+}
+.fb-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 14px 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 1px rgba(196,81,255,0.2);
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    overflow: hidden;
+    max-width: 54px;
+    white-space: nowrap;
+}
+.fb-toggle:hover {
+    max-width: 220px;
+    background: linear-gradient(135deg, #9333ff, #c451ff);
+    box-shadow: 0 12px 35px rgba(147,51,255,0.4);
+    padding: 14px 22px;
+    gap: 10px;
+}
+.fb-icon { flex-shrink: 0; display: flex; align-items: center; }
+.fb-icon svg { width: 22px; height: 22px; }
+.fb-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease 0.1s, max-width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    letter-spacing: 0.3px;
+}
+.fb-toggle:hover .fb-label { opacity: 1; max-width: 160px; }
+.fb-panel {
+    width: 320px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(196,81,255,0.1);
+    overflow: hidden;
+    transform: translateY(20px) scale(0.92);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transform-origin: bottom right;
+}
+.fb-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+.fb-panel-header {
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+.fb-close { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.7); padding: 2px; display: flex; transition: color 0.2s; }
+.fb-close:hover { color: #fff; }
+.fb-close svg { width: 18px; height: 18px; }
+.fb-panel-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.fb-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #2f2f2f;
+    background: #fafafa;
+    transition: border-color 0.2s, background 0.2s;
+    box-sizing: border-box;
+    outline: none;
+    resize: none;
+}
+.fb-input:focus { border-color: #9333ff; background: #fff; }
+.fb-textarea { min-height: 90px; }
+.fb-send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.fb-send:hover { background: linear-gradient(135deg, #9333ff, #c451ff); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(147,51,255,0.35); }
+.fb-send svg { width: 16px; height: 16px; }
+.fb-success { display: none; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: #16a34a; padding: 10px 14px; background: #f0fdf4; border-radius: 12px; }
 </style>
 </head>
 
@@ -1260,7 +1418,7 @@ footer a{color:#e6b5ff;text-decoration:none}
 </section>
 
 <!-- BRAND MESSAGE -->
-<section class="brand-message">
+<section class="brand-message animate-section">
     <div class="section-bg"></div>
     
     <div class="brand-message-inner">
@@ -1275,12 +1433,12 @@ footer a{color:#e6b5ff;text-decoration:none}
 </section>
 
 <!-- VALUE BLOCK -->
-<section class="value-block">
+<section class="value-block animate-section">
     <div class="section-bg"></div>
     
     <div class="value-inner">
         <div class="value-text">
-            <h2>То, что вы получаете с нами:</h2>
+            <h2>ТО, ЧТО ВЫ ПОЛУЧАЕТЕ С НАМИ:</h2>
             
             <p class="value-main">
                 С Organi'Care вы получаете не просто питание, а комплексный подход, 
@@ -1296,7 +1454,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 
-<section class="daily-menu">
+<section class="daily-menu animate-section">
     <div class="daily-menu-container">
 
         <div class="section-header">
@@ -1402,7 +1560,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 
-<section class="diet-horizontal">
+<section class="diet-horizontal animate-section">
     <div class="container">
 
         <h2 class="diet-title">Наши специализированные диеты</h2>
@@ -1454,7 +1612,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 
-<section class="diet-horizontal diet-secondary">
+<section class="diet-horizontal diet-secondary animate-section">
     <div class="container">
 
         <h2 class="diet-title">Расширенный перечень диет</h2>
@@ -1502,7 +1660,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 
-<section class="menu-showcase">
+<section class="menu-showcase animate-section">
     <div class="menu-showcase-container">
 
         <div class="section-header">
@@ -1559,7 +1717,7 @@ footer a{color:#e6b5ff;text-decoration:none}
     </div>
 </section>
 <!-- PRINCIPLES -->
-<section style="background:#f6f6f6; padding:100px 20px;">
+<section style="background:#f6f6f6; padding:100px 20px;" class="animate-section">
 <div style="max-width:1100px; margin:0 auto;">
 
     <div class="section-title">Наш подход</div>
@@ -1687,5 +1845,51 @@ function toggleDiet(el) {
 }
 </script>
 
+<script>
+// Unified scroll animation
+const _animObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.animate-section').forEach(s => _animObserver.observe(s));
+</script>
+
+<!-- FEEDBACK WIDGET -->
+<div class="fb-widget" id="fbWidget">
+    <button class="fb-toggle" id="fbToggle" aria-label="Оставить обратную связь">
+        <span class="fb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <span class="fb-label">Обратная связь</span>
+    </button>
+    <div class="fb-panel" id="fbPanel">
+        <div class="fb-panel-header">
+            <span>Оставьте отзыв</span>
+            <button class="fb-close" id="fbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="fb-panel-body">
+            <input class="fb-input" id="fbName" type="text" placeholder="Ваше имя">
+            <input class="fb-input" id="fbPhone" type="tel" placeholder="+7 (___) ___-__-__">
+            <textarea class="fb-input fb-textarea" id="fbMessage" placeholder="Ваш отзыв..."></textarea>
+            <button class="fb-send" id="fbSend">Отправить отзыв <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+            <div class="fb-success" id="fbSuccess"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14.5 15 9"/></svg>Отзыв отправлен! Спасибо.</div>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    const toggle=document.getElementById('fbToggle'),panel=document.getElementById('fbPanel'),close=document.getElementById('fbClose'),send=document.getElementById('fbSend'),success=document.getElementById('fbSuccess');
+    toggle.addEventListener('click',()=>panel.classList.toggle('open'));
+    close.addEventListener('click',()=>panel.classList.remove('open'));
+    send.addEventListener('click',()=>{
+        const name=document.getElementById('fbName').value.trim(),phone=document.getElementById('fbPhone').value.trim(),message=document.getElementById('fbMessage').value.trim();
+        document.getElementById('fbName').style.borderColor=name?'#e8e8e8':'#ef4444';
+        document.getElementById('fbMessage').style.borderColor=message?'#e8e8e8':'#ef4444';
+        if(!name||!message)return;
+        const subject=encodeURIComponent("Обратная связь с сайта ORGANI'CARE");
+        const body=encodeURIComponent(`Имя: ${name}\nТелефон: ${phone||'не указан'}\n\nОтзыв:\n${message}`);
+        window.location.href=`mailto:iron@organicare.ru?subject=${subject}&body=${body}`;
+        send.style.display='none';success.style.display='flex';
+        setTimeout(()=>{panel.classList.remove('open');setTimeout(()=>{send.style.display='';success.style.display='none';document.getElementById('fbName').value='';document.getElementById('fbPhone').value='';document.getElementById('fbMessage').value='';},500);},2000);
+    });
+})();
+</script>
 </body>
 </html>
