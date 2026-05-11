@@ -534,7 +534,7 @@
 /* ==================== SERVICES - 3D АНИМАЦИЯ ==================== */
 /* ==================== SERVICES - ПРЕМИУМ ВЕРСИЯ ==================== */
 .services {
-    padding: 160px 20px;
+    padding: 80px 20px 160px;
     position: relative;
     color: white;
     text-align: center;
@@ -565,25 +565,55 @@
 }
 
 .service-card-new {
-    background: rgba(22, 22, 22, 0.92);
+    background: rgba(22, 22, 22, 0.88);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 24px;
-    padding: 38px 28px 42px;     /* уменьшил отступы */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.55);
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    border-radius: 20px;
+    padding: 28px 24px 32px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+    transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
     height: 100%;
-    min-height: 260px;
+    min-height: 200px;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* Hover эффект — более утончённый */
 .service-card-new:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.65);
-    border-color: rgba(196, 81, 255, 0.25);
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    border-color: rgba(196, 81, 255, 0.35);
+    background: rgba(30, 22, 40, 0.92);
+}
+
+/* Стрелка-ссылка */
+.service-card-new .card-arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(196,81,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+.service-card-new:hover .card-arrow {
+    opacity: 1;
+    background: rgba(196,81,255,0.3);
+    transform: translate(2px, -2px);
+}
+.service-card-new .card-arrow svg {
+    width: 14px;
+    height: 14px;
+    stroke: #e0aaff;
+    fill: none;
 }
 
 /* Номер карточки */
@@ -604,19 +634,19 @@
 
 /* Заголовок */
 .service-card-new h3 {
-    font-size: 23px;           /* уменьшил */
+    font-size: 19px;
     font-weight: 700;
-    line-height: 1.35;
-    margin: 0 0 18px 0;
+    line-height: 1.3;
+    margin: 0 0 12px 0;
     color: #ffffff;
     text-align: center;
 }
 
 /* Описание */
 .service-desc {
-    font-size: 15.5px;         /* уменьшил */
-    line-height: 1.55;
-    color: rgba(255,255,255,0.82);
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.75);
     flex-grow: 1;
     text-align: center;
 }
@@ -740,10 +770,8 @@
         .info-connector::after { right: -7px; }
 
 /* ==================== GUARANTEE ==================== */
-/* ==================== GUARANTEE ==================== */
-/* ==================== GUARANTEE ==================== */
 .guarantee {
-    padding: 160px 20px;
+    padding: 220px 20px 100px;
     text-align: center;
     color: white;
     position: relative;
@@ -752,19 +780,16 @@
     center/cover no-repeat fixed;
 }
 
-.guarantee {
-    padding-bottom: 220px; /* было 160 */
-}
-
-.service-culture {
-    padding-top: 220px; /* было 140 */
-}
-
 .guarantee::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.15) 0%,
+        rgba(0,0,0,0.5) 45%,
+        rgba(10,5,20,0.75) 100%
+    );
     z-index: 1;
 }
 
@@ -776,28 +801,70 @@
 }
 
 .guarantee h2 {
-    font-size: 48px;
-    margin-bottom: 50px;
-    text-shadow: 
-        0 4px 20px rgba(0,0,0,0.9),
-        0 0 30px rgba(168,85,247,0.35);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(196,81,255,0.9);
+    margin-bottom: 20px;
+    text-shadow: none;
+}
+
+.guarantee-headline {
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 70px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 6px 30px rgba(0,0,0,0.6);
 }
 
 .guarantee-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 32px;
-    margin-top: 40px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 0;
+    background: rgba(255,255,255,0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(6px);
+}
+
+@media (max-width: 900px) {
+    .guarantee-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .guarantee-grid { grid-template-columns: 1fr; }
 }
 
 .g-item {
-    padding: 24px 16px;
-    text-align: center;
-
+    padding: 40px 28px;
+    text-align: left;
+    background: rgba(255,255,255,0.04);
+    transition: background 0.3s ease;
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
+
+.g-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(196,81,255,0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.g-item:hover {
+    background: rgba(196,81,255,0.08);
+    transform: translateY(-2px) !important;
+}
+.g-item:hover::before { opacity: 1; }
 
 .guarantee.visible .g-item {
     opacity: 1;
@@ -809,24 +876,34 @@
 .guarantee.visible .g-item:nth-child(3) { transition-delay: 0.25s; }
 .guarantee.visible .g-item:nth-child(4) { transition-delay: 0.35s; }
 
-.g-item h3 {
-    font-size: 19px;           /* уменьшенный размер */
+.g-item-number {
+    font-size: 11px;
     font-weight: 700;
-    margin-bottom: 12px;
-    line-height: 1.35;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    letter-spacing: 3px;
+    color: rgba(196,81,255,0.7);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.g-item h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    line-height: 1.3;
+    color: #fff;
+    text-shadow: none;
 }
 
 .g-item p {
-    font-size: 14.5px;         /* уменьшенный размер */
-    line-height: 1.55;
-    color: rgba(255,255,255,0.92);
-    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+    text-shadow: none;
 }
 
-/* Лёгкий hover эффект без сильного изменения фона */
-.g-item:hover {
-    transform: translateY(-4px);
+.service-culture {
+    padding-top: 120px;
 }
         /* ==================== SOCIAL ==================== */
         .social {
@@ -1858,7 +1935,7 @@
 
 <!-- НАША МИССИЯ (ФОТО СТАТИЧНОЕ, БЕЗ РАМКИ) -->
 <!-- НАША МИССИЯ -->
-<section class="mission animate-section" style="background: #ffffff; padding: 120px 20px;">
+<section class="mission animate-section" style="background: #ffffff; padding: 120px 20px 0;">
     <div class="mission-container">
         <div class="mission-left">
             <div class="mission-label">Философия бренда</div>
@@ -1885,32 +1962,36 @@
     <div class="services-grid-new">
 
         <!-- 1 -->
-        <div class="service-card-new" data-tilt>
+        <a class="service-card-new" href="nutritionist.html" data-tilt>
             <div class="card-number"></div>
             <h3>Открытие кухни в клинике</h3>
             <p class="service-desc">Организация пищеблока на территории медицинского учреждения. Наши повара готовят в клинике лечебное питание для пациентов</p>
-        </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
         <!-- 2 -->
-        <div class="service-card-new" data-tilt>
+        <a class="service-card-new" href="nutritionist.html" data-tilt>
             <div class="card-number"></div>
             <h3>Доставка лечебного питания в роддома</h3>
             <p class="service-desc">Доставка лечебного питания в индивидуальной упаковке для ваших пациентов</p>
-        </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
         <!-- 3 -->
-        <div class="service-card-new" data-tilt>
+        <a class="service-card-new" href="canteen.html" data-tilt>
             <div class="card-number"></div>
             <h3>Организация буфета в клинике</h3>
             <p class="service-desc">Открытие буфета-столовой на территории клиники, кофейни, фингер-фуд, wellness питание</p>
-        </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
         <!-- 4 - Корпоративное питание -->
-        <div class="service-card-new corporate" data-tilt>
+        <a class="service-card-new corporate" href="corporate.html" data-tilt>
             <div class="card-number"></div>
             <h3>Корпоративное питание</h3>
             <p class="service-desc">Питание для сотрудников компаний, организация школьного питания, микромаркеты</p>
-        </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
     </div>
 </section>
@@ -1919,24 +2000,30 @@
 <section class="guarantee animate-section">
   <div class="guarantee-container">
     <h2>МЫ ГАРАНТИРУЕМ</h2>
+    <div class="guarantee-headline">Четыре принципа,<br>которые отличают нас</div>
 
     <div class="guarantee-grid">
 
         <div class="g-item">
+            <span class="g-item-number">01</span>
             <h3>Гастровпечатление</h3>
             <p>Авторские блюда с европейским вкусом, приготовления из-под ножа</p>
         </div>
 
         <div class="g-item">
+            <span class="g-item-number">02</span>
             <h3>Забота</h3>
             <p>Гибкость меню, возможность заказать в зависимости исключений, расширенная фасовка, опыт обработки заказа</p>
         </div>
 
         <div class="g-item">
+            <span class="g-item-number">03</span>
             <h3>Персонализация с инновацией</h3>
-            <p>Telegram-бот для первичного опроса пациентов на  вкусовые предпочтения и подбор блюд. Возможность исключать продукты из рациона через Telegram бот. Реакция на каждый запрос персонального менеджера в течении 10 минут</p>
+            <p>Telegram-бот для первичного опроса пациентов на вкусовые предпочтения и подбор блюд. Реакция на каждый запрос персонального менеджера в течении 10 минут</p>
         </div>
+
         <div class="g-item">
+            <span class="g-item-number">04</span>
             <h3>Сервисная культура</h3>
             <p>Предугадывание потребностей и запросов</p>
         </div>
