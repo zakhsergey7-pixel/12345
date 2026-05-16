@@ -92,7 +92,7 @@ header {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url('https://sun9-86.vkuserphoto.ru/impg/mmma2Sqs282r_c28FQxsLjOulueCdUcFlmWHfw/Uj-E5IDcgsk.jpg?size=1280x859&quality=95&sign=48d89c3ab156ddffde9444444ac0e23d&type=album')
+    background: url('https://sun9-55.userapi.com/s/v1/ig2/8nya6q2GkwqLBieTA1Uh8Y9wNQ8JJuSRwBt249_HWmxl0_S073grshdcArNRlegeXiQVOOCBA-M06l02Gl557_Sj.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x240,480x319,540x359,640x426,720x479,1080x719,1280x852,1440x958,2000x1331&from=bu&cs=2000x0')
                 center/cover no-repeat;
     z-index: 1;
 }
@@ -664,6 +664,7 @@ h2.diet-title {
 @media (max-width:768px){
     .brand-message{
         padding: 100px 20px;
+        min-height: auto;
         background-attachment: scroll; /* фикс убираем на мобиле */
     }
 
@@ -674,7 +675,11 @@ h2.diet-title {
 
 .value-block{
     position: relative;
-    padding: 150px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 160px 20px;
     text-align: center;
     color: #fff;
     overflow: hidden;
@@ -702,6 +707,7 @@ h2.diet-title {
     z-index: 2;
     max-width: 900px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* заголовок */
@@ -737,6 +743,7 @@ h2.diet-title {
 @media (max-width:768px){
     .value-block{
         padding: 110px 20px;
+        min-height: auto;
         background-attachment: scroll;
     }
 
