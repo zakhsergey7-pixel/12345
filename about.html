@@ -529,6 +529,40 @@ h2 {
     </div>
 </section>
 
+<!-- ORGANI CARE — фотографии (пустой блок, фотографии будут добавлены позже) -->
+<section class="organi-care-gallery animate-section">
+    <h2>ORGANI CARE</h2>
+    <div class="gallery-placeholder">
+        <!-- Здесь будут добавлены фотографии -->
+    </div>
+</section>
+
+<style>
+.organi-care-gallery {
+    padding: 120px 20px 100px;
+    background: #ffffff;
+    text-align: center;
+}
+.gallery-placeholder {
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 220px;
+    border: 2px dashed rgba(196,81,255,0.3);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(196,81,255,0.45);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    background: rgba(196,81,255,0.02);
+}
+.gallery-placeholder::after {
+    content: '— фотографии появятся здесь —';
+}
+</style>
+
 <section class="contacts animate-section" id="contacts">
     <div class="contacts-wrapper">
         <div class="contact-card">
