@@ -581,7 +581,8 @@
 }
 
 /* Hover эффект — более утончённый */
-.service-card-new:hover {
+.service-card-new:hover,
+.service-card-new.js-hovered {
     transform: translateY(-10px);
     box-shadow: 0 30px 60px rgba(0,0,0,0.6);
     border-color: rgba(196, 81, 255, 0.35);
@@ -603,7 +604,8 @@
     transition: all 0.3s ease;
     opacity: 0;
 }
-.service-card-new:hover .card-arrow {
+.service-card-new:hover .card-arrow,
+.service-card-new.js-hovered .card-arrow {
     opacity: 1;
     background: rgba(196,81,255,0.3);
     transform: translate(2px, -2px);
@@ -1376,7 +1378,8 @@
     z-index: 10;
 }
 
-.culture-card:hover {
+.culture-card:hover,
+.culture-card.hovered {
     transform: translateY(-5px);
     box-shadow: 0 14px 40px rgba(196, 81, 255, 0.30);
     background: rgba(35, 35, 35, 0.95);
@@ -1416,7 +1419,8 @@
 }
 
 .culture-card:hover .toggle-arrow,
-.culture-card.active .toggle-arrow {
+.culture-card.active .toggle-arrow,
+.culture-card.hovered .toggle-arrow {
     transform: rotate(180deg);
 }
 
@@ -1431,7 +1435,8 @@
 }
 
 .culture-card:hover .card-desc,
-.culture-card.active .card-desc {
+.culture-card.active .card-desc,
+.culture-card.hovered .card-desc {
     max-height: 300px;
     opacity: 1;
     margin-top: 8px;
@@ -1464,7 +1469,8 @@
     z-index: 2;
 }
 
-.service-card-new:hover {
+.service-card-new:hover,
+.service-card-new.js-hovered {
     box-shadow: 0 25px 70px rgba(0,0,0,0.65);
     transform: translateY(-6px);
 }
@@ -1732,6 +1738,14 @@
 /* появление */
 .sticky-cost.show {
     bottom: 20px;
+    /* Контейнер не перехватывает события мыши — карточки под ним остаются интерактивными */
+    pointer-events: none;
+}
+
+/* Только кнопка захватывает клики */
+.sticky-cost .sticky-btn,
+.sticky-cost .sticky-inner {
+    pointer-events: auto;
 }
 
 /* контейнер */
@@ -2108,15 +2122,25 @@
     if(infographic) new IntersectionObserver(([e]) => { if(e.isIntersecting) infographic.classList.add('visible'); }, { threshold: 0.3 }).observe(infographic);
     document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const target = document.querySelector(this.getAttribute('href')); if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); } }); });
 
-    // Клик-переключатель для карточек сервисной культуры (надёжнее чистого CSS hover)
+    // Карточки сервисной культуры — mouseenter/leave + click, надёжно для крайних карточек
     document.querySelectorAll('.culture-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            if (!card.classList.contains('active')) {
+                card.classList.add('hovered');
+            }
+        });
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('hovered');
+        });
         card.addEventListener('click', () => {
             card.classList.toggle('active');
         });
-        // Удаляем active при уходе мыши если не было клика — оставляем стандартное CSS hover
-        card.addEventListener('mouseleave', () => {
-            // Не трогаем active — пусть остаётся открытым после клика
-        });
+    });
+
+    // Карточки услуг — mouseenter/leave для стрелки (надёжно для правой карточки)
+    document.querySelectorAll('.service-card-new').forEach(card => {
+        card.addEventListener('mouseenter', () => card.classList.add('js-hovered'));
+        card.addEventListener('mouseleave', () => card.classList.remove('js-hovered'));
     });
     const sticky = document.getElementById('stickyCost');
 const triggerSection = document.querySelector('.services');
