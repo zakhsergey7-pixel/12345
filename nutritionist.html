@@ -643,9 +643,20 @@ h2.diet-title {
 /* контент */
 .brand-message-inner{
     position: relative;
-    z-index: 2;
-    max-width: 900px;
+    z-index: 3;
+    max-width: 860px;
     margin: 0 auto;
+    width: 100%;
+}
+
+/* Плашка с размытием под текстом */
+.brand-text {
+    background: rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 20px;
+    padding: 40px 48px;
 }
 
 /* текст */
