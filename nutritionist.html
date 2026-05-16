@@ -608,14 +608,19 @@ h2.diet-title {
     background: none; /* убираем фон отсюда */
 }
 
+/* ==================== BRAND MESSAGE (same size as hero) ==================== */
 .brand-message{
     position: relative;
-    padding: 140px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 160px 20px;
     text-align: center;
     color: #fff;
     overflow: hidden;
 
-    background: url('https://sun9-55.userapi.com/s/v1/ig2/8nya6q2GkwqLBieTA1Uh8Y9wNQ8JJuSRwBt249_HWmxl0_S073grshdcArNRlegeXiQVOOCBA-M06l02Gl557_Sj.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x240,480x319,540x359,640x426,720x479,1080x719,1280x852,1440x958,2000x1331&from=bu&cs=1280x0')
+    background: url('https://sun9-80.userapi.com/s/v1/ig2/KholZcFc3mgx0bD0t01MWbLSKJll6JeKCSV3vrxVk11_ZLlTGrI5ge2rJEkCFATBlAHc7a2LEl0ctHGebTQbm1Gv.jpg?quality=95&as=32x40,48x60,72x90,108x135,160x200,240x300,360x450,480x600,540x675,640x800,720x900,1080x1350,1122x1402&from=bu&cs=1122x0')
     center/cover no-repeat fixed;
 }
 
@@ -1425,8 +1430,8 @@ footer a{color:#e6b5ff;text-decoration:none}
         <div class="brand-text">
             <p>
                 Большинство успешных компаний-брендов работодателей и их собственники 
-                выбирают поставщиков готового питания, руководствуясь ключевыми факторами, 
-                которые мы также разделяем.
+                выбирают проверенных годами поставщиков готового питания, с гарантией постоянного качества, 
+                сервисом и на основе живых рекомендаций.
             </p>
         </div>
     </div>
@@ -1833,9 +1838,11 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <script>
 function toggleDiet(el) {
-    const items = document.querySelectorAll('.diet-item');
+    // Only collapse siblings within the same diet-row, not across blocks
+    const parentRow = el.closest('.diet-row');
+    const siblings = parentRow ? parentRow.querySelectorAll('.diet-item') : [];
     
-    items.forEach(item => {
+    siblings.forEach(item => {
         if (item !== el) {
             item.classList.remove('active');
         }
