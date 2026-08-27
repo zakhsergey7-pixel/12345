@@ -712,25 +712,39 @@
   $('#fileInput').addEventListener('change', e=>handleFiles(e.target.files));
 
   function handleFiles(fileList){
-    [...fileList].forEach(file=>{
+    const files = [...fileList];
+    if(!files.length) return;
+    const results = new Array(files.length);
+    let remaining = files.length;
+    files.forEach((file, idx)=>{
       const reader = new FileReader();
       reader.onload = e=>{
         try{
           const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
           const sheet = wb.Sheets[wb.SheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(sheet, {header:1, raw:false, defval:''});
-          openMappingModal(file.name, rows);
+          results[idx] = {filename:file.name, rows};
         }catch(err){
           alert('Не получилось прочитать файл ' + file.name + '. Попробуйте пересохранить его как CSV или XLSX.');
         }
+        remaining--;
+        if(remaining===0) runImportQueue(results.filter(Boolean));
       };
       reader.readAsArrayBuffer(file);
     });
     $('#fileInput').value='';
   }
 
+  // Открываем окна сопоставления колонок по одному, а не все разом стопкой —
+  // иначе легко забыть переключить источник во втором/третьем окне под низом.
+  function runImportQueue(queue){
+    if(!queue.length) return;
+    const next = queue.shift();
+    openMappingModal(next.filename, next.rows, ()=>runImportQueue(queue));
+  }
+
   // ---------- column mapping modal ----------
-  function openMappingModal(filename, rows){
+  function openMappingModal(filename, rows, onDone){
     let headerIdx = 0;
     for(let i=0;i<Math.min(rows.length,10);i++){
       if(rows[i].filter(c=>String(c).trim()!=='').length>=2){ headerIdx=i; break; }
@@ -750,6 +764,15 @@
     const gAmount = guess(['сумма операции','сумма платежа','сумма','amount']);
     const gDebit = guess(['дебет','расход','списание']);
     const gCredit = guess(['кредит','приход','поступление','зачисление']);
+
+    const fn = filename.toLowerCase();
+    let guessedSource = null;
+    if(/тинькофф|tinkoff|t-?bank|т-?банк/.test(fn)) guessedSource = 'Т-Банк';
+    else if(/точка|tochka/.test(fn)) guessedSource = 'Точка';
+    else if(/озон|ozon/.test(fn)) guessedSource = 'Озон Банк';
+    else if(/сбер|sber/.test(fn)) guessedSource = 'Сбер';
+    else if(/альфа|alfa|alpha/.test(fn)) guessedSource = 'Альфа-Банк';
+    else if(/втб|vtb/.test(fn)) guessedSource = 'ВТБ';
 
     const overlayEl = document.createElement('div');
     overlayEl.className = 'modal-overlay';
@@ -775,6 +798,7 @@
         </div>
       </div>`;
     document.body.appendChild(overlayEl);
+    if(guessedSource){ overlayEl.querySelector('#mSource').value = guessedSource; }
 
     const fillSelect = (sel, selected)=>{
       sel.innerHTML += headers.map((h,i)=>`<option value="${i}">${escapeHtml(h||'(колонка '+(i+1)+')')}</option>`).join('');
@@ -797,7 +821,7 @@
       }
     });
 
-    overlayEl.querySelector('#mCancel').onclick = ()=>overlayEl.remove();
+    overlayEl.querySelector('#mCancel').onclick = ()=>{ overlayEl.remove(); if(onDone) onDone(); };
     overlayEl.querySelector('#mOk').onclick = async ()=>{
       const iDate = +overlayEl.querySelector('#mDate').value;
       const iDesc = +overlayEl.querySelector('#mDesc').value;
@@ -857,8 +881,9 @@
       save(); render();
       if(remoteReady() && newTxns.length){
         try{ await remotePost({action:'bulk_add', txns:newTxns}); }
-        catch(err){ console.error('bulk_add failed', err); }
+        catch(err){ console.error('bulk_add failed', err); alert('Не удалось сохранить «'+filename+'» на сервере: '+err.message); }
       }
+      if(onDone) onDone();
     };
   }
 
@@ -934,7 +959,7 @@
       save(); render();
       if(remoteReady()){
         try{ await remotePost({action:'add', txn:t}); }
-        catch(err){ console.error('add failed', err); }
+        catch(err){ console.error('add failed', err); alert('Не удалось сохранить операцию на сервере: '+err.message); }
       }
     };
   }
