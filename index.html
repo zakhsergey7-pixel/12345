@@ -26,7 +26,7 @@
   }
   #fin-app{position:relative; max-width:1240px; margin:0 auto; padding:20px 20px 40px;}
   h1,h2,h3{font-family:'Fraunces',serif; font-weight:600; margin:0;}
-  .mono{font-family:'IBM Plex Mono',monospace;}
+  .mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
   .muted{color:var(--muted);}
   .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow);}
   button{
@@ -52,12 +52,32 @@
   svg{display:block;}
 
   /* ---------- header ---------- */
-  .app-header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
-  .app-header h1{font-size:19px;}
-  .conn-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); margin-left:auto;}
+  .app-header{
+    display:flex; align-items:center; gap:12px; margin-bottom:14px;
+    position:sticky; top:0; z-index:30; background:var(--bg); padding:8px 0;
+  }
+  .app-header h1{font-size:19px; flex-shrink:0;}
+  .header-balance{font-family:'IBM Plex Mono',monospace; font-size:12px; font-variant-numeric:tabular-nums; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .header-balance b.p{color:var(--personal); font-weight:600;}
+  .header-balance b.w{color:var(--work); font-weight:600;}
+  .conn-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); margin-left:auto; flex-shrink:0;}
   .conn-dot{width:7px; height:7px; border-radius:50%; background:var(--muted2); flex-shrink:0;}
   .conn-dot.on{background:var(--ok);}
   .conn-dot.off{background:var(--danger);}
+  @media (max-width:480px){
+    .conn-status .conn-label{display:none;}
+    .header-balance{font-size:10.5px;}
+  }
+
+  /* ---------- period selector ---------- */
+  .period-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;}
+  .period-pills{display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:1px;}
+  .period-pills::-webkit-scrollbar{display:none;}
+  .period-pill{flex-shrink:0; border:1px solid var(--border); background:var(--surface2); color:var(--muted); border-radius:20px; padding:7px 14px; font-size:12px; font-weight:500; cursor:pointer; white-space:nowrap;}
+  .period-pill:hover{border-color:#3A4050; color:var(--text);}
+  .period-pill.active{background:var(--personal-soft); color:var(--personal); border-color:var(--personal);}
+  .period-custom-dates{display:flex; gap:6px; align-items:center;}
+  .period-custom-dates input{width:auto; min-width:130px;}
 
   /* ---------- toolbar ---------- */
   .toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:16px;}
@@ -101,7 +121,7 @@
   .hero-scale-labels .side{display:flex; flex-direction:column; min-width:0;}
   .hero-scale-labels .side.right{text-align:right; align-items:flex-end;}
   .hero-scale-labels .tag{font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:600;}
-  .hero-scale-labels .amt{font-family:'Fraunces',serif; font-size:26px; font-weight:600; white-space:nowrap;}
+  .hero-scale-labels .amt{font-family:'Fraunces',serif; font-size:26px; font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums;}
   .hero-scale-labels .pct{font-size:11.5px; color:var(--muted);}
   .p-color{color:var(--personal);} .w-color{color:var(--work);}
   .scale-bar{position:relative; width:100%; height:12px; background:var(--surface2); border-radius:7px; overflow:hidden; border:1px solid var(--border);}
@@ -109,21 +129,19 @@
   .scale-fill-w{position:absolute; left:50%; top:0; bottom:0; background:linear-gradient(90deg,var(--work),#37988a); transition:width .35s ease;}
   .scale-mid{position:absolute; left:50%; top:-3px; bottom:-3px; width:2px; background:var(--bg); transform:translateX(-1px);}
 
+  .period-delta{margin-top:10px; font-size:12px; text-align:center; color:var(--muted); min-height:16px;}
+  .period-delta .up{color:var(--danger); font-weight:600;}
+  .period-delta .down{color:var(--ok); font-weight:600;}
+
   .stat-strip{display:flex; margin-top:16px; border-top:1px solid var(--border-soft); padding-top:14px; gap:0;}
   .stat-item{flex:1; display:flex; align-items:center; gap:10px; padding:0 12px; border-left:1px solid var(--border-soft);}
   .stat-item:first-child{border-left:none; padding-left:0;}
   .stat-icon{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--surface2); color:var(--muted);}
-  .stat-item .n{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; white-space:nowrap;}
+  .stat-item .n{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; animation:valueIn .3s ease;}
   .stat-item .l{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
   @media (max-width:680px){.stat-strip{flex-wrap:wrap; row-gap:12px;} .stat-item{flex:1 1 45%; border-left:none;}}
 
-  /* ---------- period strip ---------- */
-  .period-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
-  @media (max-width:680px){.period-strip{grid-template-columns:repeat(2,1fr);}}
-  .period-item{background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 14px;}
-  .period-item .pl{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;}
-  .period-item .pv{font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600;}
-  .period-item .pd{font-size:11px; color:var(--muted2); margin-top:3px;}
+  @keyframes valueIn{from{opacity:.35; transform:translateY(2px);} to{opacity:1; transform:translateY(0);}}
 
   /* ---------- charts ---------- */
   .chart-row{display:grid; grid-template-columns:1fr 1.35fr; gap:18px;}
@@ -133,15 +151,15 @@
   .legend-list{display:flex; flex-direction:column; gap:2px; margin-top:12px; max-height:160px; overflow-y:auto; overflow-x:hidden;}
   .legend-item{display:flex; align-items:center; gap:8px; font-size:12px; padding:5px 2px; border-radius:6px; min-width:0;}
   .legend-item:hover{background:var(--surface2);}
-  .legend-dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .legend-icon{width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10.5px; flex-shrink:0;}
   .legend-name{flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .legend-amt{font-family:'IBM Plex Mono',monospace; flex-shrink:0;}
+  .legend-amt{font-family:'IBM Plex Mono',monospace; flex-shrink:0; font-variant-numeric:tabular-nums;}
 
   /* ---------- filters card ---------- */
   .filters-card .filters{display:flex; flex-direction:column; gap:8px;}
   .filters .row2{display:flex; gap:8px;}
 
-  /* ---------- table ---------- */
+  /* ---------- table (desktop) ---------- */
   .table-scroll{max-height:440px; overflow:auto; border-radius:10px;}
   table.txns{width:100%; min-width:640px; border-collapse:collapse; font-size:12.5px; table-layout:fixed;}
   table.txns col.c-date{width:84px;} table.txns col.c-desc{width:auto;}
@@ -156,12 +174,33 @@
   table.txns td{padding:7px 8px; border-bottom:1px solid var(--border-soft); vertical-align:middle; overflow:hidden;}
   table.txns tr:hover td{background:rgba(255,255,255,.02);}
   td.desc-cell{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .amt{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap;}
+  .amt{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums;}
   .cat-pill{width:100%; border-radius:20px; border:1px solid transparent; padding:4px 8px; font-size:11.5px; font-weight:600; cursor:pointer;}
   .segmented{display:inline-flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;}
   .segmented button{border:none; border-radius:0; padding:4px 9px; font-size:11px; background:transparent; color:var(--muted);}
   .segmented button.active-p{background:var(--personal-soft); color:var(--personal);}
   .segmented button.active-w{background:var(--work-soft); color:var(--work);}
+
+  /* ---------- transaction list (mobile) ---------- */
+  .txn-list{display:none;}
+  @media (max-width:680px){
+    .table-scroll{display:none;}
+    .txn-list{display:block;}
+  }
+  .txn-date-header{
+    position:sticky; top:56px; z-index:8; background:var(--bg);
+    font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:600;
+    padding:10px 2px 6px;
+  }
+  .txn-card{display:flex; flex-direction:column; gap:9px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px; margin-bottom:8px;}
+  .tc-top{display:flex; align-items:center; gap:10px;}
+  .tc-icon{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+  .tc-main{flex:1; min-width:0;}
+  .tc-desc{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tc-meta{font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tc-amt{font-family:'IBM Plex Mono',monospace; font-weight:600; font-variant-numeric:tabular-nums; flex-shrink:0;}
+  .tc-bottom{display:flex; gap:8px; align-items:center;}
+  .tc-bottom .cat-pill{flex:1;}
 
   .empty-state{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:44px 20px; color:var(--muted2); text-align:center;}
   .empty-state svg{color:var(--muted2);}
@@ -172,9 +211,17 @@
   details summary::before{content:'▸ '; color:var(--muted);}
   details[open] summary::before{content:'▾ '; }
   .rule-row{display:flex; gap:6px; align-items:center; margin-bottom:6px; min-width:0;}
-  .rule-cat-label{display:flex; align-items:center; gap:5px; width:96px; flex-shrink:0; font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rule-cat-label{display:flex; align-items:center; gap:5px; width:110px; flex-shrink:0; font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .rule-row input{flex:1; min-width:0;}
   .cat-swatch{display:inline-block; width:7px; height:7px; border-radius:50%; flex-shrink:0;}
+
+  /* ---------- FAB (mobile quick-add) ---------- */
+  .fab{
+    display:none; position:fixed; right:18px; bottom:18px; z-index:40; width:54px; height:54px; border-radius:50%;
+    align-items:center; justify-content:center; font-size:26px; line-height:1; padding:0;
+    background:var(--personal); color:#241705; border:none; box-shadow:0 10px 24px rgba(0,0,0,.45);
+  }
+  @media (max-width:680px){ .fab{display:flex;} }
 
   /* ---------- modal ---------- */
   .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; padding:16px;}
@@ -184,7 +231,7 @@
   .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px;}
   .modal-hint{font-size:11px; color:var(--muted2); margin-top:10px; line-height:1.5;}
 
-  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important;}}
 </style>
 </head>
 <body>
@@ -196,13 +243,23 @@
 
   <div class="app-header">
     <h1>Трекер расходов</h1>
+    <span class="header-balance" id="headerBalance"></span>
     <div class="conn-status" id="connStatus">
       <span class="conn-dot" id="connDot"></span>
-      <span id="connLabel">—</span>
+      <span class="conn-label" id="connLabel">—</span>
     </div>
     <button class="icon-btn ghost" id="settingsBtn" title="Настройки подключения">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
+  </div>
+
+  <div class="period-row">
+    <div class="period-pills" id="periodPills"></div>
+    <div class="period-custom-dates" id="periodCustomDates" style="display:none;">
+      <input type="date" id="filterFrom">
+      <span class="muted">—</span>
+      <input type="date" id="filterTo">
+    </div>
   </div>
 
   <div class="toolbar">
@@ -217,8 +274,6 @@
       <option value="unset">Без метки</option>
     </select>
     <select id="filterBank" class="grow"><option value="all">Все источники</option></select>
-    <input type="date" id="filterFrom" class="grow">
-    <input type="date" id="filterTo" class="grow">
     <div class="toolbar-actions">
       <button id="syncBtn" title="Загрузить свежие операции">⟳ Обновить</button>
       <button id="addTxnBtn">+ Операция</button>
@@ -271,12 +326,8 @@
           </div>
         </div>
         <div class="scale-bar"><div class="scale-fill-p" id="scaleFillP" style="width:0%"></div><div class="scale-fill-w" id="scaleFillW" style="width:0%"></div><div class="scale-mid"></div></div>
+        <div class="period-delta" id="periodDelta"></div>
         <div class="stat-strip" id="statStrip"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title-row"><h3>Расходы за период</h3></div>
-        <div class="period-strip" id="periodStrip"></div>
       </div>
 
       <div class="card">
@@ -311,6 +362,8 @@
             <tbody id="txnBody"></tbody>
           </table>
         </div>
+        <div class="txn-list" id="txnList"></div>
+        <div class="empty-note" id="filterEmptyNote" style="display:none;">Нет операций за выбранный период или фильтр.</div>
         <div class="empty-state" id="emptyState">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg>
           <div>Загрузите первую выписку — операции появятся здесь</div>
@@ -320,25 +373,39 @@
   </div>
 </div>
 
+<button class="fab" id="fabAddBtn" title="Добавить операцию">+</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <script>
 (function(){
   const CATS = [
-    {id:'groceries', name:'Продукты', color:'#8FAE7C', keys:['пятерочка','перекрест','магнит','ашан','лента ','вкусвилл','дикси','окей','spar','metro']},
-    {id:'cafe', name:'Кафе и рестораны', color:'#D97896', keys:['кафе','ресторан','старбакс','кофе','coffee','kfc','макдон','mcdonald','burger','пицц','sushi','суши']},
-    {id:'transport', name:'Транспорт', color:'#6FA8DC', keys:['такси','taxi','yandex go','uber','ржд','aeroflot','s7 ','авиа','азс','лукойл','газпромнефть','shell','каршер','метрополитен']},
-    {id:'housing', name:'Жильё и ЖКХ', color:'#C9A876', keys:['жкх','коммунал','электросет','водоканал','управляющая компания','квартплата']},
-    {id:'comms', name:'Связь и интернет', color:'#8991A6', keys:['мтс','билайн','мегафон','tele2','теле2','ростелеком','интернет провайд']},
-    {id:'health', name:'Здоровье и аптеки', color:'#9C8FE0', keys:['аптека','клиника','стоматолог','больниц','медцентр']},
-    {id:'shopping', name:'Одежда и красота', color:'#C48FBF', keys:['zara','h&m','lamoda','ecco','салон красот','парикмахер','косметик']},
-    {id:'marketplace', name:'Маркетплейсы', color:'#E0B15B', keys:['wildberries','ozon.ru','яндекс маркет','aliexpress','avito']},
-    {id:'fun', name:'Развлечения и хобби', color:'#5FC7B8', keys:['кино','cinema','netflix','spotify','steam','ivi','okko','театр','музей']},
-    {id:'subs', name:'Подписки и сервисы', color:'#EFA646', keys:['подписк','apple.com/bill','google play','яндекс плюс','icloud']},
-    {id:'transfers', name:'Переводы и снятия', color:'#6B7A99', keys:['перевод','снятие наличных','атм ',' atm','cash withdraw']},
-    {id:'other', name:'Прочее', color:'#7A7F8A', keys:[]},
+    {id:'groceries', name:'Продукты', color:'#8FAE7C', icon:'🛒', keys:['пятерочка','перекрест','магнит','ашан','лента ','вкусвилл','дикси','окей','spar','metro']},
+    {id:'cafe', name:'Кафе и рестораны', color:'#D97896', icon:'☕', keys:['кафе','ресторан','старбакс','кофе','coffee','kfc','макдон','mcdonald','burger','пицц','sushi','суши']},
+    {id:'transport', name:'Транспорт', color:'#6FA8DC', icon:'🚕', keys:['такси','taxi','yandex go','uber','ржд','aeroflot','s7 ','авиа','азс','лукойл','газпромнефть','shell','каршер','метрополитен']},
+    {id:'housing', name:'Жильё и ЖКХ', color:'#C9A876', icon:'🏠', keys:['жкх','коммунал','электросет','водоканал','управляющая компания','квартплата']},
+    {id:'comms', name:'Связь и интернет', color:'#8991A6', icon:'📶', keys:['мтс','билайн','мегафон','tele2','теле2','ростелеком','интернет провайд']},
+    {id:'health', name:'Здоровье и аптеки', color:'#9C8FE0', icon:'💊', keys:['аптека','клиника','стоматолог','больниц','медцентр']},
+    {id:'shopping', name:'Одежда и красота', color:'#C48FBF', icon:'👗', keys:['zara','h&m','lamoda','ecco','салон красот','парикмахер','косметик']},
+    {id:'marketplace', name:'Маркетплейсы', color:'#E0B15B', icon:'📦', keys:['wildberries','ozon.ru','яндекс маркет','aliexpress','avito']},
+    {id:'fun', name:'Развлечения и хобби', color:'#5FC7B8', icon:'🎬', keys:['кино','cinema','netflix','spotify','steam','ivi','okko','театр','музей']},
+    {id:'subs', name:'Подписки и сервисы', color:'#EFA646', icon:'🔁', keys:['подписк','apple.com/bill','google play','яндекс плюс','icloud']},
+    {id:'transfers', name:'Переводы и снятия', color:'#6B7A99', icon:'💸', keys:['перевод','снятие наличных','атм ',' atm','cash withdraw']},
+    {id:'other', name:'Прочее', color:'#7A7F8A', icon:'⚪', keys:[]},
   ];
   const catById = id => CATS.find(c=>c.id===id) || CATS[CATS.length-1];
+
+  const PERIODS = [
+    {id:'today', label:'Сегодня'},
+    {id:'week', label:'7 дней'},
+    {id:'month', label:'Месяц'},
+    {id:'halfyear', label:'Полгода'},
+    {id:'year', label:'Год'},
+    {id:'all', label:'Всё время'},
+    {id:'custom', label:'Свой период'},
+  ];
+  const PREV_LABELS = {today:'ко вчера', week:'к прошлой неделе', month:'к прошлому месяцу', halfyear:'к прошлому полугодию', year:'к прошлому году'};
+  let currentPeriod = 'month';
 
   const CHAT_MODE = (typeof window.storage !== 'undefined' && typeof window.storage.get === 'function');
 
@@ -359,6 +426,35 @@
     return `rgba(${r},${g},${b},${a})`;
   };
   const todayStr = () => new Date().toISOString().slice(0,10);
+  const shiftDateStr = (base, days) => {
+    const d = new Date(base+'T00:00:00');
+    d.setDate(d.getDate()+days);
+    return d.toISOString().slice(0,10);
+  };
+
+  // ---------- period range helpers ----------
+  function getPeriodRange(id){
+    const today = todayStr();
+    const now = new Date();
+    switch(id){
+      case 'today': return {from:today, to:today};
+      case 'week': return {from:shiftDateStr(today,-6), to:today};
+      case 'month': return {from:new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10), to:today};
+      case 'halfyear': return {from:new Date(now.getFullYear(), now.getMonth()-6, now.getDate()).toISOString().slice(0,10), to:today};
+      case 'year': return {from:new Date(now.getFullYear()-1, now.getMonth(), now.getDate()).toISOString().slice(0,10), to:today};
+      case 'custom': return {from: $('#filterFrom').value || null, to: $('#filterTo').value || null};
+      case 'all': default: return {from:null, to:null};
+    }
+  }
+  function getPreviousRange(range){
+    if(!range.from || !range.to) return null;
+    const fromD = new Date(range.from+'T00:00:00');
+    const toD = new Date(range.to+'T00:00:00');
+    const spanDays = Math.round((toD-fromD)/86400000)+1;
+    const prevTo = new Date(fromD.getTime()-86400000);
+    const prevFrom = new Date(prevTo.getTime()-(spanDays-1)*86400000);
+    return {from:prevFrom.toISOString().slice(0,10), to:prevTo.toISOString().slice(0,10)};
+  }
 
   // ---------- connection status ----------
   function setConn(mode){
@@ -702,6 +798,7 @@
 
   // ---------- manual add modal ----------
   $('#addTxnBtn').addEventListener('click', openAddModal);
+  $('#fabAddBtn').addEventListener('click', openAddModal);
   function openAddModal(){
     const sources = [...new Set(state.txns.map(t=>t.source))];
     const overlayEl = document.createElement('div');
@@ -719,7 +816,7 @@
             <option value="__new__">+ другой источник…</option>
           </select>
           <label>Категория</label>
-          <select id="aCategory">${CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>
+          <select id="aCategory">${CATS.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('')}</select>
           <label>Метка</label>
           <div class="segmented" id="aType">
             <button type="button" data-v="personal">Личное</button>
@@ -810,7 +907,7 @@
     list.innerHTML = state.rules.map((r,idx)=>{
       const c = catById(r.category);
       return `<div class="rule-row">
-        <span class="rule-cat-label" title="${c.name}"><span class="cat-swatch" style="background:${c.color}"></span>${c.name}</span>
+        <span class="rule-cat-label" title="${c.name}"><span class="cat-swatch" style="background:${c.color}"></span>${c.icon} ${c.name}</span>
         <input type="text" data-idx="${idx}" class="ruleKeys" value="${r.keys.join(', ')}">
       </div>`;
     }).join('');
@@ -822,7 +919,7 @@
       });
     });
     const catSel = $('#newRuleCategory');
-    catSel.innerHTML = CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    catSel.innerHTML = CATS.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
   }
   $('#addRuleBtn').addEventListener('click', ()=>{
     const kw = $('#newRuleKeyword').value.trim();
@@ -839,13 +936,31 @@
     save(); render();
   });
 
+  // ---------- period pills ----------
+  function renderPeriodPills(){
+    $('#periodCustomDates').style.display = currentPeriod==='custom' ? 'flex' : 'none';
+    const host = $('#periodPills');
+    host.innerHTML = PERIODS.map(p=>`<button type="button" class="period-pill ${p.id===currentPeriod?'active':''}" data-id="${p.id}">${p.label}</button>`).join('');
+    host.querySelectorAll('.period-pill').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        currentPeriod = btn.dataset.id;
+        if(currentPeriod==='custom' && !$('#filterFrom').value){
+          $('#filterFrom').value = shiftDateStr(todayStr(), -29);
+          $('#filterTo').value = todayStr();
+        }
+        render();
+      });
+    });
+  }
+
   // ---------- filters ----------
   function currentFilters(){
+    const range = getPeriodRange(currentPeriod);
     return {
       type: $('#filterType').value,
       bank: $('#filterBank').value,
-      from: $('#filterFrom').value,
-      to: $('#filterTo').value,
+      from: range.from,
+      to: range.to,
       q: $('#searchInput').value.trim().toLowerCase(),
     };
   }
@@ -870,6 +985,19 @@
     });
     return list;
   }
+  // Личное/Рабочее в hero-блоке игнорируют выбор "Метка", чтобы переключатель периода
+  // двигал весь дашборд, но не обнулял вторую половину шкалы при активном фильтре по метке.
+  function filteredTxnsForHero(){
+    const f = currentFilters();
+    return state.txns.filter(t=>{
+      if(t.amount>=0) return false;
+      if(f.bank!=='all' && t.source!==f.bank) return false;
+      if(f.from && t.date < f.from) return false;
+      if(f.to && t.date > f.to) return false;
+      if(f.q && !t.desc.toLowerCase().includes(f.q)) return false;
+      return true;
+    });
+  }
   ['filterType','filterBank','filterFrom','filterTo','searchInput'].forEach(id=>{
     const el = document.getElementById(id);
     el.addEventListener(id==='searchInput' ? 'input' : 'change', render);
@@ -882,6 +1010,53 @@
       render();
     });
   });
+
+  // ---------- animated hero numbers ----------
+  const animCache = new Map();
+  function animateValue(el, key, to){
+    const from = animCache.has(key) ? animCache.get(key) : 0;
+    animCache.set(key, to);
+    if(from===to){ el.textContent = fmt(to); return; }
+    const start = performance.now();
+    const duration = 500;
+    if(el._raf) cancelAnimationFrame(el._raf);
+    function step(now){
+      const p = Math.min(1, (now-start)/duration);
+      const eased = 1-Math.pow(1-p,3);
+      el.textContent = fmt(from + (to-from)*eased);
+      if(p<1) el._raf = requestAnimationFrame(step);
+      else el.textContent = fmt(to);
+    }
+    el._raf = requestAnimationFrame(step);
+  }
+
+  function renderPeriodDelta(currentSum){
+    const el = $('#periodDelta');
+    if(currentPeriod==='all' || currentPeriod==='custom'){ el.innerHTML=''; return; }
+    const range = getPeriodRange(currentPeriod);
+    const prev = getPreviousRange(range);
+    if(!prev){ el.innerHTML=''; return; }
+    const f = currentFilters();
+    const prevSum = state.txns.filter(t=>{
+      if(t.amount>=0) return false;
+      if(f.bank!=='all' && t.source!==f.bank) return false;
+      if(f.q && !t.desc.toLowerCase().includes(f.q)) return false;
+      if(t.date < prev.from || t.date > prev.to) return false;
+      return true;
+    }).reduce((s,t)=>s+(-t.amount),0);
+
+    const label = PREV_LABELS[currentPeriod] || 'к прошлому периоду';
+    if(prevSum===0){
+      el.innerHTML = currentSum>0 ? `${fmt(currentSum)} — за прошлый период трат не было` : '';
+      return;
+    }
+    const diff = currentSum - prevSum;
+    if(diff===0){ el.innerHTML = `без изменений ${label}`; return; }
+    const pct = Math.round(Math.abs(diff)/prevSum*100);
+    const cls = diff>0 ? 'up' : 'down';
+    const arrow = diff>0 ? '↑' : '↓';
+    el.innerHTML = `<span class="${cls}">${arrow} ${pct}%</span> ${label} (${diff>0?'+':'−'}${fmt(Math.abs(diff))})`;
+  }
 
   // ---------- rendering ----------
   let catChart=null, monthChart=null;
@@ -896,25 +1071,30 @@
     renderRules();
     renderFileChips();
     renderBankOptions();
+    renderPeriodPills();
     const txns = filteredTxns();
+    const heroTxns = filteredTxnsForHero();
 
-    const personal = state.txns.filter(t=>t.amount<0 && t.type==='personal').reduce((s,t)=>s+(-t.amount),0);
-    const work = state.txns.filter(t=>t.amount<0 && t.type==='work').reduce((s,t)=>s+(-t.amount),0);
-    const unsetCount = state.txns.filter(t=>t.amount<0 && t.type==='unset').length;
+    const personal = heroTxns.filter(t=>t.type==='personal').reduce((s,t)=>s+(-t.amount),0);
+    const work = heroTxns.filter(t=>t.type==='work').reduce((s,t)=>s+(-t.amount),0);
+    const unsetCount = txns.filter(t=>t.type==='unset').length;
     const total = txns.reduce((s,t)=>s+(-t.amount),0);
     const sum = personal+work;
 
-    $('#heroP').textContent = fmt(personal);
-    $('#heroW').textContent = fmt(work);
+    animateValue($('#heroP'), 'heroP', personal);
+    animateValue($('#heroW'), 'heroW', work);
     $('#pctP').textContent = sum ? Math.round(personal/sum*100)+'%' : '—';
     $('#pctW').textContent = sum ? Math.round(work/sum*100)+'%' : '—';
     $('#scaleFillP').style.width = (sum? personal/sum*50:0)+'%';
     $('#scaleFillW').style.width = (sum? work/sum*50:0)+'%';
+    renderPeriodDelta(sum);
+
+    $('#headerBalance').innerHTML = sum ? `<b class="p">${fmt(personal)}</b> · <b class="w">${fmt(work)}</b>` : '';
 
     $('#statStrip').innerHTML = [
       ['total', fmt(total), 'по фильтру', 'var(--text)'],
-      ['personal', fmt(personal), 'личное всего', 'var(--personal)'],
-      ['work', fmt(work), 'рабочее всего', 'var(--work)'],
+      ['personal', fmt(personal), 'личное', 'var(--personal)'],
+      ['work', fmt(work), 'рабочее', 'var(--work)'],
       ['unset', unsetCount, 'без метки', 'var(--muted)'],
     ].map(([key,n,l,c])=>`
       <div class="stat-item">
@@ -922,43 +1102,12 @@
         <div><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>
       </div>`).join('');
 
-    renderPeriodStrip();
+    $('#filterEmptyNote').style.display = (state.txns.length>0 && txns.length===0) ? 'block' : 'none';
+
     renderCatChart(txns);
     renderMonthChart(txns);
     renderTable(txns);
-  }
-
-  function renderPeriodStrip(){
-    const now = new Date();
-    const todayD = todayStr();
-    const dayMs = 86400000;
-    const weekAgo = new Date(now.getTime() - 6*dayMs).toISOString().slice(0,10);
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
-    const halfYearAgo = new Date(now.getFullYear(), now.getMonth()-6, now.getDate()).toISOString().slice(0,10);
-
-    const expenses = state.txns.filter(t=>t.amount<0 && t.date);
-    const sumSince = (from, to) => expenses.filter(t=> t.date>=from && (!to || t.date<=to)).reduce((s,t)=>s+(-t.amount),0);
-
-    const dayTotal = sumSince(todayD, todayD);
-    const weekTotal = sumSince(weekAgo, todayD);
-    const monthTotal = sumSince(monthStart, todayD);
-    const halfYearTotal = sumSince(halfYearAgo, todayD);
-
-    const daysInMonthSoFar = now.getDate();
-    const avgPerDayMonth = daysInMonthSoFar ? monthTotal/daysInMonthSoFar : 0;
-
-    const tiles = [
-      ['Сегодня', dayTotal, ''],
-      ['За 7 дней', weekTotal, weekTotal ? '~'+fmt(weekTotal/7)+' / день' : ''],
-      ['Этот месяц', monthTotal, monthTotal ? '~'+fmt(avgPerDayMonth)+' / день' : ''],
-      ['Полгода', halfYearTotal, halfYearTotal ? '~'+fmt(halfYearTotal/6)+' / месяц' : ''],
-    ];
-    $('#periodStrip').innerHTML = tiles.map(([l,v,d])=>`
-      <div class="period-item">
-        <div class="pl">${l}</div>
-        <div class="pv">${fmt(v)}</div>
-        ${d ? `<div class="pd">${d}</div>` : ''}
-      </div>`).join('');
+    renderTxnList(txns);
   }
 
   function renderBankOptions(){
@@ -990,7 +1139,10 @@
       },
       options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
     });
-    legendHost.innerHTML = entries.map(([id,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${catById(id).color}"></span><span class="legend-name" title="${catById(id).name}">${catById(id).name}</span><span class="legend-amt">${fmt(v)}</span></div>`).join('');
+    legendHost.innerHTML = entries.map(([id,v])=>{
+      const c = catById(id);
+      return `<div class="legend-item"><span class="legend-icon" style="background:${hexToRgba(c.color,.18)}">${c.icon}</span><span class="legend-name" title="${c.name}">${c.name}</span><span class="legend-amt">${fmt(v)}</span></div>`;
+    }).join('');
   }
 
   function renderMonthChart(txns){
@@ -1022,48 +1174,31 @@
     });
   }
 
-  function renderTable(txns){
-    const body = $('#txnBody');
-    $('#txnCount').textContent = txns.length ? `${txns.length} шт.` : '';
-    $('#emptyState').style.display = state.txns.length? 'none':'flex';
-    body.innerHTML = txns.slice(0,500).map(t=>{
-      const c = catById(t.category);
-      return `<tr data-id="${t.id}">
-        <td class="mono">${t.date||'—'}</td>
-        <td class="desc-cell" title="${escapeHtml(t.desc)}">${escapeHtml(t.desc)}</td>
-        <td class="muted" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(t.source)}">${escapeHtml(t.source)}</td>
-        <td>
-          <select class="catSel cat-pill" data-id="${t.id}" style="background:${hexToRgba(c.color,.15)}; color:${c.color};">
-            ${CATS.map(cc=>`<option value="${cc.id}" ${cc.id===t.category?'selected':''}>${cc.name}</option>`).join('')}
-          </select>
-        </td>
-        <td>
-          <div class="segmented">
-            <button type="button" class="typeBtn ${t.type==='personal'?'active-p':''}" data-id="${t.id}" data-act="personal">Личное</button>
-            <button type="button" class="typeBtn ${t.type==='work'?'active-w':''}" data-id="${t.id}" data-act="work">Рабочее</button>
-          </div>
-        </td>
-        <td class="amt">${fmt(-t.amount)}</td>
-      </tr>`;
-    }).join('');
-
-    body.querySelectorAll('.catSel').forEach(sel=>{
+  // ---------- shared row controls (desktop table + mobile card list) ----------
+  function wireRowControls(container){
+    container.querySelectorAll('.catSel').forEach(sel=>{
       sel.addEventListener('change', async e=>{
         const t = state.txns.find(x=>x.id===e.target.dataset.id);
-        if(t){
-          t.category = e.target.value;
-          const c = catById(t.category);
-          e.target.style.background = hexToRgba(c.color,.15);
-          e.target.style.color = c.color;
-          save(); renderCatChart(filteredTxns());
-          if(remoteReady()){
-            try{ await remotePost({action:'update_fields', id:t.id, fields:{category:t.category}}); }
-            catch(err){ console.error('update_fields failed', err); }
-          }
+        if(!t) return;
+        t.category = e.target.value;
+        const c = catById(t.category);
+        e.target.style.background = hexToRgba(c.color,.15);
+        e.target.style.color = c.color;
+        const card = e.target.closest('.txn-card');
+        if(card){
+          const icon = card.querySelector('.tc-icon');
+          if(icon){ icon.textContent = c.icon; icon.style.background = hexToRgba(c.color,.18); }
+          const meta = card.querySelector('.tc-meta');
+          if(meta) meta.textContent = t.source + ' · ' + c.name;
+        }
+        save(); renderCatChart(filteredTxns());
+        if(remoteReady()){
+          try{ await remotePost({action:'update_fields', id:t.id, fields:{category:t.category}}); }
+          catch(err){ console.error('update_fields failed', err); }
         }
       });
     });
-    body.querySelectorAll('.typeBtn').forEach(btn=>{
+    container.querySelectorAll('.typeBtn').forEach(btn=>{
       btn.addEventListener('click', async e=>{
         const t = state.txns.find(x=>x.id===e.target.dataset.id);
         if(!t) return;
@@ -1076,6 +1211,81 @@
         }
       });
     });
+  }
+
+  function renderTable(txns){
+    const body = $('#txnBody');
+    $('#txnCount').textContent = txns.length ? `${txns.length} шт.` : '';
+    $('#emptyState').style.display = state.txns.length? 'none':'flex';
+    body.innerHTML = txns.slice(0,500).map(t=>{
+      const c = catById(t.category);
+      return `<tr data-id="${t.id}">
+        <td class="mono">${t.date||'—'}</td>
+        <td class="desc-cell" title="${escapeHtml(t.desc)}">${escapeHtml(t.desc)}</td>
+        <td class="muted" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(t.source)}">${escapeHtml(t.source)}</td>
+        <td>
+          <select class="catSel cat-pill" data-id="${t.id}" style="background:${hexToRgba(c.color,.15)}; color:${c.color};">
+            ${CATS.map(cc=>`<option value="${cc.id}" ${cc.id===t.category?'selected':''}>${cc.icon} ${cc.name}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <div class="segmented">
+            <button type="button" class="typeBtn ${t.type==='personal'?'active-p':''}" data-id="${t.id}" data-act="personal">Личное</button>
+            <button type="button" class="typeBtn ${t.type==='work'?'active-w':''}" data-id="${t.id}" data-act="work">Рабочее</button>
+          </div>
+        </td>
+        <td class="amt">${fmt(-t.amount)}</td>
+      </tr>`;
+    }).join('');
+    wireRowControls(body);
+  }
+
+  function formatDateHeader(dateStr){
+    if(!dateStr) return 'Без даты';
+    const today = todayStr();
+    const yesterday = shiftDateStr(today,-1);
+    if(dateStr===today) return 'Сегодня';
+    if(dateStr===yesterday) return 'Вчера';
+    const d = new Date(dateStr+'T00:00:00');
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const sameYear = d.getFullYear()===new Date().getFullYear();
+    return d.getDate()+' '+months[d.getMonth()]+(sameYear?'':' '+d.getFullYear());
+  }
+
+  function renderTxnList(txns){
+    const host = $('#txnList');
+    const sorted = [...txns].sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+    let html = '';
+    let lastDate;
+    sorted.slice(0,500).forEach(t=>{
+      if(t.date !== lastDate){
+        html += `<div class="txn-date-header">${formatDateHeader(t.date)}</div>`;
+        lastDate = t.date;
+      }
+      const c = catById(t.category);
+      html += `
+        <div class="txn-card" data-id="${t.id}">
+          <div class="tc-top">
+            <div class="tc-icon" style="background:${hexToRgba(c.color,.18)}">${c.icon}</div>
+            <div class="tc-main">
+              <div class="tc-desc">${escapeHtml(t.desc)}</div>
+              <div class="tc-meta">${escapeHtml(t.source)} · ${escapeHtml(c.name)}</div>
+            </div>
+            <div class="tc-amt">${fmt(-t.amount)}</div>
+          </div>
+          <div class="tc-bottom">
+            <select class="catSel cat-pill" data-id="${t.id}" style="background:${hexToRgba(c.color,.15)}; color:${c.color};">
+              ${CATS.map(cc=>`<option value="${cc.id}" ${cc.id===t.category?'selected':''}>${cc.icon} ${cc.name}</option>`).join('')}
+            </select>
+            <div class="segmented">
+              <button type="button" class="typeBtn ${t.type==='personal'?'active-p':''}" data-id="${t.id}" data-act="personal">Личное</button>
+              <button type="button" class="typeBtn ${t.type==='work'?'active-w':''}" data-id="${t.id}" data-act="work">Рабочее</button>
+            </div>
+          </div>
+        </div>`;
+    });
+    host.innerHTML = html;
+    wireRowControls(host);
   }
 
   // ---------- export / clear ----------
