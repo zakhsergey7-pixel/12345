@@ -88,6 +88,33 @@ function appendTxn_(sheet, txn) {
   return id;
 }
 
+function appendTxnsBatch_(sheet, txns) {
+  // Один вызов setValues() вместо appendRow() в цикле — для импорта выписки
+  // на десятки строк это секунды вместо минут и убирает гонку с параллельным
+  // запросом "Обновить" с сайта, который может застать ещё не дописанные данные.
+  if (!txns || !txns.length) return [];
+  const now = new Date();
+  const ids = [];
+  const rows = txns.map(function (txn) {
+    const id = txn.id || Utilities.getUuid();
+    ids.push(id);
+    return [
+      id,
+      now,
+      txn.date || '',
+      Number(txn.amount) || 0,
+      txn.desc || '',
+      txn.source || '',
+      txn.category || 'other',
+      txn.type || 'unset',
+      txn.fileId || '',
+    ];
+  });
+  const startRow = sheet.getLastRow() + 1;
+  sheet.getRange(startRow, 1, rows.length, HEADERS.length).setValues(rows);
+  return ids;
+}
+
 // ---------------------------------------------------------------------------
 // HTTP entry points
 // ---------------------------------------------------------------------------
@@ -136,7 +163,7 @@ function handleSiteAction_(body) {
     }
     case 'bulk_add': {
       const txns = body.txns || [];
-      const ids = txns.map(t => appendTxn_(sheet, t));
+      const ids = appendTxnsBatch_(sheet, txns);
       return jsonOut_({ ok: true, ids: ids });
     }
     case 'update_fields': {
