@@ -125,6 +125,17 @@
   .file-chip button{padding:3px 7px; flex-shrink:0;}
   .empty-note{color:var(--muted2); font-size:12px; padding:4px 2px;}
 
+  /* ---------- bank breakdown ---------- */
+  .bank-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .bank-row:last-child{margin-bottom:0;}
+  .bank-badge{width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;}
+  .bank-main{flex:1; min-width:0;}
+  .bank-name-row{display:flex; justify-content:space-between; gap:8px; font-size:12px; margin-bottom:4px;}
+  .bank-name{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bank-amt{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; flex-shrink:0;}
+  .bank-bar{height:6px; background:var(--surface3); border-radius:4px; overflow:hidden;}
+  .bank-bar-fill{height:100%; border-radius:4px; transition:width .35s ease;}
+
   /* ---------- hero / balance ---------- */
   .hero-scale-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; gap:10px;}
   .hero-scale-labels .side{display:flex; flex-direction:column; min-width:0;}
@@ -310,6 +321,11 @@
       </div>
 
       <div class="card">
+        <div class="card-title-row"><h3>По банкам</h3></div>
+        <div id="bankBreakdown"></div>
+      </div>
+
+      <div class="card">
         <details>
           <summary>Правила категорий</summary>
           <div id="rulesList"></div>
@@ -412,6 +428,22 @@
     {id:'other', name:'Прочее', color:'#7A7F8A', icon:'⚪', keys:[]},
   ];
   const catById = id => CATS.find(c=>c.id===id) || CATS[CATS.length-1];
+
+  const BANK_STYLES = {
+    'Т-Банк': {color:'#FFDD2D', text:'#1A1A1A', icon:'Т'},
+    'Точка': {color:'#3B82F6', text:'#fff', icon:'⚡'},
+    'Озон Банк': {color:'#005BFF', text:'#fff', icon:'O'},
+    'Сбер': {color:'#21A038', text:'#fff', icon:'С'},
+    'Сбербанк': {color:'#21A038', text:'#fff', icon:'С'},
+    'Альфа-Банк': {color:'#EF3124', text:'#fff', icon:'A'},
+    'Альфа': {color:'#EF3124', text:'#fff', icon:'A'},
+    'ВТБ': {color:'#009FDB', text:'#fff', icon:'В'},
+  };
+  function bankStyle(name){
+    if(BANK_STYLES[name]) return BANK_STYLES[name];
+    const letter = (name||'?').trim().charAt(0).toUpperCase() || '?';
+    return {color:'#5C6275', text:'#fff', icon:letter};
+  }
 
   const PERIODS = [
     {id:'today', label:'Сегодня'},
@@ -727,7 +759,7 @@
         <div class="muted" style="font-size:12px;">${escapeHtml(filename)} · строк: ${dataRows.length}</div>
         <div class="modal-grid">
           <label>Источник</label>
-          <select id="mSource"><option>Т-Банк</option><option>Точка</option><option>Озон Банк</option><option>Другое</option></select>
+          <select id="mSource"><option>Т-Банк</option><option>Точка</option><option>Озон Банк</option><option>Сбер</option><option>Альфа-Банк</option><option>ВТБ</option><option value="__other__">Другое…</option></select>
           <label>Дата</label><select id="mDate"></select>
           <label>Описание</label><select id="mDesc"></select>
           <label>Сумма (1 колонка)</label><select id="mAmount"><option value="-1">— не использовать —</option></select>
@@ -753,6 +785,17 @@
     fillSelect(overlayEl.querySelector('#mAmount'), gAmount);
     fillSelect(overlayEl.querySelector('#mDebit'), gDebit);
     fillSelect(overlayEl.querySelector('#mCredit'), gCredit);
+
+    overlayEl.querySelector('#mSource').addEventListener('change', e=>{
+      if(e.target.value==='__other__'){
+        const name = prompt('Название банка/источника:');
+        if(name){
+          const opt = document.createElement('option');
+          opt.value=name; opt.textContent=name; opt.selected=true;
+          e.target.insertBefore(opt, e.target.lastElementChild);
+        } else { e.target.selectedIndex = 0; }
+      }
+    });
 
     overlayEl.querySelector('#mCancel').onclick = ()=>overlayEl.remove();
     overlayEl.querySelector('#mOk').onclick = async ()=>{
@@ -1041,6 +1084,19 @@
       return true;
     });
   }
+  // По банкам считаем без учёта фильтра "Источник" — иначе выбор конкретного банка
+  // схлопывал бы карточку сравнения до одной строки.
+  function filteredTxnsForBanks(){
+    const f = currentFilters();
+    return state.txns.filter(t=>{
+      if(t.amount>=0) return false;
+      if(f.type!=='all' && t.type!==f.type) return false;
+      if(f.from && t.date < f.from) return false;
+      if(f.to && t.date > f.to) return false;
+      if(f.q && !t.desc.toLowerCase().includes(f.q)) return false;
+      return true;
+    });
+  }
   ['filterType','filterBank','searchInput'].forEach(id=>{
     const el = document.getElementById(id);
     el.addEventListener(id==='searchInput' ? 'input' : 'change', render);
@@ -1155,8 +1211,30 @@
 
     renderCatChart(txns);
     renderMonthChart(txns);
+    renderBankBreakdown(filteredTxnsForBanks());
     renderTable(txns);
     renderTxnList(txns);
+  }
+
+  function renderBankBreakdown(txns){
+    const byBank = {};
+    txns.forEach(t=>{ byBank[t.source] = (byBank[t.source]||0) + (-t.amount); });
+    const entries = Object.entries(byBank).sort((a,b)=>b[1]-a[1]);
+    const host = $('#bankBreakdown');
+    if(entries.length===0){ host.innerHTML = `<div class="empty-note">Нет операций за выбранный период.</div>`; return; }
+    const max = entries[0][1] || 1;
+    host.innerHTML = entries.map(([name,v])=>{
+      const st = bankStyle(name);
+      const pct = Math.round(v/max*100);
+      return `
+        <div class="bank-row">
+          <div class="bank-badge" style="background:${st.color}; color:${st.text}">${escapeHtml(st.icon)}</div>
+          <div class="bank-main">
+            <div class="bank-name-row"><span class="bank-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="bank-amt">${fmt(v)}</span></div>
+            <div class="bank-bar"><div class="bank-bar-fill" style="width:${pct}%; background:${st.color}"></div></div>
+          </div>
+        </div>`;
+    }).join('');
   }
 
   function renderBankOptions(){
