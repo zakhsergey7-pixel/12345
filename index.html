@@ -1,2232 +1,1102 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORGANI'CARE — доставка корпоративного питания и кейтеринг в Санкт-Петербурге</title>
-    <meta name="description" content="Доставка обедов в офис в Санкт-Петербурге. Закажите пробную неделю комплексных обедов ресторанного качества.">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --main: #3d3d3d;
-            --accent: #c451ff;
-            --accent-dark: #9333ff;
-            --text-light: #ffffff;
-            --glass: rgba(255,255,255,0.12);
-            --card-bg: #ffffff;
-            --border-light: #f0eef2;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            color: var(--main); 
-            line-height: 1.55; 
-            overflow-x: hidden;
-            background: #fdfdfd;
-        }
-
-
-      /* ==================== ОБЩИЕ АНИМАЦИИ ==================== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(60px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== UNIFIED SCROLL ANIMATION ===== */
-        .animate-section {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            pointer-events: none;
-        }
-        .animate-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        /* ===== FEEDBACK WIDGET ===== */
-        .fb-widget {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 14px;
-        }
-        .fb-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0;
-            background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
-            color: #fff;
-            border: none;
-            border-radius: 60px;
-            padding: 14px 18px;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 1px rgba(196,81,255,0.2);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            overflow: hidden;
-            max-width: 54px;
-            white-space: nowrap;
-        }
-        .fb-toggle:hover {
-            max-width: 220px;
-            background: linear-gradient(135deg, #9333ff, #c451ff);
-            box-shadow: 0 12px 35px rgba(147,51,255,0.4);
-            padding: 14px 22px;
-            gap: 10px;
-        }
-        .fb-icon { flex-shrink: 0; display: flex; align-items: center; }
-        .fb-icon svg { width: 22px; height: 22px; }
-        .fb-label {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            opacity: 0;
-            max-width: 0;
-            overflow: hidden;
-            transition: opacity 0.3s ease 0.1s, max-width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            letter-spacing: 0.3px;
-        }
-        .fb-toggle:hover .fb-label { opacity: 1; max-width: 160px; }
-        .fb-panel {
-            width: 320px;
-            background: #fff;
-            border-radius: 22px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(196,81,255,0.1);
-            overflow: hidden;
-            transform: translateY(20px) scale(0.92);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            transform-origin: bottom right;
-        }
-        .fb-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
-        .fb-panel-header {
-            background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
-            color: #fff;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .fb-close { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.7); padding: 2px; display: flex; transition: color 0.2s; }
-        .fb-close:hover { color: #fff; }
-        .fb-close svg { width: 18px; height: 18px; }
-        .fb-panel-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .fb-input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid #e8e8e8;
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            color: #2f2f2f;
-            background: #fafafa;
-            transition: border-color 0.2s, background 0.2s;
-            box-sizing: border-box;
-            outline: none;
-            resize: none;
-        }
-        .fb-input:focus { border-color: #9333ff; background: #fff; }
-        .fb-textarea { min-height: 90px; }
-        .fb-send {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #2f2f2f, #1a1a1a);
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            padding: 13px 20px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        }
-        .fb-send:hover { background: linear-gradient(135deg, #9333ff, #c451ff); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(147,51,255,0.35); }
-        .fb-send svg { width: 16px; height: 16px; }
-        .fb-success { display: none; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: #16a34a; padding: 10px 14px; background: #f0fdf4; border-radius: 12px; }
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.85); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* ==================== HEADER ==================== */
-        header {
-            background: rgba(61, 61, 61, 0.95);
-            backdrop-filter: blur(12px);
-            position: fixed;
-            top: 0; left: 0; width: 100%; z-index: 1000;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-            transition: all 0.4s ease;
-        }
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 80px;
-        }
-        .logo img { 
-            height: 58px; 
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .logo:hover img { transform: scale(1.08) rotate(8deg); }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 32px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-        nav a:hover { color: #e6b5ff; }
-        nav a:hover::after { width: 100%; }
-
-        .burger {
-            display: none;
-            cursor: pointer;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .burger span {
-            width: 28px;
-            height: 3px;
-            background: #e6b5ff;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .burger.active span:nth-child(2) { opacity: 0; }
-        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
-
-        
-       /* ==================== HERO ==================== */
-.hero {
-    height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    overflow: hidden;
-}
-
-.hero iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border: none;
-    z-index: -2;
-    filter: brightness(1.25);
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://grainy-gradients.vercel.app/noise.svg');
-    opacity: 0.08;
-    z-index: 1;
-}
-
-.hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.72) 100%);
-    z-index: -1;
-}
-
-.hero-content {
-    z-index: 2;
-    max-width: 960px;
-    padding: 0 20px;
-    animation: fadeInUp 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.hero-title {
-    line-height: 0.78;
-    margin-bottom: 16px;
-}
-
-/* Тонкий верхний ORGANI */
-
-
-.hero-subtitle {
-    margin-bottom: 28px;
-}
-
-.hero-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px 48px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-
-    color: white;
-    text-decoration: none;
-
-    border-radius: 60px;
-    background: linear-gradient(135deg, #6d28d9, #a855f7);
-
-    box-shadow: 
-        0 10px 30px rgba(0,0,0,0.25),
-        0 0 0 1px rgba(255,255,255,0.08) inset;
-
-    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-/* эффект "свет проходит" */
-.hero-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 120%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,0.25),
-        transparent
-    );
-    transition: 0.8s;
-}
-
-.hero-btn:hover::before {
-    left: 120%;
-}
-
-/* hover */
-.hero-btn:hover {
-    transform: translateY(-4px);
-    box-shadow: 
-        0 25px 60px rgba(168,85,247,0.5),
-        0 0 0 1px rgba(255,255,255,0.12) inset;
-}
-
-.hero-logo {
-    margin-bottom: 24px;
-}
-
-.hero-logo-img {
-    width: 420px;
-    max-width: 82%;
-    height: auto;
-    filter: brightness(1.05) drop-shadow(0 12px 40px rgba(0,0,0,0.65));
-    transition: transform 0.5s ease;
-}
-
-.hero-logo-img:hover {
-    transform: scale(1.04);
-}
-
-/* Адаптив для мобильных */
-@media (max-width: 768px) {
-    .hero-logo-img {
-        width: 320px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-logo-img {
-        width: 260px;
-    }
-}
-
-/* === HERO LOGO TEXT (ORGANI CARE) === */
-.hero-brand {
-    font-size: 72px;
-    font-weight: 700;
-    letter-spacing: 6px;
-    color: white;
-    text-transform: uppercase;
-    line-height: 1;
-    margin-bottom: 20px;
-}
-
-.hero-brand span {
-    font-weight: 700; /* одинаковая толщина */
-}
-
-/* адаптив */
-@media (max-width: 768px) {
-    .hero-brand {
-        font-size: 42px;
-        letter-spacing: 4px;
-    }
-}
-
-/* click */
-.hero-btn:active {
-    transform: translateY(-1px) scale(0.98);
-}
-        /* ==================== TRUST (взято из about.html) ==================== */
-        .trust {
-            background: #fff;
-            padding: 100px 20px 80px;
-            text-align: center;
-        }
-        .trust h2 {
-            font-size: 40px;
-            text-align: center;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            color: #2f2f2f;
-        }
-        .slider-wrapper {
-            max-width: 100%;
-            overflow: hidden;
-        }
-        .slides {
-            display: flex;
-            width: 100%;
-            transition: transform 0.6s ease;
-        }
-        .slide {
-            min-width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            flex-wrap: wrap;
-        }
-        .slide img {
-            width: 130px;
-            height: auto;
-            opacity: 0.9;
-        }
-        .client img {
-            width: 130px;
-            height: auto;
-            opacity: 0.9;
-            filter: grayscale(80%);
-            transition: all 0.4s ease;
-        }
-        .client img:hover {
-            filter: grayscale(0%) brightness(1.05);
-            transform: scale(1.08);
-            opacity: 1;
-        }
-
-        /* ==================== MISSION (СТАТИЧНОЕ ФОТО, БЕЗ РАМКИ) ==================== */
-        .mission {
-    background-attachment: fixed;
-}
-        .mission-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 80px;
-            flex-wrap: wrap;
-        }
-        .mission-left {
-            flex: 1.2;
-            min-width: 300px;
-        }
-        .mission-label {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: inline-block;
-            background: rgba(248, 247, 248, 0.1);
-            padding: 6px 14px;
-            border-radius: 40px;
-        }
-        .mission-left h2 {
-            font-size: 48px;
-            font-weight: 600;
-            margin-bottom: 32px;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #2d2d2d, #5a5a5a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .mission-desc {
-            font-size: 20px;
-            line-height: 1.6;
-            color: #4a4a4a;
-            margin-bottom: 36px;
-            font-weight: 500;
-        }
-        .mission-quote {
-            border-left: 4px solid var(--accent);
-            padding-left: 24px;
-            font-style: normal;
-            font-size: 18px;
-            color: #666;
-            margin-top: 32px;
-        }
-        .mission-quote span {
-            display: block;
-            margin-top: 12px;
-            font-weight: 700;
-            color: var(--accent-dark);
-        }
-        .mission-right {
-            flex: 0.9;
-            min-width: 320px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        /* Фото: убрана анимация, рамка, тень, скругления */
-        .mission-image {
-            width: 100%;
-            max-width: 480px;
-            display: block;
-            border: none;
-            outline: none;
-            background: transparent;
-            box-shadow: none;
-            border-radius: 0;
-            transition: none; /* Полностью статично */
-        }
-
-        /* ==================== SERVICES ==================== */
-      
-/* ==================== SERVICES - 3D АНИМАЦИЯ ==================== */
-/* ==================== SERVICES - ПРЕМИУМ ВЕРСИЯ ==================== */
-.services {
-    padding: 80px 20px 160px;
-    position: relative;
-    color: white;
-    text-align: center;
-    overflow: hidden;
-    background: url('https://sun9-54.vkuserphoto.ru/s/v1/ig2/fTCcl1-TViNs8Xkfm969SVBLBtK1EzM7Iz7BDqxWGQ6_AHVQo8YL3IBzOkAvIslxS0oWTf-vTDNWQ2JhdKM1fDJd.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x240,480x319,540x359,640x426,720x479,1080x719,1280x852,1440x958,2000x1331&from=bu&cs=1280x0')
-    center/cover no-repeat fixed;
-}
-
-.services h2 {
-    font-size: 48px;
-    margin-bottom: 100px;
-    position: relative;
-    z-index: 2;
-    color: #fff;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.9),
-                 0 0 30px rgba(168,85,247,0.35);
-}
-
-/* Более компактная и премиальная сетка */
-.services-grid-new {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 20px;
-    perspective: 1200px;
-}
-
-.service-card-new {
-    background: rgba(22, 22, 22, 0.88);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 28px 24px 32px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
-    transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-    min-height: 200px;
-    text-decoration: none;
-    cursor: pointer;
-    z-index: 2;
-}
-
-/* Hover эффект — более утончённый */
-.service-card-new:hover,
-.service-card-new.js-hovered {
-    transform: translateY(-10px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    border-color: rgba(196, 81, 255, 0.35);
-    background: rgba(30, 22, 40, 0.92);
-}
-
-/* Стрелка-ссылка */
-.service-card-new .card-arrow {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(196,81,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    opacity: 0;
-}
-.service-card-new:hover .card-arrow,
-.service-card-new.js-hovered .card-arrow {
-    opacity: 1;
-    background: rgba(196,81,255,0.3);
-    transform: translate(2px, -2px);
-}
-.service-card-new .card-arrow svg {
-    width: 14px;
-    height: 14px;
-    stroke: #e0aaff;
-    fill: none;
-}
-
-/* Номер карточки */
-.card-number {
-    position: absolute;
-    top: 24px;
-    right: 28px;
-    font-size: 38px;
-    font-weight: 900;
-    line-height: 1;
-    color: rgba(255,255,255,0.09);
-    transition: all 0.4s ease;
-}
-
-.service-card-new:hover .card-number {
-    color: rgba(196, 81, 255, 0.25);
-}
-
-/* Заголовок */
-.service-card-new h3 {
-    font-size: 19px;
-    font-weight: 700;
-    line-height: 1.3;
-    margin: 0 0 12px 0;
-    color: #ffffff;
-    text-align: center;
-}
-
-/* Описание */
-.service-desc {
-    font-size: 14px;
-    line-height: 1.5;
-    color: rgba(255,255,255,0.75);
-    flex-grow: 1;
-    text-align: center;
-}
-
-/* Адаптив */
-@media (max-width: 1150px) {
-    .services-grid-new {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 680px) {
-    .services-grid-new {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
-    .service-card-new {
-        padding: 34px 24px 38px;
-        min-height: 240px;
-    }
-}
-
-        /* ==================== DIFFERENCE ==================== */
-        .difference {
-            padding: 160px 20px 140px;
-            background: #ffffff;
-            text-align: center;
-            overflow: hidden;
-        }
-        .difference h2 {
-            font-size: 48px;
-            margin-bottom: 100px;
-            color: #3d3d3d;
-        }
-        .infographic {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 40px;
-            position: relative;
-            max-width: 1280px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-        .info-item {
-            flex: 1;
-            min-width: 280px;
-            max-width: 360px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .infographic.visible .info-item {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .info-item:nth-child(1) { transition-delay: 0.1s; }
-        .info-item:nth-child(3) { transition-delay: 0.4s; }
-        .info-item:nth-child(5) { transition-delay: 0.7s; }
-
-        .info-number {
-            font-size: 22px;
-            font-weight: 700;
-            color: #c451ff;
-            margin-bottom: 12px;
-            letter-spacing: 2px;
-        }
-        .info-photo {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 24px;
-            border-radius: 0;
-            overflow: visible;
-            background: none;
-            box-shadow: none;
-            transition: all 0.5s ease;
-        }
-        .info-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            border-radius: 0;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
-        .info-photo:hover img {
-            transform: scale(1.05);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-        }
-        .info-content h3 {
-            font-size: 26px;
-            margin-bottom: 16px;
-            color: #3d3d3d;
-        }
-        .info-content p {
-            font-size: 17px;
-            line-height: 1.75;
-            color: #555;
-        }
-        .info-connector {
-            flex: 0 0 80px;
-            height: 4px;
-            background: linear-gradient(to right, #c451ff, #9333ff);
-            position: relative;
-            top: 80px;
-            box-shadow: 0 0 15px rgba(196, 81, 255, 0.4);
-        }
-        .info-connector::before,
-        .info-connector::after {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background: #c451ff;
-            border-radius: 50%;
-            top: -5px;
-        }
-        .info-connector::before { left: -7px; }
-        .info-connector::after { right: -7px; }
-
-/* ==================== GUARANTEE ==================== */
-.guarantee {
-    padding: 220px 20px 100px;
-    text-align: center;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    background: url('https://sun9-74.userapi.com/s/v1/ig2/dOv863Yp3KbTVV2bFZNKO8jkugToTD5Ip45Tw69FB58rNtL1ILnVgtOLINn6stOXgGuZErO1QXajd34I_TBkgmzu.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x106,240x160,360x240,480x319,540x359,640x426,720x479,1080x719,1280x852,1440x958,1537x1023&from=bu&cs=1537x0')
-    center/cover no-repeat fixed;
-}
-
-.guarantee::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.15) 0%,
-        rgba(0,0,0,0.5) 45%,
-        rgba(10,5,20,0.75) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-}
-
-.guarantee-container {
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.guarantee h2 {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: rgba(196,81,255,0.9);
-    margin-bottom: 20px;
-    text-shadow: none;
-}
-
-.guarantee-headline {
-    font-size: clamp(36px, 3vw, 60px);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 70px;
-    letter-spacing: -0.02em;
-    text-shadow: 0 6px 30px rgba(0,0,0,0.6);
-}
-
-.guarantee-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    margin-top: 0;
-    background: rgba(255,255,255,0.005);
-    border-radius: 24px;
-    overflow: hidden;
-    backdrop-filter: blur(1px);
-}
-
-@media (max-width: 900px) {
-    .guarantee-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 500px) {
-    .guarantee-grid { grid-template-columns: 1fr; }
-}
-
-.g-item {
-    padding: 40px 28px;
-    text-align: left;
-    background: rgba(255,255,255,0.01);
-    transition: background 0.3s ease;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.g-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(196,81,255,0.6), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.g-item:hover {
-    background: rgba(196,81,255,0.08);
-    transform: translateY(-2px) !important;
-}
-.g-item:hover::before { opacity: 1; }
-
-.guarantee.visible .g-item {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.guarantee.visible .g-item:nth-child(1) { transition-delay: 0.05s; }
-.guarantee.visible .g-item:nth-child(2) { transition-delay: 0.15s; }
-.guarantee.visible .g-item:nth-child(3) { transition-delay: 0.25s; }
-.guarantee.visible .g-item:nth-child(4) { transition-delay: 0.35s; }
-
-.g-item-number {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: rgba(196,81,255,0.7);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    display: block;
-}
-
-.g-item h3 {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    line-height: 1.3;
-    color: #fff;
-    text-shadow: none;
-}
-
-.g-item p {
-    font-size: 14px;
-    line-height: 1.65;
-    color: rgba(255,255,255,0.65);
-    text-shadow: none;
-}
-
-.service-culture {
-    padding-top: 120px;
-}
-        /* ==================== SOCIAL ==================== */
-        .social {
-            padding: 120px 20px 100px;
-            background: #f9f9f9;
-            position: relative;
-            overflow: hidden;
-        }
-        .social-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 45px;
-            flex-wrap: wrap;
-        }
-        .social-left {
-            flex: 1;
-            min-width: 520px;
-            text-align: left;
-        }
-        .social-left h2 {
-            font-size: 42px;
-            margin-bottom: 20px;
-            color: #3d3d3d;
-        }
-        .social-left p {
-            font-size: 20px;
-            max-width: 480px;
-            color: #666;
-            margin-bottom: 50px;
-            line-height: 1.6;
-        }
-        .social-icons {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 0;
-        }
-        .social-icons img {
-            height: 68px;
-            transition: transform 0.4s ease;
-        }
-        .social-icons a:hover img {
-            transform: scale(1.15);
-        }
-        .social-right {
-            flex: 1;
-            min-width: 320px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .side-floating-img {
-            max-width: 100%;
-            width: 580px;
-            animation: floatSide 3s ease-in-out infinite;
-            display: block;
-            border: none;
-            outline: none;
-            background: transparent;
-            box-shadow: none;
-            border-radius: 0;
-            transition: transform 0.5s ease;
-        }
-        .side-floating-img:hover {
-            transform: scale(1.02);
-            animation-play-state: paused;
-        }
-        @keyframes floatSide {
-            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
-            50% { transform: translateY(-20px) translateX(10px) rotate(3deg); }
-        }
-
-        /* ==================== CONTACTS ==================== */
-        
-        .contacts {
-    min-height: 100vh;
-}
-
-.contacts-wrapper {
-    display: flex;
-    justify-content: center; /* по горизонтали */
-    align-items: center;     /* по вертикали */
-    min-height: 100vh;
-}
-
-.contact-card {
-    max-width: 520px;
-    width: 100%;
-    text-align: center;
-
-    padding: 48px 42px;
-    border-radius: 28px;
-
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(14px);
-
-    border: 1px solid rgba(196, 81, 255, 0.12);
-
-    box-shadow:
-        0 20px 60px -25px rgba(0,0,0,0.25),
-        0 0 0 1px rgba(255,255,255,0.6) inset;
-
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-
-        .contact-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 45px 70px -25px rgba(0,0,0,0.18), 0 0 0 1px rgba(196,81,255,0.2);
-        }
-        .contact-card h2 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 32px;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #2d2d2d, #4a4a4a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-            display: inline-block;
-        }
-        .contact-card h2::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            width: 56px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-dark));
-            border-radius: 4px;
-        }
-        .info-row {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 28px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-            transition: all 0.3s ease;
-        }
-        .info-row:hover {
-            border-bottom-color: rgba(196,81,255,0.2);
-            transform: translateX(4px);
-        }
-        .business-icon {
-            width: 44px;
-            height: 44px;
-            background: #f5f3ff;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .info-row:hover .business-icon {
-            background: linear-gradient(135deg, #f0e9ff, #e6dcff);
-            transform: scale(1.02);
-        }
-        .business-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--accent-dark);
-            stroke-width: 1.7;
-            fill: none;
-        }
-        .info-content-block {
-            flex: 1;
-        }
-        .info-label {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-        .info-value {
-            font-size: 18px;
-            font-weight: 500;
-            color: #1f1f1f;
-        }
-        .info-value a {
-            color: #1f1f1f;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .info-value a:hover {
-            color: var(--accent-dark);
-        }
-        .phone-row {
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 2px dashed rgba(196,81,255,0.2);
-        }
-        .phone-row .business-icon {
-            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-        }
-        .phone-row .business-icon svg {
-            stroke: white;
-            stroke-width: 1.8;
-        }
-        .phone-row .info-value {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-        .phone-row .info-value a {
-            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .cta-features {
-            list-style: none;
-            margin: 36px 0 42px;
-        }
-        .cta-features li {
-            font-size: 17px;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            color: #2c2c2c;
-            font-weight: 500;
-        }
-        .check-mark {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            background: linear-gradient(135deg, #c451ff20, #9333ff20);
-            border-radius: 10px;
-            color: var(--accent-dark);
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .cta-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
-            color: white;
-            padding: 18px 44px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 8px 22px rgba(0,0,0,0.1);
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            justify-content: center;
-        }
-        .cta-btn:hover {
-            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px -8px rgba(147,51,255,0.35);
-        }
-        .cta-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: white;
-            fill: none;
-            stroke-width: 2;
-            transition: transform 0.3s;
-        }
-        .cta-btn:hover svg {
-            transform: translateX(6px);
-        }
-        .contact-note {
-            font-size: 13px;
-            color: #999;
-            margin-top: 24px;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
-
-        /* ==================== FOOTER ==================== */
-        footer {
-            background: #3d3d3d;
-            color: white;
-            padding: 56px 20px 42px;
-            text-align: center;
-        }
-        .footer-content {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-        .footer-logo img { height: 50px; }
-        .footer-links {
-            margin: 28px 0 34px;
-            display: flex;
-            justify-content: center;
-            gap: 38px;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: #e6b5ff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .footer-links a:hover { color: white; }
-        .footer-bottom {
-            font-size: 15px;
-            opacity: 0.8;
-        }
-        .footer-bottom a { color: #e6b5ff; }
-
-        /* ===== АНИМАЦИИ ===== */
-        .animate-section {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Невидимые секции НЕ перехватывают события мыши */
-            pointer-events: none;
-        }
-        .animate-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        @media (max-width: 980px) {
-            .burger { display: flex; }
-            nav ul {
-                position: fixed;
-                top: 80px; left: -100%;
-                width: 100%; height: calc(100vh - 80px);
-                background: #3d3d3d;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 44px;
-                transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            nav ul.active { left: 0; }
-        }
-        @media (max-width: 900px) {
-            .contacts-wrapper { grid-template-columns: 1fr; gap: 30px; }
-            .contact-card { padding: 36px 28px; }
-            .mission-container { flex-direction: column; text-align: center; gap: 40px; }
-            .mission-left { text-align: center; }
-            .mission-quote { text-align: left; }
-            .mission-left h2 { font-size: 36px; }
-        }
-        @media (max-width: 992px) {
-            .infographic {
-                flex-direction: column;
-                align-items: center;
-                gap: 60px;
-            }
-            .info-connector { display: none; }
-            .social-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .social-left { text-align: center; }
-            .social-left p { margin-left: auto; margin-right: auto; }
-            .social-icons { justify-content: center; }
-        }
-
-/* ==================== SERVICE CULTURE (ФИНАЛЬНАЯ ВЕРСИЯ — МАЛЕНЬКИЕ КАРТОЧКИ + ПОЛНЫЙ ТЕКСТ) ==================== */
-/* ==================== SERVICE CULTURE (САМАЯ КОМПАКТНАЯ ВЕРСИЯ) ==================== */
-.service-culture {
-    padding: 140px 20px 200px;
-    position: relative;
-    overflow: visible;
-    color: white;
-}
-
-.service-culture-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://sun9-60.vkuserphoto.ru/s/v1/ig2/uu96qPaCTeGHEFF-pczHYB64J4dnrLH0STxsWBEJZbEw46hP5VUl9jzEr7BVCJpLCEQsHW1RBx-jz1R0dCcCVJ4c.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x427,720x480,1080x720,1280x853,1440x960,2560x1707&from=bu&cs=1280x0') 
-                center/cover no-repeat fixed;
-    z-index: -2;
-    pointer-events: none;
-}
-
-.service-culture-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgba(15, 15, 15, 0.35) 0%,
-        rgba(20, 20, 20, 0.45) 45%,
-        rgba(15, 15, 15, 0.55) 70%,
-        rgba(15, 15, 15, 0.40) 100%
-    );
-    z-index: -1;
-    pointer-events: none;
-}
-
-.service-culture-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 105px;
-}
-
-.section-label {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: rgba(196, 81, 255, 0.20);
-    padding: 8px 22px;
-    border-radius: 40px;
-    display: inline-block;
-    margin-bottom: 16px;
-}
-
-.service-culture h2 {
-    font-size: 46px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 20px;
-}
-
-.section-subtitle {
-    font-size: 19.5px;
-    max-width: 720px;
-    margin: 0 auto;
-    color: rgba(255,255,255,0.88);
-    line-height: 1.6;
-}
-
-.culture-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 18px;
-    perspective: 1600px;
-    margin-top: 40px;
-}
-
-/* ==================== СЕРВИСНАЯ КУЛЬТУРА (без 3D) ==================== */
-/* ==================== СЕРВИСНАЯ КУЛЬТУРА (компактная версия) ==================== */
-/* ==================== СЕРВИСНАЯ КУЛЬТУРА — ОЧЕНЬ КОМПАКТНАЯ ==================== */
-.culture-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    margin-top: 40px;
-}
-
-.culture-card {
-    background: rgba(28, 28, 28, 0.90);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 14px;
-    padding: 16px 18px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease, border-color 0.35s ease;
-    cursor: pointer;
-    min-height: 68px;
-    position: relative;
-    z-index: 10;
-}
-
-.culture-card:hover,
-.culture-card.hovered {
-    transform: translateY(-5px);
-    box-shadow: 0 14px 40px rgba(196, 81, 255, 0.30);
-    background: rgba(35, 35, 35, 0.95);
-}
-
-.card-number {
-    position: absolute;
-    top: 14px;
-    right: 18px;
-    font-size: 34px;
-    font-weight: 900;
-    background: linear-gradient(135deg, #c451ff, #a855f7);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    opacity: 0.14;
-}
-
-.culture-card:hover .card-number {
-    opacity: 0.22;
-}
-
-.card-content h3 {
-    font-size: 16.5px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    line-height: 1.35;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.toggle-arrow {
-    font-size: 15px;
-    transition: transform 0.4s ease;
-    margin-left: 6px;
-}
-
-.culture-card:hover .toggle-arrow,
-.culture-card.active .toggle-arrow,
-.culture-card.hovered .toggle-arrow {
-    transform: rotate(180deg);
-}
-
-.card-desc {
-    font-size: 12.6px;
-    line-height: 1.2;
-    color: rgba(255,255,255,0.82);
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.45s ease, opacity 0.4s ease, margin-top 0.4s ease;
-}
-
-.culture-card:hover .card-desc,
-.culture-card.active .card-desc,
-.culture-card.hovered .card-desc {
-    max-height: 300px;
-    opacity: 1;
-    margin-top: 8px;
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-    .culture-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-    
-    .culture-card {
-        padding: 18px 20px;
-        min-height: 78px;
-    }
-}
-
-/* ==================== НАШИ УСЛУГИ (без 3D) ==================== */
-.service-card-new {
-    background: rgba(22, 22, 22, 0.88);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 28px;
-    padding: 50px 36px 54px;
-    box-shadow: 0 15px 45px rgba(0,0,0,0.5);
-    transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease, border-color 0.4s ease;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    z-index: 2;
-}
-
-.service-card-new:hover,
-.service-card-new.js-hovered {
-    box-shadow: 0 25px 70px rgba(0,0,0,0.65);
-    transform: translateY(-6px);
-}
-
-/* Убираем 3D эффекты */
-.service-card-new {
-    transform-style: flat;
-}
-
-/* ==================== COST BLOCK ==================== */
-/* ==================== COST BLOCK — ANIMATED PREMIUM ==================== */
-
-.cost-block {
-    padding: 220px 20px;
-    background: linear-gradient(180deg, #ffffff 0%, #f3efff 100%);
-    position: relative;
-    z-index: 5;
-    margin-top: 140px;
-
-    opacity: 0;
-    transform: translateY(80px) scale(0.96);
-    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.cost-block {
-    padding: 220px 20px;
-    margin-top: 140px;
-}
-
-/* АКТИВАЦИЯ (когда появился на экране) */
-.cost-block.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-/* верхний разделитель */
-.cost-block::after {
-    content: '';
-    position: absolute;
-    top: -70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(0,0,0,0.15), transparent);
-}
-
-/* GLOW (изначально выключен) */
-.cost-block::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 900px;
-    height: 900px;
-    transform: translate(-50%, -50%) scale(0.7);
-    background: radial-gradient(circle, rgba(196,81,255,0.25) 0%, transparent 70%);
-    filter: blur(70px);
-    opacity: 0;
-    transition: all 1.4s ease;
-    z-index: 0;
-}
-
-/* GLOW включается при появлении */
-.cost-block.visible::before {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-/* карточка */
-.cost-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 90px 70px;
-
-    background: #ffffff;
-    border-radius: 42px;
-
-    box-shadow:
-        0 60px 120px rgba(0,0,0,0.15),
-        0 0 0 1px rgba(196,81,255,0.12);
-
-    text-align: center;
-    position: relative;
-    z-index: 2;
-
-    transform: translateY(40px);
-    opacity: 0;
-    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* карточка появляется чуть позже */
-.cost-block.visible .cost-container {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-/* label */
-.cost-label {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-
-    background: rgba(196,81,255,0.12);
-    padding: 8px 20px;
-    border-radius: 40px;
-
-    margin-bottom: 20px;
-
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.6s ease;
-}
-
-.cost-block.visible .cost-label {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* заголовок */
-.cost-block h2 {
-    font-size: 46px;
-    font-weight: 800;
-    margin-bottom: 24px;
-
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.6s ease 0.1s;
-}
-
-.cost-block.visible h2 {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* текст */
-.cost-block p {
-    font-size: 20px;
-    color: #555;
-    max-width: 600px;
-    margin: 0 auto 45px;
-
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.6s ease 0.2s;
-}
-
-.cost-block.visible p {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* кнопка */
-.cost-block .cta-btn {
-    padding: 24px 64px;
-    font-size: 20px;
-    border-radius: 80px;
-
-    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
-
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-    transition: 0.6s ease 0.3s;
-}
-
-.cost-block.visible .cta-btn {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-.cost-block .cta-btn:hover {
-    transform: translateY(-6px) scale(1.05);
-}
-
-
-
-.cta-features {
-    list-style: none;
-    margin: 40px 0 45px;
-    padding: 0;
-}
-
-.cta-features li {
-    font-size: 18px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    color: #2c2c2c;
-    font-weight: 500;
-    justify-content: center;
-}
-
-.check-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: linear-gradient(135deg, #c451ff20, #9333ff20);
-    border-radius: 10px;
-    color: var(--accent-dark);
-    font-weight: 700;
-    font-size: 17px;
-}
-
-.cta-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
-    color: white;
-    padding: 20px 52px;
-    border-radius: 60px;
-    font-size: 19px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    margin-bottom: 20px;
-}
-
-.cta-btn:hover {
-    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(147,51,255,0.4);
-}
-
-.contact-note {
-    font-size: 14px;
-    color: #888;
-    margin-top: 20px;
-}
-
-/* === STICKY COST BAR === */
-.sticky-cost {
-    bottom: 20px !important;
-}
-.sticky-cost {
-    z-index: 9999;
-}
-.sticky-cost {
-    position: fixed;
-    bottom: -120px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 920px;
-
-    background: rgba(25, 25, 25, 0.92);
-    backdrop-filter: blur(14px);
-
-    border-radius: 18px;
-    padding: 16px 22px;
-
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-
-    z-index: 999;
-    transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
-}
-
-/* появление */
-.sticky-cost.show {
-    bottom: 20px;
-    /* Контейнер не перехватывает события мыши — карточки под ним остаются интерактивными */
-    pointer-events: none;
-}
-
-/* Только кнопка захватывает клики */
-.sticky-cost .sticky-btn,
-.sticky-cost .sticky-inner {
-    pointer-events: auto;
-}
-
-/* контейнер */
-.sticky-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-/* текст */
-.sticky-text strong {
-    display: block;
-    font-size: 16px;
-    color: white;
-}
-
-.sticky-text span {
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-}
-
-/* кнопка */
-.sticky-btn {
-    background: linear-gradient(135deg, #c451ff, #9333ff);
-    color: white;
-    padding: 12px 26px;
-    border-radius: 40px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.sticky-btn:hover {
-    transform: translateY(-2px);
-}
-
-/* мобильная версия */
-@media (max-width: 600px) {
-    .sticky-inner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .sticky-btn {
-        width: 100%;
-    }
-}
-
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Трекер расходов</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#0F1115; --surface:#171A21; --surface2:#1F232D; --surface3:#282D3A;
+    --border:#282C37; --border-soft:rgba(255,255,255,.06);
+    --text:#EDEAE2; --muted:#98A0B3; --muted2:#5C6275;
+    --personal:#EFA646; --personal-soft:rgba(239,166,70,.15);
+    --work:#48C0AE; --work-soft:rgba(72,192,174,.15);
+    --cat-1:#8FAE7C; --cat-2:#D97896; --cat-3:#6FA8DC; --cat-4:#C9A876;
+    --cat-5:#8991A6; --cat-6:#9C8FE0; --cat-7:#C48FBF; --cat-8:#5FC7B8;
+    --cat-9:#E0B15B; --cat-10:#6B7A99; --cat-11:#7A7F8A;
+    --danger:#E1615A; --ok:#7BC67E; --radius-lg:16px; --radius-md:12px; --radius-sm:8px;
+    --shadow:0 10px 28px rgba(0,0,0,.32);
+  }
+  *{box-sizing:border-box; min-width:0;}
+  html,body{margin:0; padding:0; background:var(--bg);}
+  body{
+    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;
+    font-size:13.5px; line-height:1.45; min-height:100vh;
+  }
+  #fin-app{position:relative; max-width:1240px; margin:0 auto; padding:20px 20px 40px;}
+  h1,h2,h3{font-family:'Fraunces',serif; font-weight:600; margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .muted{color:var(--muted);}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow);}
+  button{
+    font-family:'Inter',sans-serif; cursor:pointer; border:1px solid var(--border);
+    background:var(--surface2); color:var(--text); border-radius:9px; padding:8px 14px;
+    font-size:12.5px; font-weight:500; transition:background .15s,border-color .15s,transform .1s; white-space:nowrap;
+  }
+  button:hover{border-color:#3A4050; background:var(--surface3);}
+  button:active{transform:scale(.97);}
+  button.primary{background:var(--personal); color:#241705; border-color:var(--personal); font-weight:700;}
+  button.primary:hover{filter:brightness(1.08);}
+  button.ghost{background:transparent;}
+  button.small{padding:5px 10px; font-size:11.5px;}
+  button.icon-btn{padding:6px 9px; display:inline-flex; align-items:center; justify-content:center;}
+  input,select{
+    font-family:'Inter',sans-serif; background:var(--surface2); border:1px solid var(--border);
+    color:var(--text); border-radius:8px; padding:7px 10px; font-size:12.5px; width:100%;
+  }
+  input:focus-visible,select:focus-visible,button:focus-visible{
+    outline:2px solid var(--personal); outline-offset:1px;
+  }
+  ::placeholder{color:var(--muted2);}
+  svg{display:block;}
+
+  /* ---------- header ---------- */
+  .app-header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .app-header h1{font-size:19px;}
+  .conn-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); margin-left:auto;}
+  .conn-dot{width:7px; height:7px; border-radius:50%; background:var(--muted2); flex-shrink:0;}
+  .conn-dot.on{background:var(--ok);}
+  .conn-dot.off{background:var(--danger);}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:16px;}
+  .toolbar .grow{flex:1 1 160px; min-width:120px;}
+  .toolbar select,.toolbar input{min-width:0;}
+  .toolbar-actions{display:flex; gap:8px; margin-left:auto;}
+  .search-wrap{position:relative; flex:2 1 220px;}
+  .search-wrap svg{position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--muted2);}
+  .search-wrap input{padding-left:30px;}
+
+  /* ---------- layout ---------- */
+  .fin-grid{display:grid; grid-template-columns:250px 1fr; gap:16px; align-items:start;}
+  @media (max-width:820px){.fin-grid{grid-template-columns:1fr;}}
+  .fin-side{display:flex; flex-direction:column; gap:14px;}
+  .fin-main{display:flex; flex-direction:column; gap:14px;}
+  .card-title-row{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
+  .card-title-row h3{font-size:13.5px; letter-spacing:.01em;}
+
+  /* ---------- global dropzone overlay ---------- */
+  .drop-overlay{
+    position:fixed; inset:10px; z-index:50; border-radius:var(--radius-lg);
+    border:2px dashed var(--personal); background:rgba(15,17,21,.9);
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:8px;
+    color:var(--personal); font-weight:600; pointer-events:none;
+  }
+  .drop-overlay.active{display:flex;}
+
+  /* ---------- file chips ---------- */
+  .file-chip{
+    display:flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:8px 10px; margin-top:8px; font-size:12px;
+  }
+  .file-chip .fc-main{flex:1; min-width:0;}
+  .file-chip .fc-name{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .file-chip .fc-count{color:var(--muted); font-size:11px;}
+  .file-chip button{padding:3px 7px; flex-shrink:0;}
+  .empty-note{color:var(--muted2); font-size:12px; padding:4px 2px;}
+
+  /* ---------- hero / balance ---------- */
+  .hero-scale-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; gap:10px;}
+  .hero-scale-labels .side{display:flex; flex-direction:column; min-width:0;}
+  .hero-scale-labels .side.right{text-align:right; align-items:flex-end;}
+  .hero-scale-labels .tag{font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:600;}
+  .hero-scale-labels .amt{font-family:'Fraunces',serif; font-size:26px; font-weight:600; white-space:nowrap;}
+  .hero-scale-labels .pct{font-size:11.5px; color:var(--muted);}
+  .p-color{color:var(--personal);} .w-color{color:var(--work);}
+  .scale-bar{position:relative; width:100%; height:12px; background:var(--surface2); border-radius:7px; overflow:hidden; border:1px solid var(--border);}
+  .scale-fill-p{position:absolute; right:50%; top:0; bottom:0; background:linear-gradient(90deg,#c9863a,var(--personal)); transition:width .35s ease;}
+  .scale-fill-w{position:absolute; left:50%; top:0; bottom:0; background:linear-gradient(90deg,var(--work),#37988a); transition:width .35s ease;}
+  .scale-mid{position:absolute; left:50%; top:-3px; bottom:-3px; width:2px; background:var(--bg); transform:translateX(-1px);}
+
+  .stat-strip{display:flex; margin-top:16px; border-top:1px solid var(--border-soft); padding-top:14px; gap:0;}
+  .stat-item{flex:1; display:flex; align-items:center; gap:10px; padding:0 12px; border-left:1px solid var(--border-soft);}
+  .stat-item:first-child{border-left:none; padding-left:0;}
+  .stat-icon{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--surface2); color:var(--muted);}
+  .stat-item .n{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; white-space:nowrap;}
+  .stat-item .l{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+  @media (max-width:680px){.stat-strip{flex-wrap:wrap; row-gap:12px;} .stat-item{flex:1 1 45%; border-left:none;}}
+
+  /* ---------- period strip ---------- */
+  .period-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  @media (max-width:680px){.period-strip{grid-template-columns:repeat(2,1fr);}}
+  .period-item{background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 14px;}
+  .period-item .pl{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;}
+  .period-item .pv{font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600;}
+  .period-item .pd{font-size:11px; color:var(--muted2); margin-top:3px;}
+
+  /* ---------- charts ---------- */
+  .chart-row{display:grid; grid-template-columns:1fr 1.35fr; gap:18px;}
+  @media (max-width:680px){.chart-row{grid-template-columns:1fr;}}
+  .chart-col{min-width:0;}
+  .chart-box{position:relative; height:210px;}
+  .legend-list{display:flex; flex-direction:column; gap:2px; margin-top:12px; max-height:160px; overflow-y:auto; overflow-x:hidden;}
+  .legend-item{display:flex; align-items:center; gap:8px; font-size:12px; padding:5px 2px; border-radius:6px; min-width:0;}
+  .legend-item:hover{background:var(--surface2);}
+  .legend-dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .legend-name{flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .legend-amt{font-family:'IBM Plex Mono',monospace; flex-shrink:0;}
+
+  /* ---------- filters card ---------- */
+  .filters-card .filters{display:flex; flex-direction:column; gap:8px;}
+  .filters .row2{display:flex; gap:8px;}
+
+  /* ---------- table ---------- */
+  .table-scroll{max-height:440px; overflow:auto; border-radius:10px;}
+  table.txns{width:100%; min-width:640px; border-collapse:collapse; font-size:12.5px; table-layout:fixed;}
+  table.txns col.c-date{width:84px;} table.txns col.c-desc{width:auto;}
+  table.txns col.c-src{width:96px;} table.txns col.c-cat{width:168px;}
+  table.txns col.c-type{width:118px;} table.txns col.c-amt{width:104px;}
+  table.txns th{
+    text-align:left; color:var(--muted); font-weight:500; padding:8px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--surface); z-index:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  table.txns th.sortable{cursor:pointer; user-select:none;}
+  table.txns th.sortable:hover{color:var(--text);}
+  table.txns td{padding:7px 8px; border-bottom:1px solid var(--border-soft); vertical-align:middle; overflow:hidden;}
+  table.txns tr:hover td{background:rgba(255,255,255,.02);}
+  td.desc-cell{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .amt{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap;}
+  .cat-pill{width:100%; border-radius:20px; border:1px solid transparent; padding:4px 8px; font-size:11.5px; font-weight:600; cursor:pointer;}
+  .segmented{display:inline-flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;}
+  .segmented button{border:none; border-radius:0; padding:4px 9px; font-size:11px; background:transparent; color:var(--muted);}
+  .segmented button.active-p{background:var(--personal-soft); color:var(--personal);}
+  .segmented button.active-w{background:var(--work-soft); color:var(--work);}
+
+  .empty-state{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:44px 20px; color:var(--muted2); text-align:center;}
+  .empty-state svg{color:var(--muted2);}
+
+  /* ---------- rules editor ---------- */
+  details summary{cursor:pointer; font-weight:600; margin-bottom:8px; font-size:12.5px; list-style:none;}
+  details summary::-webkit-details-marker{display:none;}
+  details summary::before{content:'▸ '; color:var(--muted);}
+  details[open] summary::before{content:'▾ '; }
+  .rule-row{display:flex; gap:6px; align-items:center; margin-bottom:6px; min-width:0;}
+  .rule-cat-label{display:flex; align-items:center; gap:5px; width:96px; flex-shrink:0; font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rule-row input{flex:1; min-width:0;}
+  .cat-swatch{display:inline-block; width:7px; height:7px; border-radius:50%; flex-shrink:0;}
+
+  /* ---------- modal ---------- */
+  .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; padding:16px;}
+  .modal-box{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px; width:min(520px,94vw); color:var(--text); max-height:90vh; overflow:auto;}
+  .modal-box h3{font-size:17px; margin-bottom:4px;}
+  .modal-grid{display:grid; grid-template-columns:120px 1fr; gap:9px 10px; align-items:center; font-size:12.5px; margin-top:14px;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px;}
+  .modal-hint{font-size:11px; color:var(--muted2); margin-top:10px; line-height:1.5;}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
 </head>
 <body>
+<div id="fin-app">
+  <div class="drop-overlay" id="dropOverlay">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M12 3l-4 4M12 3l4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+    Отпустите файл, чтобы загрузить
+  </div>
 
-<!-- HEADER -->
-<!-- HEADER -->
-<header class="header">
-    <div class="nav-container">
-        
-        <!-- Лого слева -->
-        <div class="logo">
-            <a href="/">
-                <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" 
-                     alt="ORGANI'CARE">
-            </a>
-        </div>
-
-        <!-- Навигация справа -->
-        <nav class="nav">
-            <ul>
-                <li><a href="about.html">О нас</a></li>
-                <li><a href="nutritionist.html">Лечебное питание</a></li>
-                <li><a href="corporate.html">Корпоративное питание</a></li>
-                <li><a href="canteen.html">Столовые</a></li>
-                <li><a href="contacts.html">Контакты</a></li>
-            </ul>
-        </nav>
-
-        <!-- Бургер для мобильных -->
-        <div class="burger" id="burger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
+  <div class="app-header">
+    <h1>Трекер расходов</h1>
+    <div class="conn-status" id="connStatus">
+      <span class="conn-dot" id="connDot"></span>
+      <span id="connLabel">—</span>
     </div>
-</header>
-
-
-<!-- HERO -->
-<section class="hero">
-    <iframe 
-        src="https://kinescope.io/odhNn36kVhxzJr1Y3bxrVW?autoplay=1&muted=1&loop=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-
-    <div class="hero-content">
-
-    <div class="hero-logo">
-        <img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" 
-             alt="ORGANI'CARE" 
-             class="hero-logo-img">
-    </div>
-
-    <p class="hero-subtitle">
-        Гастрономическая культура корпоративного и лечебного питания
-    </p>
-
-    <a href="#contacts" class="hero-btn">
-        Заказать пробную неделю
-    </a>
-
-</div>
-
-</section>
-<!-- TRUST -->
-<section class="trust animate-section">
-    <h2>НАМ ДОВЕРЯЮТ</h2>
-
-    <div class="slider-wrapper">
-        <div class="slides" id="slides">
-            <div class="slide">
-                <div class="client"><img src="https://thb.tildacdn.com/tild3065-3137-4266-b037-316434393431/dx_primary_logo_on_w.png" alt="Devexperts"></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3266-6437-4666-b430-653733313737/OW_Logotype_RGB_99x2.png" alt="Openway"></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3861-3236-4632-b538-666333303763/Playrix-Logowine.png" alt="Playrix"></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3231-3764-4666-b937-663564646466/arrival-logo-1300x70.png" alt="Arrival"></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3037-3964-4465-b336-326235626665/5076328F-1C74-4BEC-B.jpeg" alt="DLT"></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3837-3364-4638-b261-343334383661/ya.png" alt="Ava Clinic"></div>
-            </div>
-            <div class="slide">
-                <div class="client"><img src="https://thb.tildacdn.com/tild3230-6336-4537-b733-306563333130/_--04.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild6262-3937-4139-b131-326230643462/AAF57E73-D785-47E0-8.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3363-3938-4561-a663-376165376365/4.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3834-6366-4732-b739-303064353561/2.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3561-3865-4537-b063-626435616537/_-.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild6463-3565-4133-b932-623061313139/_--01.png" alt=""></div>
-            </div>
-            <div class="slide">
-                <div class="client"><img src="https://thb.tildacdn.com/tild3561-6136-4639-a532-633731316630/_--07.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3531-3461-4462-b038-626133343238/_--02.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild6537-3737-4037-a134-303735336632/_--03.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3332-6337-4533-b034-333539343162/5.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild6336-3666-4230-a435-656535653036/_--05.png" alt=""></div>
-                <div class="client"><img src="https://thb.tildacdn.com/tild3732-3237-4234-b962-366331666366/3.png" alt=""></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- DIFFERENCE -->
-<section class="difference animate-section">
-    <div class="difference-container">
-        <h2>В ЧЁМ НАШЕ ОТЛИЧИЕ?</h2>
-        <div class="infographic" id="infographic">
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-86.userapi.com/s/v1/ig2/o0jTN3M66XvaQjH7dm7IeNyj_gvbqQFqRYaJD66bT6XyP3cxE3RrUujc0ojaT1vQiCOWyxtneA9MZQwuDQYa4vut.jpg?quality=95&as=32x47,48x70,72x105,108x157,160x233,240x350,360x525,480x699,540x787,640x932,720x1049,1080x1574,1280x1865,1440x2098,1757x2560&from=bu&cs=1280x0" alt="Современная гастрономия"></div><div class="info-content"><h3>Современная гастрономия</h3><p>Европейский вкус от шеф-повара Four Seasons. Авторские блюда — результат 10 лет изучения клиентских предпочтений.</p></div></div>
-            <div class="info-connector"></div>
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-1.userapi.com/s/v1/ig2/pFwAuo2981rtRy7FJCBjNVCTN9A_B0Ph2zzjFCCAkPYeXl4VrDC8Cii8-voE2tm4uFOGL6WHpv-SBW8TXIRXpgFG.jpg?quality=95&as=32x29,48x43,72x65,108x97,160x144,240x215,360x323,480x431,540x484,640x574,720x646,1080x969,1280x1148,1440x1292,1693x1519&from=bu&cs=1280x0" alt="Готовим из-под ножа"></div><div class="info-content"><h3>Готовим из-под ножа</h3><p>Цикл заготовок не более 12 часов. Рыбные и мясные блюда, салаты готовим перед отдачей</p></div></div>
-            <div class="info-connector"></div>
-            <div class="info-item"><div class="info-number"></div><div class="info-photo"><img src="https://sun9-66.userapi.com/s/v1/ig2/dDoM1iTqogXoU2fy140Whghcn6HXAdeNq2AmxmuQrh22POG3LbVqCgpYt4mKNvnMj-rUaE3bHIsVtxWXBOwQr8Jk.jpg?quality=95&as=32x44,48x66,72x99,108x149,160x221,240x331,360x497,480x662,540x745,640x883,720x993,1080x1490,1280x1766,1440x1986,1856x2560&from=bu&cs=1280x0" alt="Сервис — как культура"></div><div class="info-content"><h3>Сервис — как культура</h3><p>Забота о наших клиентах — это не просто слова. Это ежедневная философия всей команды ORGANI'CARE.</p></div></div>
-        </div>
-    </div>
-</section>
-
-<!-- === СЕРВИСНАЯ КУЛЬТУРА === -->
-<section class="service-culture animate-section" id="service-culture">
-    <div class="service-culture-bg"></div>
-    
-    <div class="service-culture-container">
-        <div class="section-header">
-            <div class="section-label">Сервисная культура</div>
-            <h2>МЫ ДЕЛАЕМ СЕРВИС ЧАСТЬЮ ФИЛОСОФИИ</h2>
-        </div>
-
-        <div class="culture-grid">
-            <div class="culture-card">
-                <div class="card-number"></div>
-                <div class="card-content">
-                    <h3>Индивидуальный подход <span class="toggle-arrow">↓</span></h3>
-                    <p class="card-desc">Возможность заказать конкретное блюдо под запрос пациента в рамках формата лечебного питания.</p>
-                </div>
-            </div>
-
-            <div class="culture-card">
-                <div class="card-number"></div>
-                <div class="card-content">
-                    <h3>Быстрая обратная связь <span class="toggle-arrow">↓</span></h3>
-                    <p class="card-desc">Личный менеджер в Telegram отвечает на вопросы по заказам за 15 минут. Обучаем менеджеров эмпатичности и софт-скиллам.</p>
-                </div>
-            </div>
-
-            <div class="culture-card">
-                <div class="card-number"></div>
-                <div class="card-content">
-                    <h3>Меню в Telegram-боте с КБЖУ <span class="toggle-arrow">↓</span></h3>
-                    <p class="card-desc">По QR-коду можно посмотреть меню на неделю, альтернативные блюда для специализированных диет, состав и КБЖУ блюд. Оставить отзыв о качестве.</p>
-                </div>
-            </div>
-
-            <div class="culture-card">
-                <div class="card-number"></div>
-                <div class="card-content">
-                    <h3>Гарантия <span class="toggle-arrow">↓</span></h3>
-                    <p class="card-desc">Если блюдо не соответствует технологически заявленному и полученному ранее, мы привезём новое без вопросов или вычтем из стоимости услуг за месяц.</p>
-                </div>
-            </div>
-
-            <div class="culture-card">
-                <div class="card-number"></div>
-                <div class="card-content">
-                    <h3>Экономия ресурса сотрудников пищеблока <span class="toggle-arrow">↓</span></h3>
-                    <p class="card-desc">Мы берём на себя дополнительные расходы по фасовке каждого набора питания в индивидуальные пакеты с названием заказа, отправляем запасные комплекты за наш счёт, предупреждаем обо всех особенностях и дарим комплиментарные блюда и подарки пациентам на любое возражение по сервису.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<!-- НАША МИССИЯ (ФОТО СТАТИЧНОЕ, БЕЗ РАМКИ) -->
-<!-- НАША МИССИЯ -->
-<section class="mission animate-section" style="background: #ffffff; padding: 120px 20px 0;">
-    <div class="mission-container">
-        <div class="mission-left">
-            <div class="mission-label">Философия бренда</div>
-            <h2>НАША МИССИЯ</h2>
-            <div class="mission-desc">
-                Заботиться о счастье клиентов и сотрудников вашего бизнеса через корпоративное и лечебное питание, повышая уровень сервисной культуры, развивая современную гастрономию.
-            </div>
-            <div class="mission-quote">
-                <span>— Команда ORGANI'CARE</span>
-            </div>
-        </div>
-        <div class="mission-right">
-            <img src="https://sun9-24.userapi.com/s/v1/ig2/rykdEY1_k-RHXxhXVKkujIOF_qaA2_KyPwmv73vT-sFHS7imt9zqJln7qcn4YwEIQZw8T8SkaI_7xULELo768tkt.jpg?quality=95&as=32x37,48x56,72x84,108x126,160x187,240x281,360x421,480x561,540x631,640x748,720x842,1080x1263,1280x1496,1372x1604&from=bu&cs=1280x0" 
-                 class="mission-image" 
-                 alt="Кухня ORGANI'CARE">
-        </div>
-    </div>
-</section>
-
-<!-- SERVICES - 3D АНИМАЦИЯ -->
-<section class="services animate-section">
-    <h2>НАШИ УСЛУГИ</h2>
-
-    <div class="services-grid-new">
-
-        <!-- 1 -->
-        <a class="service-card-new" href="nutritionist.html" data-tilt>
-            <div class="card-number"></div>
-            <h3>Открытие кухни в клинике</h3>
-            <p class="service-desc">Организация пищеблока на территории медицинского учреждения. Наши повара готовят в клинике лечебное питание для пациентов</p>
-            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        </a>
-
-        <!-- 2 -->
-        <a class="service-card-new" href="nutritionist.html" data-tilt>
-            <div class="card-number"></div>
-            <h3>Доставка лечебного питания в роддома</h3>
-            <p class="service-desc">Доставка лечебного питания в индивидуальной упаковке для ваших пациентов</p>
-            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        </a>
-
-        <!-- 3 -->
-        <a class="service-card-new" href="canteen.html" data-tilt>
-            <div class="card-number"></div>
-            <h3>Организация буфета в клинике</h3>
-            <p class="service-desc">Открытие буфета-столовой на территории клиники, кофейни, фингер-фуд, wellness питание</p>
-            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        </a>
-
-        <!-- 4 - Корпоративное питание -->
-        <a class="service-card-new corporate" href="corporate.html" data-tilt>
-            <div class="card-number"></div>
-            <h3>Корпоративное питание</h3>
-            <p class="service-desc">Питание для сотрудников компаний, организация школьного питания, микромаркеты</p>
-            <div class="card-arrow"><svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        </a>
-
-    </div>
-</section>
-
-<!-- GUARANTEE -->
-<section class="guarantee animate-section">
-  <div class="guarantee-container">
-    
-    <div class="guarantee-headline">МЫ ГАРАНТИРУЕМ</div>
-
-    <div class="guarantee-grid">
-
-        <div class="g-item">
-            <span class="g-item-number"></span>
-            <h3>Гастровпечатление</h3>
-            <p>Авторские блюда с европейским вкусом, приготовления из-под ножа</p>
-        </div>
-
-        <div class="g-item">
-            <span class="g-item-number"></span>
-            <h3>Забота</h3>
-            <p>Гибкость меню, возможность заказать в зависимости исключений, расширенная фасовка, опыт обработки заказа</p>
-        </div>
-
-        <div class="g-item">
-            <span class="g-item-number"></span>
-            <h3>Персонализация с инновацией</h3>
-            <p>Telegram-бот для первичного опроса пациентов на вкусовые предпочтения и подбор блюд. Реакция на каждый запрос персонального менеджера в течении 10 минут</p>
-        </div>
-
-        <div class="g-item">
-            <span class="g-item-number"></span>
-            <h3>Сервисная культура</h3>
-            <p>Предугадывание потребностей и запросов</p>
-        </div>
-
-    </div>
-</div>
-</section>
-
-<section class="contacts animate-section" id="contacts">
-    <div class="contacts-wrapper">
-        <div class="contact-card">
-            
-            
-        <div class="contact-card">
-            
-            <h2>УЗНАЙ СТОИМОСТЬ ПИТАНИЯ НА ОДНОГО ЧЕЛОВЕКА</h2>
-            <p style="color:#555; margin-bottom:28px; font-size:16px; line-height:1.5;">Оставьте заявку и мы рассчитаем стоимость питания для вашей компании на одного сотрудника.</p>
-            
-            <a href="#" onclick="alert('Форма заявки открыта (в реальном проекте здесь будет модальное окно)')" class="cta-btn">Оставить заявку<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-            <div class="contact-note">Ответим в течение 1 рабочего часа</div>
-        </div>
-    </div>
-</section>
-
-<!-- SOCIAL -->
-<section class="social animate-section">
-    <div class="social-container">
-        <div class="social-left"><h2>НАШИ СОЦ.СЕТИ</h2><p>Подписывайся и смотри больше live-фотографий блюд корпоративного питания и кейтеринга</p><div class="social-icons"><a href="https://vk.com/organi.care" target="_blank"><img src="https://static.tildacdn.com/tild3632-6132-4432-b936-346237393162/vk.png" alt="VK"></a><a href="https://www.instagram.com/organi_care/" target="_blank"><img src="https://static.tildacdn.com/tild6536-3734-4733-b331-376564616665/instagram_2.png" alt="Instagram"></a><a href="https://web.telegram.org/z/#5665927340" target="_blank"><img src="https://static.tildacdn.com/tild6464-3436-4638-b663-363338343733/free-icon-telegram-1.png" alt="Telegram"></a></div></div>
-        <div class="social-right"><img src="https://optim.tildacdn.com/tild3063-3662-4638-b738-656463353361/-/format/webp/3.png.webp" class="side-floating-img" alt="Анимация блюд"></div>
-    </div>
-</section>
-
-
-
-<!-- FOOTER -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-logo"><img src="https://static.tildacdn.com/tild3932-3934-4433-a637-626234386530/-02.png" alt="ORGANI'CARE"></div>
-        <div class="footer-links"><a href="/">Главная</a><a href="#">Партнерам</a><a href="#">Франшиза</a></div>
-        <div class="footer-bottom">© 2026 ORGANI'CARE<br><a href="javascript:window.scrollTo({top:0,behavior:'smooth'})">Наверх ↑</a></div>
-    </div>
-</footer>
-
-<script>
-    const burger = document.getElementById('burger');
-    const menu = document.getElementById('menu');
-    if (burger && menu) burger.addEventListener('click', () => { burger.classList.toggle('active'); menu.classList.toggle('active'); });
-
-    // Слайдер «Нам доверяют» — точная копия из about.html
-    (function(){
-        let current = 0;
-        const slides = document.getElementById('slides');
-        if (!slides) return;
-        const total = slides.children.length;
-        function goToSlide(i){ current = i; slides.style.transform = `translateX(-${i * 100}%)`; }
-        function autoSlide(){ current = (current + 1) % total; goToSlide(current); }
-        setInterval(autoSlide, 4000);
-    })();
-    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.22 });
-    document.querySelectorAll('.animate-section').forEach(s => observer.observe(s));
-    const infographic = document.getElementById('infographic');
-    if(infographic) new IntersectionObserver(([e]) => { if(e.isIntersecting) infographic.classList.add('visible'); }, { threshold: 0.3 }).observe(infographic);
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const target = document.querySelector(this.getAttribute('href')); if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); } }); });
-
-    // ===== НАДЁЖНОЕ ОБНАРУЖЕНИЕ HOVER ЧЕРЕЗ КООРДИНАТЫ МЫШИ =====
-    // getBoundingClientRect обходит все проблемы с z-index, pointer-events и перекрытием
-    (function() {
-        var cultureCards = Array.from(document.querySelectorAll('.culture-card'));
-        var serviceCards = Array.from(document.querySelectorAll('.service-card-new'));
-
-        document.addEventListener('mousemove', function(e) {
-            var mx = e.clientX, my = e.clientY;
-
-            cultureCards.forEach(function(card) {
-                var r = card.getBoundingClientRect();
-                var inside = mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom;
-                if (inside) {
-                    card.classList.add('hovered');
-                } else {
-                    card.classList.remove('hovered');
-                }
-            });
-
-            serviceCards.forEach(function(card) {
-                var r = card.getBoundingClientRect();
-                var inside = mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom;
-                if (inside) {
-                    card.classList.add('js-hovered');
-                } else {
-                    card.classList.remove('js-hovered');
-                }
-            });
-        });
-
-        // Клик для закрепления/снятия раскрытия карточек культуры
-        cultureCards.forEach(function(card) {
-            card.addEventListener('click', function() {
-                card.classList.toggle('active');
-            });
-        });
-    })();
-    const sticky = document.getElementById('stickyCost');
-const triggerSection = document.querySelector('.services');
-const footer = document.querySelector('footer');
-
-if (sticky && triggerSection && footer) {
-    window.addEventListener('scroll', () => {
-
-        const triggerTop = triggerSection.getBoundingClientRect().top;
-        const footerTop = footer.getBoundingClientRect().top;
-
-        if (triggerTop < window.innerHeight * 0.5) {
-            sticky.classList.add('show');
-        } else {
-            sticky.classList.remove('show');
-        }
-
-        if (footerTop < window.innerHeight) {
-            sticky.classList.remove('show');
-        }
-
-    });
-}
-// sticky bar управляется только скроллом — принудительный show убран чтобы не перекрывать карточки услуг
-</script>
-
-<!-- FEEDBACK WIDGET -->
-<div class="fb-widget" id="fbWidget">
-    <button class="fb-toggle" id="fbToggle" aria-label="Оставить обратную связь">
-        <span class="fb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-        <span class="fb-label">Обратная связь</span>
+    <button class="icon-btn ghost" id="settingsBtn" title="Настройки подключения">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
-    <div class="fb-panel" id="fbPanel">
-        <div class="fb-panel-header">
-            <span>Оставьте отзыв</span>
-            <button class="fb-close" id="fbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        </div>
-        <div class="fb-panel-body">
-            <input class="fb-input" id="fbName" type="text" placeholder="Ваше имя">
-            <input class="fb-input" id="fbPhone" type="tel" placeholder="+7 (___) ___-__-__">
-            <textarea class="fb-input fb-textarea" id="fbMessage" placeholder="Ваш отзыв..."></textarea>
-            <button class="fb-send" id="fbSend">Отправить отзыв <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            <div class="fb-success" id="fbSuccess"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14.5 15 9"/></svg>Отзыв отправлен! Спасибо.</div>
-        </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Поиск по описанию…">
     </div>
+    <select id="filterType" class="grow">
+      <option value="all">Все траты</option>
+      <option value="personal">Личное</option>
+      <option value="work">Рабочее</option>
+      <option value="unset">Без метки</option>
+    </select>
+    <select id="filterBank" class="grow"><option value="all">Все источники</option></select>
+    <input type="date" id="filterFrom" class="grow">
+    <input type="date" id="filterTo" class="grow">
+    <div class="toolbar-actions">
+      <button id="syncBtn" title="Загрузить свежие операции">⟳ Обновить</button>
+      <button id="addTxnBtn">+ Операция</button>
+      <button class="primary" id="openUploadBtn">Загрузить выписку</button>
+    </div>
+  </div>
+  <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" multiple style="display:none;">
+
+  <div class="fin-grid">
+    <!-- SIDEBAR -->
+    <div class="fin-side">
+      <div class="card">
+        <div class="card-title-row"><h3>Загруженные файлы</h3></div>
+        <div id="fileChips"></div>
+        <div class="empty-note" id="fileChipsEmpty">Пока ничего не загружено — перетащите файл в любое место окна.</div>
+      </div>
+
+      <div class="card">
+        <details>
+          <summary>Правила категорий</summary>
+          <div id="rulesList"></div>
+          <div class="rule-row">
+            <input type="text" id="newRuleKeyword" placeholder="ключевое слово">
+            <select id="newRuleCategory"></select>
+            <button class="small icon-btn" id="addRuleBtn">+</button>
+          </div>
+          <button class="small ghost" id="recategorizeBtn" style="margin-top:6px; width:100%;">Пересчитать категории</button>
+        </details>
+      </div>
+
+      <div class="card">
+        <button class="ghost" style="width:100%; margin-bottom:8px;" id="exportBtn">Экспорт CSV</button>
+        <button class="ghost" style="width:100%; color:var(--danger); border-color:var(--danger);" id="clearBtn">Очистить всё</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="fin-main">
+      <div class="card">
+        <div class="hero-scale-labels">
+          <div class="side">
+            <span class="tag p-color">Личное</span>
+            <span class="amt p-color" id="heroP">0 ₽</span>
+            <span class="pct" id="pctP"></span>
+          </div>
+          <div class="side right">
+            <span class="tag w-color">Рабочее</span>
+            <span class="amt w-color" id="heroW">0 ₽</span>
+            <span class="pct" id="pctW"></span>
+          </div>
+        </div>
+        <div class="scale-bar"><div class="scale-fill-p" id="scaleFillP" style="width:0%"></div><div class="scale-fill-w" id="scaleFillW" style="width:0%"></div><div class="scale-mid"></div></div>
+        <div class="stat-strip" id="statStrip"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title-row"><h3>Расходы за период</h3></div>
+        <div class="period-strip" id="periodStrip"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title-row"><h3>По категориям</h3></div>
+        <div class="chart-row">
+          <div class="chart-col">
+            <div class="chart-box"><canvas id="catChart"></canvas></div>
+          </div>
+          <div class="chart-col">
+            <div class="chart-box"><canvas id="monthChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title-row"><h3>Операции</h3><span class="muted mono" id="txnCount" style="font-size:11.5px;"></span></div>
+        <div class="table-scroll">
+          <table class="txns">
+            <colgroup>
+              <col class="c-date"><col class="c-desc"><col class="c-src"><col class="c-cat"><col class="c-type"><col class="c-amt">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="sortable" data-sort="date">Дата</th>
+                <th>Описание</th>
+                <th>Источник</th>
+                <th>Категория</th>
+                <th>Метка</th>
+                <th class="sortable" data-sort="amount" style="text-align:right;">Сумма</th>
+              </tr>
+            </thead>
+            <tbody id="txnBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg>
+          <div>Загрузите первую выписку — операции появятся здесь</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <script>
 (function(){
-    const toggle=document.getElementById('fbToggle'),panel=document.getElementById('fbPanel'),close=document.getElementById('fbClose'),send=document.getElementById('fbSend'),success=document.getElementById('fbSuccess');
-    toggle.addEventListener('click',()=>panel.classList.toggle('open'));
-    close.addEventListener('click',()=>panel.classList.remove('open'));
-    send.addEventListener('click',()=>{
-        const name=document.getElementById('fbName').value.trim(),phone=document.getElementById('fbPhone').value.trim(),message=document.getElementById('fbMessage').value.trim();
-        document.getElementById('fbName').style.borderColor=name?'#e8e8e8':'#ef4444';
-        document.getElementById('fbMessage').style.borderColor=message?'#e8e8e8':'#ef4444';
-        if(!name||!message)return;
-        const subject=encodeURIComponent("Обратная связь с сайта ORGANI'CARE");
-        const body=encodeURIComponent(`Имя: ${name}\nТелефон: ${phone||'не указан'}\n\nОтзыв:\n${message}`);
-        window.location.href=`mailto:iron@organicare.ru?subject=${subject}&body=${body}`;
-        send.style.display='none';success.style.display='flex';
-        setTimeout(()=>{panel.classList.remove('open');setTimeout(()=>{send.style.display='';success.style.display='none';document.getElementById('fbName').value='';document.getElementById('fbPhone').value='';document.getElementById('fbMessage').value='';},500);},2000);
+  const CATS = [
+    {id:'groceries', name:'Продукты', color:'#8FAE7C', keys:['пятерочка','перекрест','магнит','ашан','лента ','вкусвилл','дикси','окей','spar','metro']},
+    {id:'cafe', name:'Кафе и рестораны', color:'#D97896', keys:['кафе','ресторан','старбакс','кофе','coffee','kfc','макдон','mcdonald','burger','пицц','sushi','суши']},
+    {id:'transport', name:'Транспорт', color:'#6FA8DC', keys:['такси','taxi','yandex go','uber','ржд','aeroflot','s7 ','авиа','азс','лукойл','газпромнефть','shell','каршер','метрополитен']},
+    {id:'housing', name:'Жильё и ЖКХ', color:'#C9A876', keys:['жкх','коммунал','электросет','водоканал','управляющая компания','квартплата']},
+    {id:'comms', name:'Связь и интернет', color:'#8991A6', keys:['мтс','билайн','мегафон','tele2','теле2','ростелеком','интернет провайд']},
+    {id:'health', name:'Здоровье и аптеки', color:'#9C8FE0', keys:['аптека','клиника','стоматолог','больниц','медцентр']},
+    {id:'shopping', name:'Одежда и красота', color:'#C48FBF', keys:['zara','h&m','lamoda','ecco','салон красот','парикмахер','косметик']},
+    {id:'marketplace', name:'Маркетплейсы', color:'#E0B15B', keys:['wildberries','ozon.ru','яндекс маркет','aliexpress','avito']},
+    {id:'fun', name:'Развлечения и хобби', color:'#5FC7B8', keys:['кино','cinema','netflix','spotify','steam','ivi','okko','театр','музей']},
+    {id:'subs', name:'Подписки и сервисы', color:'#EFA646', keys:['подписк','apple.com/bill','google play','яндекс плюс','icloud']},
+    {id:'transfers', name:'Переводы и снятия', color:'#6B7A99', keys:['перевод','снятие наличных','атм ',' atm','cash withdraw']},
+    {id:'other', name:'Прочее', color:'#7A7F8A', keys:[]},
+  ];
+  const catById = id => CATS.find(c=>c.id===id) || CATS[CATS.length-1];
+
+  const CHAT_MODE = (typeof window.storage !== 'undefined' && typeof window.storage.get === 'function');
+
+  let state = {
+    txns: [],
+    rules: CATS.map(c=>({category:c.id, keys:[...c.keys]})),
+    imports: [],
+    sort: {key:'date', dir:'desc'},
+  };
+  let settings = { url:'', secret:'' };
+
+  const $ = sel => document.querySelector(sel);
+  const fmt = n => Math.round(n).toLocaleString('ru-RU') + ' ₽';
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const hexToRgba = (hex, a) => {
+    const h = hex.replace('#','');
+    const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+    return `rgba(${r},${g},${b},${a})`;
+  };
+  const todayStr = () => new Date().toISOString().slice(0,10);
+
+  // ---------- connection status ----------
+  function setConn(mode){
+    // mode: 'chat' | 'online' | 'offline' | 'nosettings' | 'checking'
+    const dot = $('#connDot'), label = $('#connLabel');
+    dot.className = 'conn-dot';
+    if(mode==='chat'){ dot.classList.add('on'); label.textContent = 'режим чата'; }
+    else if(mode==='online'){ dot.classList.add('on'); label.textContent = 'подключено'; }
+    else if(mode==='offline'){ dot.classList.add('off'); label.textContent = 'нет связи с сервером'; }
+    else if(mode==='checking'){ label.textContent = 'проверка…'; }
+    else { label.textContent = 'настройте подключение'; }
+  }
+
+  // ---------- persistence ----------
+  function loadSettingsLocal(){
+    try{
+      const raw = localStorage.getItem('finAppSettings');
+      if(raw) settings = Object.assign(settings, JSON.parse(raw));
+    }catch(e){}
+  }
+  function saveSettingsLocal(){
+    try{ localStorage.setItem('finAppSettings', JSON.stringify(settings)); }catch(e){}
+  }
+  function loadLocalCache(){
+    try{
+      const raw = localStorage.getItem('finAppState');
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(parsed.txns) state.txns = parsed.txns;
+        if(parsed.rules) state.rules = parsed.rules;
+        if(parsed.imports) state.imports = parsed.imports;
+      }
+    }catch(e){}
+  }
+  function saveLocalCache(){
+    try{ localStorage.setItem('finAppState', JSON.stringify(state)); }catch(e){}
+  }
+
+  let saveTimer=null;
+  function save(){
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(async ()=>{
+      if(CHAT_MODE){
+        try{ await window.storage.set('fin_app_state', JSON.stringify(state), false); }
+        catch(e){ console.error('save failed', e); }
+      } else {
+        saveLocalCache();
+      }
+    }, 300);
+  }
+
+  async function load(){
+    if(CHAT_MODE){
+      try{
+        const r = await window.storage.get('fin_app_state', false);
+        if(r && r.value){
+          const parsed = JSON.parse(r.value);
+          if(parsed.txns) state.txns = parsed.txns;
+          if(parsed.rules) state.rules = parsed.rules;
+          if(parsed.imports) state.imports = parsed.imports;
+        }
+      }catch(e){ /* no saved state yet */ }
+      setConn('chat');
+      render();
+    } else {
+      loadSettingsLocal();
+      loadLocalCache();
+      render();
+      $('#settingsUrl').value = settings.url || '';
+      $('#settingsSecret').value = settings.secret || '';
+      if(settings.url && settings.secret){ remoteSync(); }
+      else { setConn('nosettings'); }
+    }
+  }
+
+  function guessCategory(desc){
+    const d = (desc||'').toLowerCase();
+    for(const rule of state.rules){
+      for(const k of rule.keys){
+        if(k && d.includes(k.toLowerCase())) return rule.category;
+      }
+    }
+    return 'other';
+  }
+
+  // ---------- remote (Apps Script) ----------
+  function remoteReady(){ return !CHAT_MODE && settings.url && settings.secret; }
+
+  function mapRemoteRow(row){
+    // Ожидаемые поля из листа «Транзакции»: id, Добавлено, Дата операции, Сумма, Описание, Источник, Категория, Метка, ФайлID
+    return {
+      id: String(row.id || row.Id || ('r'+Math.random().toString(36).slice(2,10))),
+      date: (row.date || row['Дата операции'] || '').toString().slice(0,10),
+      desc: row.desc || row['Описание'] || '(без описания)',
+      amount: Number(row.amount != null ? row.amount : row['Сумма']) || 0,
+      source: row.source || row['Источник'] || 'Другое',
+      category: row.category || row['Категория'] || guessCategory(row.desc || row['Описание'] || ''),
+      type: row.type || row['Метка'] || 'unset',
+      batchId: row.batchId || null,
+    };
+  }
+
+  async function remoteFetchAll(){
+    if(!remoteReady()) return null;
+    const url = settings.url + (settings.url.includes('?') ? '&' : '?') + 'secret=' + encodeURIComponent(settings.secret);
+    const res = await fetch(url, {method:'GET'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    if(!data || data.ok === false) throw new Error(data && data.error || 'ошибка ответа');
+    const rows = data.txns || data.rows || [];
+    return rows.map(mapRemoteRow);
+  }
+
+  async function remotePost(payload){
+    if(!remoteReady()) return null;
+    const body = Object.assign({secret: settings.secret}, payload);
+    const res = await fetch(settings.url, {method:'POST', body: JSON.stringify(body)});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json().catch(()=>({ok:true}));
+    if(data && data.ok === false) throw new Error(data.error || 'ошибка ответа');
+    return data;
+  }
+
+  async function remoteSync(){
+    if(!remoteReady()){ setConn('nosettings'); return; }
+    setConn('checking');
+    try{
+      const remoteTxns = await remoteFetchAll();
+      state.txns = remoteTxns;
+      setConn('online');
+      saveLocalCache();
+      render();
+    }catch(err){
+      console.error('sync failed', err);
+      setConn('offline');
+    }
+  }
+  $('#syncBtn').addEventListener('click', remoteSync);
+
+  // ---------- settings modal ----------
+  const settingsOverlay = document.createElement('div');
+  settingsOverlay.className = 'modal-overlay';
+  settingsOverlay.style.display = 'none';
+  settingsOverlay.innerHTML = `
+    <div class="modal-box">
+      <h3>Подключение к Apps Script</h3>
+      <div class="muted" style="font-size:12px;">Нужно только вне чата (например, на GitHub Pages). Внутри чата данные хранятся автоматически.</div>
+      <div class="modal-grid">
+        <label>URL Web App</label><input type="text" id="settingsUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        <label>Пароль</label><input type="text" id="settingsSecret" placeholder="SHARED_SECRET">
+      </div>
+      <div class="modal-hint">Тот же URL и пароль, что заданы в Code.gs (константа SHARED_SECRET) и в развёртывании Apps Script (Deploy → Web app → Who has access: Anyone).</div>
+      <div class="modal-actions">
+        <button id="settingsCancel">Закрыть</button>
+        <button id="settingsTest">Проверить</button>
+        <button class="primary" id="settingsSave">Сохранить</button>
+      </div>
+    </div>`;
+  document.body.appendChild(settingsOverlay);
+  $('#settingsBtn').addEventListener('click', ()=>{
+    if(CHAT_MODE){ alert('В режиме чата подключение к Apps Script не требуется — данные хранятся автоматически.'); return; }
+    settingsOverlay.style.display = 'flex';
+  });
+  settingsOverlay.querySelector('#settingsCancel').onclick = ()=> settingsOverlay.style.display='none';
+  settingsOverlay.querySelector('#settingsSave').onclick = ()=>{
+    settings.url = settingsOverlay.querySelector('#settingsUrl').value.trim();
+    settings.secret = settingsOverlay.querySelector('#settingsSecret').value.trim();
+    saveSettingsLocal();
+    settingsOverlay.style.display='none';
+    remoteSync();
+  };
+  settingsOverlay.querySelector('#settingsTest').onclick = async ()=>{
+    const btn = settingsOverlay.querySelector('#settingsTest');
+    const prevUrl = settings.url, prevSecret = settings.secret;
+    settings.url = settingsOverlay.querySelector('#settingsUrl').value.trim();
+    settings.secret = settingsOverlay.querySelector('#settingsSecret').value.trim();
+    btn.textContent = 'Проверка…';
+    try{
+      const rows = await remoteFetchAll();
+      alert('Соединение работает. Операций на сервере: ' + (rows ? rows.length : 0));
+    }catch(err){
+      alert('Не удалось подключиться: ' + err.message);
+    }finally{
+      btn.textContent = 'Проверить';
+      settings.url = prevUrl; settings.secret = prevSecret;
+    }
+  };
+
+  // ---------- global drag & drop ----------
+  const appRoot = document.body, overlay = $('#dropOverlay');
+  let dragCounter = 0;
+  appRoot.addEventListener('dragenter', e=>{e.preventDefault(); dragCounter++; overlay.classList.add('active');});
+  appRoot.addEventListener('dragover', e=>e.preventDefault());
+  appRoot.addEventListener('dragleave', e=>{dragCounter--; if(dragCounter<=0){dragCounter=0; overlay.classList.remove('active');}});
+  appRoot.addEventListener('drop', e=>{
+    e.preventDefault(); dragCounter=0; overlay.classList.remove('active');
+    if(e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+  });
+  $('#openUploadBtn').addEventListener('click', ()=>$('#fileInput').click());
+  $('#fileInput').addEventListener('change', e=>handleFiles(e.target.files));
+
+  function handleFiles(fileList){
+    [...fileList].forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = e=>{
+        try{
+          const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, {header:1, raw:false, defval:''});
+          openMappingModal(file.name, rows);
+        }catch(err){
+          alert('Не получилось прочитать файл ' + file.name + '. Попробуйте пересохранить его как CSV или XLSX.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
     });
+    $('#fileInput').value='';
+  }
+
+  // ---------- column mapping modal ----------
+  function openMappingModal(filename, rows){
+    let headerIdx = 0;
+    for(let i=0;i<Math.min(rows.length,10);i++){
+      if(rows[i].filter(c=>String(c).trim()!=='').length>=2){ headerIdx=i; break; }
+    }
+    const headers = rows[headerIdx].map(h=>String(h).trim());
+    const dataRows = rows.slice(headerIdx+1).filter(r=>r.some(c=>String(c).trim()!==''));
+
+    const guess = (patterns)=>{
+      for(let i=0;i<headers.length;i++){
+        const h = headers[i].toLowerCase();
+        if(patterns.some(p=>h.includes(p))) return i;
+      }
+      return -1;
+    };
+    const gDate = guess(['дата операции','дата платежа','дата']);
+    const gDesc = guess(['описание','назначение','операция','контрагент','детали']);
+    const gAmount = guess(['сумма операции','сумма платежа','сумма','amount']);
+    const gDebit = guess(['дебет','расход','списание']);
+    const gCredit = guess(['кредит','приход','поступление','зачисление']);
+
+    const overlayEl = document.createElement('div');
+    overlayEl.className = 'modal-overlay';
+    overlayEl.innerHTML = `
+      <div class="modal-box">
+        <h3>Сопоставьте колонки</h3>
+        <div class="muted" style="font-size:12px;">${escapeHtml(filename)} · строк: ${dataRows.length}</div>
+        <div class="modal-grid">
+          <label>Источник</label>
+          <select id="mSource"><option>Т-Банк</option><option>Точка</option><option>Озон Банк</option><option>Другое</option></select>
+          <label>Дата</label><select id="mDate"></select>
+          <label>Описание</label><select id="mDesc"></select>
+          <label>Сумма (1 колонка)</label><select id="mAmount"><option value="-1">— не использовать —</option></select>
+          <label>Знак трат</label>
+          <select id="mSign"><option value="neg">расход = отрицательное число</option><option value="pos">расход = положительное число</option></select>
+          <label>Расход (Дебет)</label><select id="mDebit"><option value="-1">— не использовать —</option></select>
+          <label>Приход (Кредит)</label><select id="mCredit"><option value="-1">— не использовать —</option></select>
+        </div>
+        <div class="muted" style="font-size:11px; margin-top:10px;">Если сумма в одной колонке — заполните «Сумма». Если расход/приход в разных колонках — заполните «Дебет»/«Кредит», а «Сумма» оставьте пустой.</div>
+        <div class="modal-actions">
+          <button id="mCancel">Отмена</button>
+          <button class="primary" id="mOk">Импортировать</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlayEl);
+
+    const fillSelect = (sel, selected)=>{
+      sel.innerHTML += headers.map((h,i)=>`<option value="${i}">${escapeHtml(h||'(колонка '+(i+1)+')')}</option>`).join('');
+      if(selected>=0) sel.value = selected;
+    };
+    fillSelect(overlayEl.querySelector('#mDate'), gDate);
+    fillSelect(overlayEl.querySelector('#mDesc'), gDesc);
+    fillSelect(overlayEl.querySelector('#mAmount'), gAmount);
+    fillSelect(overlayEl.querySelector('#mDebit'), gDebit);
+    fillSelect(overlayEl.querySelector('#mCredit'), gCredit);
+
+    overlayEl.querySelector('#mCancel').onclick = ()=>overlayEl.remove();
+    overlayEl.querySelector('#mOk').onclick = async ()=>{
+      const iDate = +overlayEl.querySelector('#mDate').value;
+      const iDesc = +overlayEl.querySelector('#mDesc').value;
+      const iAmount = +overlayEl.querySelector('#mAmount').value;
+      const iDebit = +overlayEl.querySelector('#mDebit').value;
+      const iCredit = +overlayEl.querySelector('#mCredit').value;
+      const sign = overlayEl.querySelector('#mSign').value;
+      const source = overlayEl.querySelector('#mSource').value;
+
+      const parseAmount = s => {
+        if(s===undefined || s==='') return NaN;
+        return parseFloat(String(s).replace(/\s/g,'').replace(/[^\d,.\-]/g,'').replace(',','.'));
+      };
+      const parseDate = v => {
+        if(v instanceof Date) return v.toISOString().slice(0,10);
+        const s = String(v).trim();
+        let m = s.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);
+        if(m){ let y=m[3].length===2?'20'+m[3]:m[3]; return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`; }
+        m = s.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if(m) return m[0].slice(0,10);
+        return s.slice(0,10);
+      };
+
+      const batchId = 'b'+Math.random().toString(36).slice(2,10);
+      let added=0;
+      const newTxns = [];
+      dataRows.forEach(r=>{
+        let amount;
+        if(iAmount>=0){
+          amount = parseAmount(r[iAmount]);
+          if(isNaN(amount)) return;
+          if(sign==='pos') amount = -Math.abs(amount);
+        } else if(iDebit>=0 || iCredit>=0){
+          const deb = iDebit>=0 ? parseAmount(r[iDebit]) : NaN;
+          const cred = iCredit>=0 ? parseAmount(r[iCredit]) : NaN;
+          if(!isNaN(deb) && deb!==0) amount = -Math.abs(deb);
+          else if(!isNaN(cred) && cred!==0) amount = Math.abs(cred);
+          else return;
+        } else return;
+
+        const desc = iDesc>=0 ? String(r[iDesc]||'').trim() : '(без описания)';
+        const date = iDate>=0 ? parseDate(r[iDate]) : '';
+        if(!desc && !date) return;
+        const t = {
+          id: 't'+Math.random().toString(36).slice(2,10),
+          date, desc, amount, source,
+          category: guessCategory(desc),
+          type: 'unset',
+          batchId
+        };
+        state.txns.push(t);
+        newTxns.push(t);
+        added++;
+      });
+      state.imports.push({id:batchId, filename, source, count:added, importedAt:Date.now()});
+      overlayEl.remove();
+      save(); render();
+      if(remoteReady() && newTxns.length){
+        try{ await remotePost({action:'bulk_add', txns:newTxns}); }
+        catch(err){ console.error('bulk_add failed', err); }
+      }
+    };
+  }
+
+  // ---------- manual add modal ----------
+  $('#addTxnBtn').addEventListener('click', openAddModal);
+  function openAddModal(){
+    const sources = [...new Set(state.txns.map(t=>t.source))];
+    const overlayEl = document.createElement('div');
+    overlayEl.className = 'modal-overlay';
+    overlayEl.innerHTML = `
+      <div class="modal-box">
+        <h3>Добавить операцию</h3>
+        <div class="modal-grid">
+          <label>Дата</label><input type="date" id="aDate" value="${todayStr()}">
+          <label>Сумма расхода</label><input type="number" id="aAmount" placeholder="0" step="0.01" min="0">
+          <label>Описание</label><input type="text" id="aDesc" placeholder="Например, кофе">
+          <label>Источник</label>
+          <select id="aSource">
+            ${sources.map(s=>`<option>${escapeHtml(s)}</option>`).join('')}
+            <option value="__new__">+ другой источник…</option>
+          </select>
+          <label>Категория</label>
+          <select id="aCategory">${CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>
+          <label>Метка</label>
+          <div class="segmented" id="aType">
+            <button type="button" data-v="personal">Личное</button>
+            <button type="button" data-v="work">Рабочее</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="aCancel">Отмена</button>
+          <button class="primary" id="aOk">Добавить</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlayEl);
+    if(sources.length===0){ overlayEl.querySelector('#aSource').innerHTML = `<option value="Вручную">Вручную</option><option value="__new__">+ другой источник…</option>`; }
+
+    let chosenType = 'unset';
+    const typeBtns = overlayEl.querySelectorAll('#aType button');
+    typeBtns.forEach(b=>b.addEventListener('click', ()=>{
+      chosenType = (chosenType===b.dataset.v) ? 'unset' : b.dataset.v;
+      typeBtns.forEach(x=>x.classList.remove('active-p','active-w'));
+      if(chosenType==='personal') b.classList.add('active-p');
+      if(chosenType==='work') b.classList.add('active-w');
+    }));
+
+    overlayEl.querySelector('#aSource').addEventListener('change', e=>{
+      if(e.target.value==='__new__'){
+        const name = prompt('Название источника (например, название карты):');
+        if(name){
+          const opt = document.createElement('option');
+          opt.value=name; opt.textContent=name; opt.selected=true;
+          e.target.insertBefore(opt, e.target.lastElementChild);
+        } else { e.target.selectedIndex = 0; }
+      }
+    });
+
+    overlayEl.querySelector('#aCancel').onclick = ()=>overlayEl.remove();
+    overlayEl.querySelector('#aOk').onclick = async ()=>{
+      const amount = parseFloat(overlayEl.querySelector('#aAmount').value);
+      if(isNaN(amount) || amount<=0){ alert('Укажите сумму расхода больше нуля.'); return; }
+      const desc = overlayEl.querySelector('#aDesc').value.trim() || '(без описания)';
+      const date = overlayEl.querySelector('#aDate').value;
+      const source = overlayEl.querySelector('#aSource').value;
+      const category = overlayEl.querySelector('#aCategory').value;
+      const t = {
+        id:'t'+Math.random().toString(36).slice(2,10),
+        date, desc, amount:-Math.abs(amount), source, category, type:chosenType, batchId:null
+      };
+      state.txns.push(t);
+      overlayEl.remove();
+      save(); render();
+      if(remoteReady()){
+        try{ await remotePost({action:'add', txn:t}); }
+        catch(err){ console.error('add failed', err); }
+      }
+    };
+  }
+
+  // ---------- file chips ----------
+  function renderFileChips(){
+    const host = $('#fileChips');
+    $('#fileChipsEmpty').style.display = state.imports.length ? 'none' : 'block';
+    host.innerHTML = state.imports.map(imp=>`
+      <div class="file-chip" data-id="${imp.id}">
+        <div class="fc-main">
+          <div class="fc-name" title="${escapeHtml(imp.filename)}">${escapeHtml(imp.filename)}</div>
+          <div class="fc-count">${imp.source} · ${imp.count} операций</div>
+        </div>
+        <button class="icon-btn removeBatch" data-id="${imp.id}" title="Удалить эти операции">✕</button>
+      </div>`).join('');
+    host.querySelectorAll('.removeBatch').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const id = btn.dataset.id;
+        if(!confirm('Удалить все операции из этого файла?')) return;
+        const ids = state.txns.filter(t=>t.batchId===id).map(t=>t.id);
+        state.txns = state.txns.filter(t=>t.batchId!==id);
+        state.imports = state.imports.filter(i=>i.id!==id);
+        save(); render();
+        if(remoteReady() && ids.length){
+          try{ await remotePost({action:'delete_batch', ids}); }
+          catch(err){ console.error('delete_batch failed', err); }
+        }
+      });
+    });
+  }
+
+  // ---------- rules editor ----------
+  function renderRules(){
+    const list = $('#rulesList');
+    list.innerHTML = state.rules.map((r,idx)=>{
+      const c = catById(r.category);
+      return `<div class="rule-row">
+        <span class="rule-cat-label" title="${c.name}"><span class="cat-swatch" style="background:${c.color}"></span>${c.name}</span>
+        <input type="text" data-idx="${idx}" class="ruleKeys" value="${r.keys.join(', ')}">
+      </div>`;
+    }).join('');
+    list.querySelectorAll('.ruleKeys').forEach(inp=>{
+      inp.addEventListener('change', e=>{
+        const idx = +e.target.dataset.idx;
+        state.rules[idx].keys = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
+        save();
+      });
+    });
+    const catSel = $('#newRuleCategory');
+    catSel.innerHTML = CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  }
+  $('#addRuleBtn').addEventListener('click', ()=>{
+    const kw = $('#newRuleKeyword').value.trim();
+    if(!kw) return;
+    const cat = $('#newRuleCategory').value;
+    let rule = state.rules.find(r=>r.category===cat);
+    if(!rule){ rule={category:cat, keys:[]}; state.rules.push(rule); }
+    rule.keys.push(kw);
+    $('#newRuleKeyword').value='';
+    save(); renderRules();
+  });
+  $('#recategorizeBtn').addEventListener('click', ()=>{
+    state.txns.forEach(t=> t.category = guessCategory(t.desc));
+    save(); render();
+  });
+
+  // ---------- filters ----------
+  function currentFilters(){
+    return {
+      type: $('#filterType').value,
+      bank: $('#filterBank').value,
+      from: $('#filterFrom').value,
+      to: $('#filterTo').value,
+      q: $('#searchInput').value.trim().toLowerCase(),
+    };
+  }
+  function filteredTxns(){
+    const f = currentFilters();
+    let list = state.txns.filter(t=>{
+      if(t.amount>=0) return false;
+      if(f.type!=='all' && t.type!==f.type) return false;
+      if(f.bank!=='all' && t.source!==f.bank) return false;
+      if(f.from && t.date < f.from) return false;
+      if(f.to && t.date > f.to) return false;
+      if(f.q && !t.desc.toLowerCase().includes(f.q)) return false;
+      return true;
+    });
+    const {key, dir} = state.sort;
+    list.sort((a,b)=>{
+      let va = key==='amount' ? -a.amount : (a.date||'');
+      let vb = key==='amount' ? -b.amount : (b.date||'');
+      if(va<vb) return dir==='asc' ? -1 : 1;
+      if(va>vb) return dir==='asc' ? 1 : -1;
+      return 0;
+    });
+    return list;
+  }
+  ['filterType','filterBank','filterFrom','filterTo','searchInput'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener(id==='searchInput' ? 'input' : 'change', render);
+  });
+  document.querySelectorAll('th.sortable').forEach(th=>{
+    th.addEventListener('click', ()=>{
+      const key = th.dataset.sort;
+      if(state.sort.key===key) state.sort.dir = state.sort.dir==='asc' ? 'desc' : 'asc';
+      else state.sort = {key, dir: key==='amount' ? 'desc' : 'desc'};
+      render();
+    });
+  });
+
+  // ---------- rendering ----------
+  let catChart=null, monthChart=null;
+  const statSvgs = {
+    total:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M6 14h4"/></svg>',
+    personal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>',
+    work:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>',
+    unset:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7"/><circle cx="12" cy="17" r=".3" fill="currentColor"/></svg>',
+  };
+
+  function render(){
+    renderRules();
+    renderFileChips();
+    renderBankOptions();
+    const txns = filteredTxns();
+
+    const personal = state.txns.filter(t=>t.amount<0 && t.type==='personal').reduce((s,t)=>s+(-t.amount),0);
+    const work = state.txns.filter(t=>t.amount<0 && t.type==='work').reduce((s,t)=>s+(-t.amount),0);
+    const unsetCount = state.txns.filter(t=>t.amount<0 && t.type==='unset').length;
+    const total = txns.reduce((s,t)=>s+(-t.amount),0);
+    const sum = personal+work;
+
+    $('#heroP').textContent = fmt(personal);
+    $('#heroW').textContent = fmt(work);
+    $('#pctP').textContent = sum ? Math.round(personal/sum*100)+'%' : '—';
+    $('#pctW').textContent = sum ? Math.round(work/sum*100)+'%' : '—';
+    $('#scaleFillP').style.width = (sum? personal/sum*50:0)+'%';
+    $('#scaleFillW').style.width = (sum? work/sum*50:0)+'%';
+
+    $('#statStrip').innerHTML = [
+      ['total', fmt(total), 'по фильтру', 'var(--text)'],
+      ['personal', fmt(personal), 'личное всего', 'var(--personal)'],
+      ['work', fmt(work), 'рабочее всего', 'var(--work)'],
+      ['unset', unsetCount, 'без метки', 'var(--muted)'],
+    ].map(([key,n,l,c])=>`
+      <div class="stat-item">
+        <div class="stat-icon" style="color:${c}">${statSvgs[key]}</div>
+        <div><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>
+      </div>`).join('');
+
+    renderPeriodStrip();
+    renderCatChart(txns);
+    renderMonthChart(txns);
+    renderTable(txns);
+  }
+
+  function renderPeriodStrip(){
+    const now = new Date();
+    const todayD = todayStr();
+    const dayMs = 86400000;
+    const weekAgo = new Date(now.getTime() - 6*dayMs).toISOString().slice(0,10);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+    const halfYearAgo = new Date(now.getFullYear(), now.getMonth()-6, now.getDate()).toISOString().slice(0,10);
+
+    const expenses = state.txns.filter(t=>t.amount<0 && t.date);
+    const sumSince = (from, to) => expenses.filter(t=> t.date>=from && (!to || t.date<=to)).reduce((s,t)=>s+(-t.amount),0);
+
+    const dayTotal = sumSince(todayD, todayD);
+    const weekTotal = sumSince(weekAgo, todayD);
+    const monthTotal = sumSince(monthStart, todayD);
+    const halfYearTotal = sumSince(halfYearAgo, todayD);
+
+    const daysInMonthSoFar = now.getDate();
+    const avgPerDayMonth = daysInMonthSoFar ? monthTotal/daysInMonthSoFar : 0;
+
+    const tiles = [
+      ['Сегодня', dayTotal, ''],
+      ['За 7 дней', weekTotal, weekTotal ? '~'+fmt(weekTotal/7)+' / день' : ''],
+      ['Этот месяц', monthTotal, monthTotal ? '~'+fmt(avgPerDayMonth)+' / день' : ''],
+      ['Полгода', halfYearTotal, halfYearTotal ? '~'+fmt(halfYearTotal/6)+' / месяц' : ''],
+    ];
+    $('#periodStrip').innerHTML = tiles.map(([l,v,d])=>`
+      <div class="period-item">
+        <div class="pl">${l}</div>
+        <div class="pv">${fmt(v)}</div>
+        ${d ? `<div class="pd">${d}</div>` : ''}
+      </div>`).join('');
+  }
+
+  function renderBankOptions(){
+    const sel = $('#filterBank');
+    const cur = sel.value;
+    const banks = [...new Set(state.txns.map(t=>t.source))];
+    sel.innerHTML = '<option value="all">Все источники</option>' + banks.map(b=>`<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+    if(banks.includes(cur)) sel.value = cur;
+  }
+
+  function renderCatChart(txns){
+    const byCat = {};
+    txns.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + (-t.amount); });
+    const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+    const ctx = document.getElementById('catChart');
+    if(catChart) catChart.destroy();
+    let legendHost = document.getElementById('catLegend');
+    if(!legendHost){
+      legendHost = document.createElement('div');
+      legendHost.id='catLegend'; legendHost.className='legend-list';
+      ctx.closest('.chart-box').after(legendHost);
+    }
+    if(entries.length===0){ legendHost.innerHTML=''; return; }
+    catChart = new Chart(ctx, {
+      type:'doughnut',
+      data:{
+        labels: entries.map(([id])=>catById(id).name),
+        datasets:[{ data: entries.map(([,v])=>v), backgroundColor: entries.map(([id])=>catById(id).color), borderColor:'#171A21', borderWidth:2 }]
+      },
+      options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
+    });
+    legendHost.innerHTML = entries.map(([id,v])=>`<div class="legend-item"><span class="legend-dot" style="background:${catById(id).color}"></span><span class="legend-name" title="${catById(id).name}">${catById(id).name}</span><span class="legend-amt">${fmt(v)}</span></div>`).join('');
+  }
+
+  function renderMonthChart(txns){
+    const byMonth = {};
+    txns.forEach(t=>{
+      const m = t.date ? t.date.slice(0,7) : 'н/д';
+      byMonth[m] = byMonth[m] || {personal:0, work:0, unset:0};
+      byMonth[m][t.type==='personal'?'personal':t.type==='work'?'work':'unset'] += (-t.amount);
+    });
+    const months = Object.keys(byMonth).sort();
+    const ctx = document.getElementById('monthChart');
+    if(monthChart) monthChart.destroy();
+    if(months.length===0) return;
+    monthChart = new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels: months,
+        datasets:[
+          {label:'Личное', data: months.map(m=>byMonth[m].personal), backgroundColor:'#EFA646', stack:'s', borderRadius:4},
+          {label:'Рабочее', data: months.map(m=>byMonth[m].work), backgroundColor:'#48C0AE', stack:'s', borderRadius:4},
+          {label:'Без метки', data: months.map(m=>byMonth[m].unset), backgroundColor:'#3A3F4D', stack:'s', borderRadius:4},
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        scales:{ x:{stacked:true, grid:{display:false}, ticks:{color:'#98A0B3'}}, y:{stacked:true, grid:{color:'#282C37'}, ticks:{color:'#98A0B3'}} },
+        plugins:{ legend:{labels:{color:'#EDEAE2', boxWidth:10, font:{size:11}}}, tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}} }
+      }
+    });
+  }
+
+  function renderTable(txns){
+    const body = $('#txnBody');
+    $('#txnCount').textContent = txns.length ? `${txns.length} шт.` : '';
+    $('#emptyState').style.display = state.txns.length? 'none':'flex';
+    body.innerHTML = txns.slice(0,500).map(t=>{
+      const c = catById(t.category);
+      return `<tr data-id="${t.id}">
+        <td class="mono">${t.date||'—'}</td>
+        <td class="desc-cell" title="${escapeHtml(t.desc)}">${escapeHtml(t.desc)}</td>
+        <td class="muted" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(t.source)}">${escapeHtml(t.source)}</td>
+        <td>
+          <select class="catSel cat-pill" data-id="${t.id}" style="background:${hexToRgba(c.color,.15)}; color:${c.color};">
+            ${CATS.map(cc=>`<option value="${cc.id}" ${cc.id===t.category?'selected':''}>${cc.name}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <div class="segmented">
+            <button type="button" class="typeBtn ${t.type==='personal'?'active-p':''}" data-id="${t.id}" data-act="personal">Личное</button>
+            <button type="button" class="typeBtn ${t.type==='work'?'active-w':''}" data-id="${t.id}" data-act="work">Рабочее</button>
+          </div>
+        </td>
+        <td class="amt">${fmt(-t.amount)}</td>
+      </tr>`;
+    }).join('');
+
+    body.querySelectorAll('.catSel').forEach(sel=>{
+      sel.addEventListener('change', async e=>{
+        const t = state.txns.find(x=>x.id===e.target.dataset.id);
+        if(t){
+          t.category = e.target.value;
+          const c = catById(t.category);
+          e.target.style.background = hexToRgba(c.color,.15);
+          e.target.style.color = c.color;
+          save(); renderCatChart(filteredTxns());
+          if(remoteReady()){
+            try{ await remotePost({action:'update_fields', id:t.id, fields:{category:t.category}}); }
+            catch(err){ console.error('update_fields failed', err); }
+          }
+        }
+      });
+    });
+    body.querySelectorAll('.typeBtn').forEach(btn=>{
+      btn.addEventListener('click', async e=>{
+        const t = state.txns.find(x=>x.id===e.target.dataset.id);
+        if(!t) return;
+        const act = e.target.dataset.act;
+        t.type = (t.type===act) ? 'unset' : act;
+        save(); render();
+        if(remoteReady()){
+          try{ await remotePost({action:'update_fields', id:t.id, fields:{type:t.type}}); }
+          catch(err){ console.error('update_fields failed', err); }
+        }
+      });
+    });
+  }
+
+  // ---------- export / clear ----------
+  $('#exportBtn').addEventListener('click', ()=>{
+    const rows = [['Дата','Описание','Источник','Категория','Метка','Сумма']];
+    filteredTxns().forEach(t=> rows.push([t.date, t.desc, t.source, catById(t.category).name, t.type, -t.amount]));
+    const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+    const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download='raskhody.csv'; a.click();
+  });
+  $('#clearBtn').addEventListener('click', async ()=>{
+    if(!confirm('Удалить все загруженные операции без возможности восстановления?')) return;
+    state.txns = []; state.imports = []; save(); render();
+    if(remoteReady()){
+      try{ await remotePost({action:'delete_all'}); }
+      catch(err){ console.error('delete_all failed', err); }
+    }
+  });
+
+  load();
 })();
 </script>
 </body>
