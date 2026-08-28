@@ -720,7 +720,9 @@
       const reader = new FileReader();
       reader.onload = e=>{
         try{
-          const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
+          // raw:true отключает автоугадывание типов ячеек в SheetJS — без него текстовые
+          // описания вроде "Аптека 36.6" иногда молча превращались в мусорные даты.
+          const wb = XLSX.read(e.target.result, {type:'array', cellDates:true, raw:true});
           const sheet = wb.Sheets[wb.SheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(sheet, {header:1, raw:false, defval:''});
           results[idx] = {filename:file.name, rows};
