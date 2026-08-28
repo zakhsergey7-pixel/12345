@@ -51,6 +51,13 @@
   ::placeholder{color:var(--muted2);}
   svg{display:block;}
 
+  /* ---------- themed scrollbars (не грубый системный скроллбар) ---------- */
+  *{ scrollbar-width:thin; scrollbar-color: var(--border) transparent; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover{ background:var(--muted2); }
+
   /* ---------- header ---------- */
   .app-header{
     display:flex; align-items:center; gap:12px; margin-bottom:14px;
