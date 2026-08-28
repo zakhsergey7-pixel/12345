@@ -11,7 +11,7 @@
  * 3. В Триггерах (часики слева) добавьте time-driven trigger на checkGmailForTransactions (каждые 10 минут).
  */
 
-const SHARED_SECRET = 'ЗАМЕНИТЕ_НА_СВОЙ_ПАРОЛЬ';
+const SHARED_SECRET = '_0uUtUTbXSp3dDzeRI9Bx6gRCnaI5YKs';
 const SHEET_NAME = 'Транзакции';
 const HEADERS = ['id', 'Добавлено', 'Дата операции', 'Сумма', 'Описание', 'Источник', 'Категория', 'Метка', 'ФайлID'];
 
