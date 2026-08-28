@@ -1285,14 +1285,24 @@
       ctx.closest('.chart-box').after(legendHost);
     }
     if(entries.length===0){ legendHost.innerHTML=''; return; }
-    catChart = new Chart(ctx, {
-      type:'doughnut',
-      data:{
-        labels: entries.map(([id])=>catById(id).name),
-        datasets:[{ data: entries.map(([,v])=>v), backgroundColor: entries.map(([id])=>catById(id).color), borderColor:'#171A21', borderWidth:2 }]
-      },
-      options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
-    });
+    // Библиотека графиков грузится с внешнего CDN — если её заблокировала сеть/антивирус,
+    // не даём этому обрушить остальную отрисовку (банки/таблицу/список). Легенда — обычный
+    // текст, она не зависит от Chart.js и всё равно показывает те же цифры.
+    if(typeof Chart === 'undefined'){
+      const box = ctx.closest('.chart-box');
+      if(!box.querySelector('.chart-fallback-note')){
+        box.insertAdjacentHTML('afterbegin', '<div class="empty-note chart-fallback-note">Графики не загрузились (заблокирован CDN?). Цифры ниже актуальны.</div>');
+      }
+    } else {
+      catChart = new Chart(ctx, {
+        type:'doughnut',
+        data:{
+          labels: entries.map(([id])=>catById(id).name),
+          datasets:[{ data: entries.map(([,v])=>v), backgroundColor: entries.map(([id])=>catById(id).color), borderColor:'#171A21', borderWidth:2 }]
+        },
+        options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
+      });
+    }
     legendHost.innerHTML = entries.map(([id,v])=>{
       const c = catById(id);
       return `<div class="legend-item"><span class="legend-icon" style="background:${hexToRgba(c.color,.18)}">${c.icon}</span><span class="legend-name" title="${c.name}">${c.name}</span><span class="legend-amt">${fmt(v)}</span></div>`;
@@ -1310,6 +1320,13 @@
     const ctx = document.getElementById('monthChart');
     if(monthChart) monthChart.destroy();
     if(months.length===0) return;
+    if(typeof Chart === 'undefined'){
+      const box = ctx.closest('.chart-box');
+      if(!box.querySelector('.chart-fallback-note')){
+        box.insertAdjacentHTML('afterbegin', '<div class="empty-note chart-fallback-note">Графики не загрузились (заблокирован CDN?).</div>');
+      }
+      return;
+    }
     monthChart = new Chart(ctx, {
       type:'bar',
       data:{
