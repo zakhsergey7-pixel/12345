@@ -132,16 +132,17 @@
   .file-chip button{padding:3px 7px; flex-shrink:0;}
   .empty-note{color:var(--muted2); font-size:12px; padding:4px 2px;}
 
-  /* ---------- bank breakdown ---------- */
-  .bank-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
-  .bank-row:last-child{margin-bottom:0;}
-  .bank-badge{width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;}
-  .bank-main{flex:1; min-width:0;}
-  .bank-name-row{display:flex; justify-content:space-between; gap:8px; font-size:12px; margin-bottom:4px;}
-  .bank-name{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .bank-amt{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; flex-shrink:0;}
-  .bank-bar{height:6px; background:var(--surface3); border-radius:4px; overflow:hidden;}
-  .bank-bar-fill{height:100%; border-radius:4px; transition:width .35s ease;}
+  /* ---------- breakdown rows (banks + categories share this look) ---------- */
+  .breakdown-list{max-height:340px; overflow-y:auto; overflow-x:hidden;}
+  .breakdown-row{display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-right:4px;}
+  .breakdown-row:last-child{margin-bottom:0;}
+  .breakdown-badge{width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;}
+  .breakdown-main{flex:1; min-width:0;}
+  .breakdown-name-row{display:flex; justify-content:space-between; gap:8px; font-size:12px; margin-bottom:4px;}
+  .breakdown-name{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .breakdown-amt{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; flex-shrink:0;}
+  .breakdown-bar{height:6px; background:var(--surface3); border-radius:4px; overflow:hidden;}
+  .breakdown-bar-fill{height:100%; border-radius:4px; transition:width .35s ease;}
 
   /* ---------- hero / balance ---------- */
   .hero-scale-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; gap:10px;}
@@ -171,16 +172,13 @@
   @keyframes valueIn{from{opacity:.35; transform:translateY(2px);} to{opacity:1; transform:translateY(0);}}
 
   /* ---------- charts ---------- */
-  .chart-row{display:grid; grid-template-columns:1fr 1.35fr; gap:18px;}
+  .chart-row{display:grid; grid-template-columns:0.9fr 1.35fr; gap:18px;}
+  .chart-row.chart-row-solo{grid-template-columns:1fr;}
   @media (max-width:680px){.chart-row{grid-template-columns:1fr;}}
   .chart-col{min-width:0;}
-  .chart-box{position:relative; height:210px;}
-  .legend-list{display:flex; flex-direction:column; gap:2px; margin-top:12px; max-height:160px; overflow-y:auto; overflow-x:hidden;}
-  .legend-item{display:flex; align-items:center; gap:8px; font-size:12px; padding:5px 2px; border-radius:6px; min-width:0;}
-  .legend-item:hover{background:var(--surface2);}
-  .legend-icon{width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10.5px; flex-shrink:0;}
-  .legend-name{flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .legend-amt{font-family:'IBM Plex Mono',monospace; flex-shrink:0; font-variant-numeric:tabular-nums;}
+  .chart-col.chart-col-hidden{display:none;}
+  .chart-box{position:relative; height:170px;}
+  .chart-box.chart-box-empty{display:none;}
 
   /* ---------- filters card ---------- */
   .filters-card .filters{display:flex; flex-direction:column; gap:8px;}
@@ -329,7 +327,7 @@
 
       <div class="card">
         <div class="card-title-row"><h3>По банкам</h3></div>
-        <div id="bankBreakdown"></div>
+        <div class="breakdown-list" id="bankBreakdown"></div>
       </div>
 
       <div class="card">
@@ -373,11 +371,12 @@
 
       <div class="card">
         <div class="card-title-row"><h3>По категориям</h3></div>
-        <div class="chart-row">
-          <div class="chart-col">
+        <div class="chart-row" id="catChartRow">
+          <div class="chart-col" id="catChartCol">
             <div class="chart-box"><canvas id="catChart"></canvas></div>
+            <div class="breakdown-list" id="catBreakdown"></div>
           </div>
-          <div class="chart-col">
+          <div class="chart-col" id="monthChartCol">
             <div class="chart-box"><canvas id="monthChart"></canvas></div>
           </div>
         </div>
@@ -1261,11 +1260,11 @@
       const st = bankStyle(name);
       const pct = Math.round(v/max*100);
       return `
-        <div class="bank-row">
-          <div class="bank-badge" style="background:${st.color}; color:${st.text}">${escapeHtml(st.icon)}</div>
-          <div class="bank-main">
-            <div class="bank-name-row"><span class="bank-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="bank-amt">${fmt(v)}</span></div>
-            <div class="bank-bar"><div class="bank-bar-fill" style="width:${pct}%; background:${st.color}"></div></div>
+        <div class="breakdown-row">
+          <div class="breakdown-badge" style="background:${st.color}; color:${st.text}">${escapeHtml(st.icon)}</div>
+          <div class="breakdown-main">
+            <div class="breakdown-name-row"><span class="breakdown-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="breakdown-amt">${fmt(v)}</span></div>
+            <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${pct}%; background:${st.color}"></div></div>
           </div>
         </div>`;
     }).join('');
@@ -1284,23 +1283,23 @@
     txns.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + (-t.amount); });
     const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
     const ctx = document.getElementById('catChart');
+    const box = ctx.closest('.chart-box');
+    const breakdownHost = $('#catBreakdown');
     if(catChart) catChart.destroy();
-    let legendHost = document.getElementById('catLegend');
-    if(!legendHost){
-      legendHost = document.createElement('div');
-      legendHost.id='catLegend'; legendHost.className='legend-list';
-      ctx.closest('.chart-box').after(legendHost);
+
+    if(entries.length===0){
+      box.classList.add('chart-box-empty');
+      breakdownHost.innerHTML = '';
+      return;
     }
-    if(entries.length===0){ legendHost.innerHTML=''; return; }
-    // Библиотека графиков грузится с внешнего CDN — если её заблокировала сеть/антивирус,
-    // не даём этому обрушить остальную отрисовку (банки/таблицу/список). Легенда — обычный
-    // текст, она не зависит от Chart.js и всё равно показывает те же цифры.
+
+    // Библиотека графиков грузится с внешнего CDN — если её заблокировала сеть/антивирус
+    // (или просто не успела на медленном соединении), не даём этому обрушить остальную
+    // отрисовку. Список ниже — обычный текст+CSS, от Chart.js не зависит.
     if(typeof Chart === 'undefined'){
-      const box = ctx.closest('.chart-box');
-      if(!box.querySelector('.chart-fallback-note')){
-        box.insertAdjacentHTML('afterbegin', '<div class="empty-note chart-fallback-note">Графики не загрузились (заблокирован CDN?). Цифры ниже актуальны.</div>');
-      }
+      box.classList.add('chart-box-empty');
     } else {
+      box.classList.remove('chart-box-empty');
       catChart = new Chart(ctx, {
         type:'doughnut',
         data:{
@@ -1310,9 +1309,19 @@
         options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
       });
     }
-    legendHost.innerHTML = entries.map(([id,v])=>{
+
+    const max = entries[0][1] || 1;
+    breakdownHost.innerHTML = entries.map(([id,v])=>{
       const c = catById(id);
-      return `<div class="legend-item"><span class="legend-icon" style="background:${hexToRgba(c.color,.18)}">${c.icon}</span><span class="legend-name" title="${c.name}">${c.name}</span><span class="legend-amt">${fmt(v)}</span></div>`;
+      const pct = Math.round(v/max*100);
+      return `
+        <div class="breakdown-row">
+          <div class="breakdown-badge" style="background:${hexToRgba(c.color,.18)}">${c.icon}</div>
+          <div class="breakdown-main">
+            <div class="breakdown-name-row"><span class="breakdown-name" title="${c.name}">${c.name}</span><span class="breakdown-amt">${fmt(v)}</span></div>
+            <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${pct}%; background:${c.color}"></div></div>
+          </div>
+        </div>`;
     }).join('');
   }
 
@@ -1325,15 +1334,16 @@
     });
     const months = Object.keys(byMonth).sort();
     const ctx = document.getElementById('monthChart');
+    const col = document.getElementById('monthChartCol');
+    const row = document.getElementById('catChartRow');
     if(monthChart) monthChart.destroy();
-    if(months.length===0) return;
-    if(typeof Chart === 'undefined'){
-      const box = ctx.closest('.chart-box');
-      if(!box.querySelector('.chart-fallback-note')){
-        box.insertAdjacentHTML('afterbegin', '<div class="empty-note chart-fallback-note">Графики не загрузились (заблокирован CDN?).</div>');
-      }
+    if(months.length===0 || typeof Chart === 'undefined'){
+      col.classList.add('chart-col-hidden');
+      row.classList.add('chart-row-solo');
       return;
     }
+    col.classList.remove('chart-col-hidden');
+    row.classList.remove('chart-row-solo');
     monthChart = new Chart(ctx, {
       type:'bar',
       data:{
