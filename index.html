@@ -425,8 +425,11 @@
 
 <button class="fab" id="fabAddBtn" title="Добавить операцию">+</button>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<!-- Библиотеки лежат прямо в репозитории (vendor/), а не грузятся с внешнего CDN —
+     у части пользователей антивирус/сетевой фильтр блокирует cdnjs.cloudflare.com,
+     из-за чего графики не строились. Так сайт от внешнего CDN не зависит вовсе. -->
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="vendor/chart.umd.js"></script>
 <script>
 (function(){
   const CATS = [
