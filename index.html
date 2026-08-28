@@ -145,6 +145,9 @@
   .breakdown-bar-fill{height:100%; border-radius:4px; transition:width .35s ease;}
   .breakdown-budget-note{font-size:10.5px; color:var(--muted2); margin-top:3px;}
   .breakdown-budget-note.over{color:var(--danger);}
+  .breakdown-bulk{display:flex; gap:6px; margin-top:5px;}
+  .breakdown-bulk button{font-size:10px; padding:2px 8px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--muted2); cursor:pointer;}
+  .breakdown-bulk button:hover{border-color:var(--personal); color:var(--personal);}
 
   /* ---------- hero / balance ---------- */
   .hero-scale-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; gap:10px;}
@@ -164,7 +167,8 @@
   .period-delta .down{color:var(--ok); font-weight:600;}
 
   .stat-strip{display:flex; margin-top:16px; border-top:1px solid var(--border-soft); padding-top:14px; gap:0;}
-  .stat-item{flex:1; display:flex; align-items:center; gap:10px; padding:0 12px; border-left:1px solid var(--border-soft);}
+  .stat-item{flex:1; display:flex; align-items:center; gap:10px; padding:0 12px; border-left:1px solid var(--border-soft); cursor:pointer; border-radius:8px; transition:background .15s;}
+  .stat-item:hover{background:var(--surface2);}
   .stat-item:first-child{border-left:none; padding-left:0;}
   .stat-icon{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--surface2); color:var(--muted);}
   .stat-item .n{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; animation:valueIn .3s ease;}
@@ -174,13 +178,12 @@
   @keyframes valueIn{from{opacity:.35; transform:translateY(2px);} to{opacity:1; transform:translateY(0);}}
 
   /* ---------- charts ---------- */
-  .chart-row{display:grid; grid-template-columns:0.9fr 1.35fr; gap:18px;}
-  .chart-row.chart-row-solo{grid-template-columns:1fr;}
-  @media (max-width:680px){.chart-row{grid-template-columns:1fr;}}
-  .chart-col{min-width:0;}
-  .chart-col.chart-col-hidden{display:none;}
-  .chart-box{position:relative; height:170px;}
+  .chart-box{position:relative; height:210px; margin-bottom:14px;}
   .chart-box.chart-box-empty{display:none;}
+  .mini-toggle{display:flex; gap:6px;}
+  .mini-toggle button{border:1px solid var(--border); background:var(--surface2); color:var(--muted); border-radius:16px; padding:5px 12px; font-size:11.5px; font-weight:500; cursor:pointer;}
+  .mini-toggle button:hover{border-color:#3A4050; color:var(--text);}
+  .mini-toggle button.active{background:var(--personal-soft); color:var(--personal); border-color:var(--personal);}
 
   /* ---------- filters card ---------- */
   .filters-card .filters{display:flex; flex-direction:column; gap:8px;}
@@ -380,16 +383,15 @@
       </div>
 
       <div class="card">
-        <div class="card-title-row"><h3>По категориям</h3></div>
-        <div class="chart-row" id="catChartRow">
-          <div class="chart-col" id="catChartCol">
-            <div class="chart-box"><canvas id="catChart"></canvas></div>
-            <div class="breakdown-list" id="catBreakdown"></div>
-          </div>
-          <div class="chart-col" id="monthChartCol">
-            <div class="chart-box"><canvas id="monthChart"></canvas></div>
+        <div class="card-title-row">
+          <h3>По категориям</h3>
+          <div class="mini-toggle" id="chartViewToggle">
+            <button type="button" class="active" data-view="donut">Диаграмма</button>
+            <button type="button" data-view="month">По месяцам</button>
           </div>
         </div>
+        <div class="chart-box" id="mainChartBox"><canvas id="mainChart"></canvas></div>
+        <div class="breakdown-list" id="catBreakdown"></div>
       </div>
 
       <div class="card">
@@ -1233,7 +1235,15 @@
   }
 
   // ---------- rendering ----------
-  let catChart=null, monthChart=null;
+  let mainChart=null;
+  let chartView='donut';
+  document.querySelectorAll('#chartViewToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      chartView = btn.dataset.view;
+      document.querySelectorAll('#chartViewToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderMainChart(filteredTxns());
+    });
+  });
   const statSvgs = {
     total:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M6 14h4"/></svg>',
     personal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>',
@@ -1272,15 +1282,23 @@
       ['work', fmt(work), 'рабочее', 'var(--work)'],
       ['unset', unsetCount, 'без метки', 'var(--muted)'],
     ].map(([key,n,l,c])=>`
-      <div class="stat-item">
+      <div class="stat-item" data-key="${key}" title="Показать эти операции в таблице">
         <div class="stat-icon" style="color:${c}">${statSvgs[key]}</div>
         <div><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>
       </div>`).join('');
+    $('#statStrip').querySelectorAll('.stat-item').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        $('#filterType').value = el.dataset.key==='total' ? 'all' : el.dataset.key;
+        render();
+        const target = document.querySelector('.table-scroll, .txn-list');
+        if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
 
     $('#filterEmptyNote').style.display = (state.txns.length>0 && txns.length===0) ? 'block' : 'none';
 
-    renderCatChart(txns);
-    renderMonthChart(txns);
+    renderCategoryBreakdown(txns);
+    renderMainChart(txns);
     renderBankBreakdown(filteredTxnsForBanks());
     renderTable(txns);
     renderTxnList(txns);
@@ -1302,9 +1320,30 @@
           <div class="breakdown-main">
             <div class="breakdown-name-row"><span class="breakdown-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="breakdown-amt">${fmt(v)}</span></div>
             <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${pct}%; background:${st.color}"></div></div>
+            <div class="breakdown-bulk">
+              <button type="button" class="bulkLabelBtn" data-bank="${escapeHtml(name)}" data-type="personal">→ Личное</button>
+              <button type="button" class="bulkLabelBtn" data-bank="${escapeHtml(name)}" data-type="work">→ Рабочее</button>
+            </div>
           </div>
         </div>`;
     }).join('');
+    host.querySelectorAll('.bulkLabelBtn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const bank = btn.dataset.bank;
+        const type = btn.dataset.type;
+        const label = type==='personal' ? 'личное' : 'рабочее';
+        const affected = state.txns.filter(t=>t.source===bank && t.amount<0);
+        if(!affected.length) return;
+        if(!confirm(`Пометить все операции источника «${bank}» (${affected.length} шт.) как «${label}»? Существующие метки будут перезаписаны.`)) return;
+        affected.forEach(t=> t.type = type);
+        save(); render();
+        if(remoteReady()){
+          affected.forEach(t=>{
+            remotePost({action:'update_fields', id:t.id, fields:{type}}).catch(err=>console.error('update_fields failed', err));
+          });
+        }
+      });
+    });
   }
 
   function renderBankOptions(){
@@ -1315,37 +1354,14 @@
     if(banks.includes(cur)) sel.value = cur;
   }
 
-  function renderCatChart(txns){
+  // Список категорий — всегда виден, не зависит от того, какой график выбран
+  // переключателем (раньше donut+список дублировали друг друга рядом).
+  function renderCategoryBreakdown(txns){
     const byCat = {};
     txns.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + (-t.amount); });
     const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
-    const ctx = document.getElementById('catChart');
-    const box = ctx.closest('.chart-box');
     const breakdownHost = $('#catBreakdown');
-    if(catChart) catChart.destroy();
-
-    if(entries.length===0){
-      box.classList.add('chart-box-empty');
-      breakdownHost.innerHTML = '';
-      return;
-    }
-
-    // Библиотека графиков грузится с внешнего CDN — если её заблокировала сеть/антивирус
-    // (или просто не успела на медленном соединении), не даём этому обрушить остальную
-    // отрисовку. Список ниже — обычный текст+CSS, от Chart.js не зависит.
-    if(typeof Chart === 'undefined'){
-      box.classList.add('chart-box-empty');
-    } else {
-      box.classList.remove('chart-box-empty');
-      catChart = new Chart(ctx, {
-        type:'doughnut',
-        data:{
-          labels: entries.map(([id])=>catById(id).name),
-          datasets:[{ data: entries.map(([,v])=>v), backgroundColor: entries.map(([id])=>catById(id).color), borderColor:'#171A21', borderWidth:2 }]
-        },
-        options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
-      });
-    }
+    if(entries.length===0){ breakdownHost.innerHTML = '<div class="empty-note">Нет операций за выбранный период.</div>'; return; }
 
     const max = entries[0][1] || 1;
     const showBudgets = currentPeriod === 'month';
@@ -1374,41 +1390,60 @@
     }).join('');
   }
 
-  function renderMonthChart(txns){
-    const byMonth = {};
-    txns.forEach(t=>{
-      const m = t.date ? t.date.slice(0,7) : 'н/д';
-      byMonth[m] = byMonth[m] || {personal:0, work:0, unset:0};
-      byMonth[m][t.type==='personal'?'personal':t.type==='work'?'work':'unset'] += (-t.amount);
-    });
-    const months = Object.keys(byMonth).sort();
-    const ctx = document.getElementById('monthChart');
-    const col = document.getElementById('monthChartCol');
-    const row = document.getElementById('catChartRow');
-    if(monthChart) monthChart.destroy();
-    if(months.length===0 || typeof Chart === 'undefined'){
-      col.classList.add('chart-col-hidden');
-      row.classList.add('chart-row-solo');
+  // Один canvas, переключаемый пилюлями «Диаграмма / По месяцам» — вместо того,
+  // чтобы всегда показывать donut рядом со списком категорий (дублировали друг друга)
+  // и столбчатый график третьей колонкой.
+  function renderMainChart(txns){
+    const ctx = document.getElementById('mainChart');
+    const box = document.getElementById('mainChartBox');
+    if(mainChart){ mainChart.destroy(); mainChart = null; }
+
+    if(typeof Chart === 'undefined'){
+      box.classList.add('chart-box-empty');
       return;
     }
-    col.classList.remove('chart-col-hidden');
-    row.classList.remove('chart-row-solo');
-    monthChart = new Chart(ctx, {
-      type:'bar',
-      data:{
-        labels: months,
-        datasets:[
-          {label:'Личное', data: months.map(m=>byMonth[m].personal), backgroundColor:'#EFA646', stack:'s', borderRadius:4},
-          {label:'Рабочее', data: months.map(m=>byMonth[m].work), backgroundColor:'#48C0AE', stack:'s', borderRadius:4},
-          {label:'Без метки', data: months.map(m=>byMonth[m].unset), backgroundColor:'#3A3F4D', stack:'s', borderRadius:4},
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        scales:{ x:{stacked:true, grid:{display:false}, ticks:{color:'#98A0B3'}}, y:{stacked:true, grid:{color:'#282C37'}, ticks:{color:'#98A0B3'}} },
-        plugins:{ legend:{labels:{color:'#EDEAE2', boxWidth:10, font:{size:11}}}, tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}} }
-      }
-    });
+
+    if(chartView === 'donut'){
+      const byCat = {};
+      txns.forEach(t=>{ byCat[t.category] = (byCat[t.category]||0) + (-t.amount); });
+      const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+      if(entries.length===0){ box.classList.add('chart-box-empty'); return; }
+      box.classList.remove('chart-box-empty');
+      mainChart = new Chart(ctx, {
+        type:'doughnut',
+        data:{
+          labels: entries.map(([id])=>catById(id).name),
+          datasets:[{ data: entries.map(([,v])=>v), backgroundColor: entries.map(([id])=>catById(id).color), borderColor:'#171A21', borderWidth:2 }]
+        },
+        options:{ plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}} }, cutout:'64%' }
+      });
+    } else {
+      const byMonth = {};
+      txns.forEach(t=>{
+        const m = t.date ? t.date.slice(0,7) : 'н/д';
+        byMonth[m] = byMonth[m] || {personal:0, work:0, unset:0};
+        byMonth[m][t.type==='personal'?'personal':t.type==='work'?'work':'unset'] += (-t.amount);
+      });
+      const months = Object.keys(byMonth).sort();
+      if(months.length===0){ box.classList.add('chart-box-empty'); return; }
+      box.classList.remove('chart-box-empty');
+      mainChart = new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels: months,
+          datasets:[
+            {label:'Личное', data: months.map(m=>byMonth[m].personal), backgroundColor:'#EFA646', stack:'s', borderRadius:4},
+            {label:'Рабочее', data: months.map(m=>byMonth[m].work), backgroundColor:'#48C0AE', stack:'s', borderRadius:4},
+            {label:'Без метки', data: months.map(m=>byMonth[m].unset), backgroundColor:'#3A3F4D', stack:'s', borderRadius:4},
+          ]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          scales:{ x:{stacked:true, grid:{display:false}, ticks:{color:'#98A0B3'}}, y:{stacked:true, grid:{color:'#282C37'}, ticks:{color:'#98A0B3'}} },
+          plugins:{ legend:{labels:{color:'#EDEAE2', boxWidth:10, font:{size:11}}}, tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}} }
+        }
+      });
+    }
   }
 
   // ---------- shared row controls (desktop table + mobile card list) ----------
@@ -1428,7 +1463,7 @@
           const meta = card.querySelector('.tc-meta');
           if(meta) meta.textContent = t.source + ' · ' + c.name;
         }
-        save(); renderCatChart(filteredTxns());
+        save(); renderCategoryBreakdown(filteredTxns()); renderMainChart(filteredTxns());
         if(remoteReady()){
           try{ await remotePost({action:'update_fields', id:t.id, fields:{category:t.category}}); }
           catch(err){ console.error('update_fields failed', err); }
