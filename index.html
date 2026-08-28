@@ -143,6 +143,8 @@
   .breakdown-amt{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; flex-shrink:0;}
   .breakdown-bar{height:6px; background:var(--surface3); border-radius:4px; overflow:hidden;}
   .breakdown-bar-fill{height:100%; border-radius:4px; transition:width .35s ease;}
+  .breakdown-budget-note{font-size:10.5px; color:var(--muted2); margin-top:3px;}
+  .breakdown-budget-note.over{color:var(--danger);}
 
   /* ---------- hero / balance ---------- */
   .hero-scale-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; gap:10px;}
@@ -344,6 +346,14 @@
       </div>
 
       <div class="card">
+        <details>
+          <summary>Лимиты по категориям</summary>
+          <div class="muted" style="font-size:11px; margin-bottom:8px;">Месячный лимит расхода. Прогресс виден в «По категориям», когда выбран период «Месяц».</div>
+          <div id="budgetsList"></div>
+        </details>
+      </div>
+
+      <div class="card">
         <button class="ghost" style="width:100%; margin-bottom:8px;" id="exportBtn">Экспорт CSV</button>
         <button class="ghost" style="width:100%; color:var(--danger); border-color:var(--danger);" id="clearBtn">Очистить всё</button>
       </div>
@@ -469,6 +479,7 @@
     txns: [],
     rules: CATS.map(c=>({category:c.id, keys:[...c.keys]})),
     imports: [],
+    budgets: {}, // {categoryId: месячный лимит в рублях}
     sort: {key:'date', dir:'desc'},
   };
   let settings = { url:'', secret:'' };
@@ -547,6 +558,7 @@
         if(parsed.txns) state.txns = parsed.txns;
         if(parsed.rules) state.rules = parsed.rules;
         if(parsed.imports) state.imports = parsed.imports;
+        if(parsed.budgets) state.budgets = parsed.budgets;
       }
     }catch(e){}
   }
@@ -1030,6 +1042,27 @@
     $('#newRuleKeyword').value='';
     save(); renderRules();
   });
+  // ---------- лимиты по категориям ----------
+  function renderBudgets(){
+    const host = $('#budgetsList');
+    host.innerHTML = CATS.map(c=>{
+      const val = state.budgets[c.id] || '';
+      return `<div class="rule-row">
+        <span class="rule-cat-label" title="${c.name}"><span class="cat-swatch" style="background:${c.color}"></span>${c.icon} ${c.name}</span>
+        <input type="number" min="0" step="500" data-cat="${c.id}" class="budgetInput" placeholder="без лимита" value="${val}">
+      </div>`;
+    }).join('');
+    host.querySelectorAll('.budgetInput').forEach(inp=>{
+      inp.addEventListener('change', e=>{
+        const cat = e.target.dataset.cat;
+        const v = parseFloat(e.target.value);
+        if(!v || v<=0) delete state.budgets[cat];
+        else state.budgets[cat] = v;
+        save(); render();
+      });
+    });
+  }
+
   $('#recategorizeBtn').addEventListener('click', ()=>{
     state.txns.forEach(t=> t.category = guessCategory(t.desc));
     save(); render();
@@ -1207,6 +1240,7 @@
 
   function render(){
     renderRules();
+    renderBudgets();
     renderFileChips();
     renderBankOptions();
     renderPeriodPills();
@@ -1311,15 +1345,27 @@
     }
 
     const max = entries[0][1] || 1;
+    const showBudgets = currentPeriod === 'month';
     breakdownHost.innerHTML = entries.map(([id,v])=>{
       const c = catById(id);
-      const pct = Math.round(v/max*100);
+      const budget = showBudgets ? state.budgets[id] : null;
+      let pct, barColor, note = '';
+      if(budget){
+        pct = Math.min(100, Math.round(v/budget*100));
+        const over = v > budget;
+        barColor = over ? 'var(--danger)' : c.color;
+        note = `<div class="breakdown-budget-note ${over?'over':''}">${fmt(v)} из ${fmt(budget)}/мес — ${Math.round(v/budget*100)}%${over?' — превышен':''}</div>`;
+      } else {
+        pct = Math.round(v/max*100);
+        barColor = c.color;
+      }
       return `
         <div class="breakdown-row">
           <div class="breakdown-badge" style="background:${hexToRgba(c.color,.18)}">${c.icon}</div>
           <div class="breakdown-main">
             <div class="breakdown-name-row"><span class="breakdown-name" title="${c.name}">${c.name}</span><span class="breakdown-amt">${fmt(v)}</span></div>
-            <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${pct}%; background:${c.color}"></div></div>
+            <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${pct}%; background:${barColor}"></div></div>
+            ${note}
           </div>
         </div>`;
     }).join('');
