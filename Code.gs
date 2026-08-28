@@ -14,6 +14,7 @@
 const SHARED_SECRET = '_0uUtUTbXSp3dDzeRI9Bx6gRCnaI5YKs';
 const SHEET_NAME = 'Транзакции';
 const HEADERS = ['id', 'Добавлено', 'Дата операции', 'Сумма', 'Описание', 'Источник', 'Категория', 'Метка', 'ФайлID'];
+const DDS_SHEET_NAME = 'ДДС';
 
 // Настройки поиска писем Озон Банка — ЧЕРНОВЫЕ, нужно уточнить по реальному письму.
 const OZON_SENDER_QUERY = 'from:(noreply@ozon.ru OR notify@ozon.ru) subject:(операция OR списание OR платёж)';
@@ -159,11 +160,13 @@ function handleSiteAction_(body) {
   switch (body.action) {
     case 'add': {
       const id = appendTxn_(sheet, body.txn || {});
+      rebuildDDS_();
       return jsonOut_({ ok: true, id: id });
     }
     case 'bulk_add': {
       const txns = body.txns || [];
       const ids = appendTxnsBatch_(sheet, txns);
+      rebuildDDS_();
       return jsonOut_({ ok: true, ids: ids });
     }
     case 'update_fields': {
@@ -176,16 +179,19 @@ function handleSiteAction_(body) {
       if (fields.date !== undefined) sheet.getRange(row, 3).setValue(fields.date);
       if (fields.amount !== undefined) sheet.getRange(row, 4).setValue(fields.amount);
       if (fields.source !== undefined) sheet.getRange(row, 6).setValue(fields.source);
+      rebuildDDS_();
       return jsonOut_({ ok: true });
     }
     case 'delete_batch': {
       const ids = body.ids || [];
       deleteRowsByIds_(sheet, ids);
+      rebuildDDS_();
       return jsonOut_({ ok: true, deleted: ids.length });
     }
     case 'delete_all': {
       const lastRow = sheet.getLastRow();
       if (lastRow > 1) sheet.deleteRows(2, lastRow - 1);
+      rebuildDDS_();
       return jsonOut_({ ok: true });
     }
     default:
@@ -216,6 +222,7 @@ function handleQuickAdd_(body) {
     category: body.category || guessCategory_(body.desc || ''),
     type: body.type || 'unset',
   });
+  rebuildDDS_();
   return jsonOut_({ ok: true, id: id });
 }
 
@@ -240,6 +247,7 @@ function handleTochkaWebhook_(body) {
       const parsed = parseTochka_(op);
       if (parsed) ids.push(appendTxn_(sheet, parsed));
     });
+    if (ids.length) rebuildDDS_();
     return jsonOut_({ ok: true, ids: ids });
   } catch (err) {
     // Логируем сырое тело, чтобы можно было свериться с реальным форматом Точки и поправить parseTochka_.
@@ -289,6 +297,7 @@ function checkGmailForTransactions() {
     });
     thread.addLabel(label);
   });
+  rebuildDDS_();
 }
 
 function parseOzonEmail_(text) {
@@ -348,4 +357,168 @@ function guessCategory_(desc) {
     }
   }
   return 'other';
+}
+
+// ---------------------------------------------------------------------------
+// ДДС — автоматически оформленный отчёт на отдельном листе
+// ---------------------------------------------------------------------------
+// Строится заново при каждой записи в «Транзакции» (см. вызовы rebuildDDS_
+// в handleSiteAction_/handleQuickAdd_/handleTochkaWebhook_/checkGmailForTransactions).
+// Обёрнуто в try/catch, чтобы сбой форматирования отчёта никогда не ронял
+// сам факт сохранения операции.
+
+const CATEGORY_LABELS_ = {
+  groceries: 'Продукты', cafe: 'Кафе и рестораны', transport: 'Транспорт',
+  housing: 'Жильё и ЖКХ', comms: 'Связь и интернет', health: 'Здоровье и аптеки',
+  shopping: 'Одежда и красота', marketplace: 'Маркетплейсы', fun: 'Развлечения и хобби',
+  subs: 'Подписки и сервисы', transfers: 'Переводы и снятия', other: 'Прочее',
+};
+const CATEGORY_ORDER_ = ['groceries', 'cafe', 'transport', 'housing', 'comms', 'health',
+  'shopping', 'marketplace', 'fun', 'subs', 'transfers', 'other'];
+const RU_MONTHS_SHORT_ = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+
+function rebuildDDS_() {
+  try {
+    rebuildDDSUnsafe_();
+  } catch (err) {
+    console.error('rebuildDDS_ failed: ' + err);
+  }
+}
+
+function rebuildDDSUnsafe_() {
+  const txns = rowsToObjects_(getSheet_()).filter(function (t) { return t.amount < 0; });
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(DDS_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(DDS_SHEET_NAME);
+  } else {
+    sheet.clear();
+    sheet.clearFormats();
+    sheet.setFrozenRows(0);
+    sheet.setFrozenColumns(0);
+  }
+
+  if (!txns.length) {
+    sheet.getRange(1, 1).setValue('Нет операций для отчёта — добавьте хотя бы одну транзакцию.');
+    return;
+  }
+
+  const monthsSet = {};
+  txns.forEach(function (t) { if (t.date) monthsSet[t.date.slice(0, 7)] = true; });
+  const months = Object.keys(monthsSet).sort();
+  const monthLabel = function (m) {
+    const parts = m.split('-');
+    return RU_MONTHS_SHORT_[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
+  };
+
+  const HEADER_BG = '#1f2937';
+  const HEADER_FG = '#ffffff';
+  const SUBHEAD_BG = '#e5e7eb';
+  const TOTAL_BG = '#f3f4f6';
+  const BORDER_COLOR = '#d1d5db';
+  const NUM_FMT = '#,##0 ₽';
+
+  let row = 1;
+
+  // ---- Заголовок ----
+  const titleColSpan = months.length + 2;
+  sheet.getRange(row, 1, 1, titleColSpan).merge()
+    .setValue('ДДС — движение денежных средств')
+    .setFontSize(14).setFontWeight('bold').setBackground(HEADER_BG).setFontColor(HEADER_FG)
+    .setHorizontalAlignment('left').setVerticalAlignment('middle');
+  sheet.setRowHeight(row, 30);
+  row += 1;
+  sheet.getRange(row, 1).setValue('Сформировано автоматически: ' +
+    Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd.MM.yyyy HH:mm'));
+  sheet.getRange(row, 1).setFontColor('#6b7280').setFontSize(9).setFontStyle('italic');
+  row += 2;
+
+  // ---- Таблица: категории × месяцы ----
+  const catTableTop = row;
+  const catHeader = ['Категория'].concat(months.map(monthLabel)).concat(['Итого']);
+  sheet.getRange(row, 1, 1, catHeader.length).setValues([catHeader])
+    .setFontWeight('bold').setBackground(SUBHEAD_BG);
+  row += 1;
+
+  const catTotalsByMonth = {};
+  months.forEach(function (m) { catTotalsByMonth[m] = 0; });
+  let grandTotal = 0;
+  const catRows = [];
+
+  CATEGORY_ORDER_.forEach(function (catId) {
+    let catSum = 0;
+    const vals = months.map(function (m) {
+      const sum = txns
+        .filter(function (t) { return t.category === catId && t.date && t.date.slice(0, 7) === m; })
+        .reduce(function (s, t) { return s + (-t.amount); }, 0);
+      catTotalsByMonth[m] += sum;
+      catSum += sum;
+      return sum || 0;
+    });
+    if (catSum > 0) {
+      grandTotal += catSum;
+      catRows.push([CATEGORY_LABELS_[catId] || catId].concat(vals).concat([catSum]));
+    }
+  });
+
+  if (catRows.length) {
+    sheet.getRange(row, 1, catRows.length, catHeader.length).setValues(catRows);
+    row += catRows.length;
+  }
+
+  const totalRow = ['Итого'].concat(months.map(function (m) { return catTotalsByMonth[m] || 0; })).concat([grandTotal]);
+  sheet.getRange(row, 1, 1, totalRow.length).setValues([totalRow])
+    .setFontWeight('bold').setBackground(TOTAL_BG);
+  const catTableBottom = row;
+  row += 2;
+
+  sheet.getRange(catTableTop + 1, 2, catTableBottom - catTableTop, months.length + 1).setNumberFormat(NUM_FMT);
+  sheet.getRange(catTableTop, 1, catTableBottom - catTableTop + 1, catHeader.length)
+    .setBorder(true, true, true, true, true, true, BORDER_COLOR, SpreadsheetApp.BorderStyle.SOLID);
+
+  // ---- По источникам (банкам) ----
+  const bankTitleRow = row;
+  sheet.getRange(row, 1).setValue('По источникам').setFontWeight('bold').setFontSize(12);
+  row += 1;
+  const byBank = {};
+  txns.forEach(function (t) { const k = t.source || 'Другое'; byBank[k] = (byBank[k] || 0) + (-t.amount); });
+  const bankEntries = Object.entries(byBank).sort(function (a, b) { return b[1] - a[1]; });
+  sheet.getRange(row, 1, 1, 2).setValues([['Источник', 'Сумма']]).setFontWeight('bold').setBackground(SUBHEAD_BG);
+  row += 1;
+  const bankDataTop = row;
+  bankEntries.forEach(function (entry) {
+    sheet.getRange(row, 1, 1, 2).setValues([[entry[0], entry[1]]]);
+    row += 1;
+  });
+  if (bankEntries.length) {
+    sheet.getRange(bankDataTop, 2, bankEntries.length, 1).setNumberFormat(NUM_FMT);
+    sheet.getRange(bankTitleRow + 1, 1, row - bankTitleRow - 1, 2)
+      .setBorder(true, true, true, true, true, true, BORDER_COLOR, SpreadsheetApp.BorderStyle.SOLID);
+  }
+  row += 2;
+
+  // ---- Личное / Рабочее / Без метки ----
+  sheet.getRange(row, 1).setValue('Личное vs рабочее').setFontWeight('bold').setFontSize(12);
+  row += 1;
+  const byType = { personal: 0, work: 0, unset: 0 };
+  txns.forEach(function (t) {
+    const k = t.type === 'personal' ? 'personal' : (t.type === 'work' ? 'work' : 'unset');
+    byType[k] += (-t.amount);
+  });
+  const typeLabels = { personal: 'Личное', work: 'Рабочее', unset: 'Без метки' };
+  sheet.getRange(row, 1, 1, 2).setValues([['Метка', 'Сумма']]).setFontWeight('bold').setBackground(SUBHEAD_BG);
+  row += 1;
+  const typeDataTop = row;
+  ['personal', 'work', 'unset'].forEach(function (k) {
+    sheet.getRange(row, 1, 1, 2).setValues([[typeLabels[k], byType[k]]]);
+    row += 1;
+  });
+  sheet.getRange(typeDataTop, 2, 3, 1).setNumberFormat(NUM_FMT);
+  sheet.getRange(typeDataTop - 1, 1, 4, 2)
+    .setBorder(true, true, true, true, true, true, BORDER_COLOR, SpreadsheetApp.BorderStyle.SOLID);
+
+  // ---- Общее оформление листа ----
+  sheet.setFrozenColumns(1);
+  sheet.autoResizeColumns(1, catHeader.length);
+  sheet.setColumnWidth(1, 190);
 }
