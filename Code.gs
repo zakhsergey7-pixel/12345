@@ -385,6 +385,13 @@ function rebuildDDS_() {
   }
 }
 
+// Обёртка без подчёркивания в конце имени — Apps Script прячет из выпадающего
+// списка "Выполнить" все функции вида *_, поэтому для ручного запуска/проверки
+// в редакторе используйте именно эту функцию.
+function manualRebuildDDS() {
+  rebuildDDS_();
+}
+
 function rebuildDDSUnsafe_() {
   const txns = rowsToObjects_(getSheet_()).filter(function (t) { return t.amount < 0; });
   const ss = SpreadsheetApp.getActiveSpreadsheet();
