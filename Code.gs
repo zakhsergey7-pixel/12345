@@ -132,12 +132,13 @@ function doGet(e) {
 
 function doPost(e) {
   const rawBody = (e && e.postData && e.postData.contents) || '';
-  console.log('doPost debug: ' + JSON.stringify({
+  logDebug_('doPost', JSON.stringify({
     hasE: !!e,
     hasPostData: !!(e && e.postData),
     postDataType: e && e.postData && e.postData.type,
     postDataLength: e && e.postData && e.postData.length,
     rawBodyLength: rawBody.length,
+    rawBody: rawBody,
     parameter: e && e.parameter,
     parameters: e && e.parameters,
     contentLength: e && e.contentLength,
@@ -243,6 +244,26 @@ function jsonOut_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
+// Пишет отладочные записи на отдельный лист «Debug» в этой же таблице — так проще
+// смотреть, что реально приходит в doPost, чем через Apps Script Executions.
+// Лист можно периодически чистить вручную, на работу трекера он не влияет.
+const DEBUG_SHEET_NAME_ = 'Debug';
+
+function logDebug_(label, data) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(DEBUG_SHEET_NAME_);
+    if (!sheet) {
+      sheet = ss.insertSheet(DEBUG_SHEET_NAME_);
+      sheet.appendRow(['Время', 'Метка', 'Данные']);
+      sheet.setFrozenRows(1);
+    }
+    sheet.appendRow([new Date(), label, String(data)]);
+  } catch (err) {
+    console.error('logDebug_ failed: ' + err);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Точка.API — вебхук по операциям счёта ИП
 // ---------------------------------------------------------------------------
@@ -260,15 +281,15 @@ function handleTochkaWebhook_(rawBody) {
   try {
     payload = decodeJwtPayload_(rawBody);
   } catch (err) {
-    console.error('Tochka webhook: не смог декодировать JWT. err=' + err + ' rawBody=' + rawBody);
+    logDebug_('tochka_decode_error', String(err) + ' rawBody=' + rawBody);
   }
   if (!payload) {
     // Точка проверяет доступность URL тестовым вызовом при создании/редактировании вебхука —
     // отвечаем 200 даже если не смогли разобрать тело, иначе вебхук не создастся.
-    console.error('Tochka webhook: пустой/неразбираемый payload. rawBody=' + rawBody);
+    logDebug_('tochka_unparsed', 'rawBody=' + rawBody);
     return jsonOut_({ ok: true, note: 'unparsed' });
   }
-  console.log('Tochka webhook payload: ' + JSON.stringify(payload));
+  logDebug_('tochka_payload', JSON.stringify(payload));
   try {
     const events = payload.events || (payload.Data && payload.Data.events) || [payload];
     const sheet = getSheet_();
