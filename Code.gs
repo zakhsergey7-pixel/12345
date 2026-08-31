@@ -305,6 +305,50 @@ function parseTochka_(op) {
   };
 }
 
+// --- Регистрация вебхука в Точка.API ---------------------------------------
+// Ключ и client_id берутся из Script Properties (Project Settings → Script Properties),
+// а не из кода — чтобы они не попадали в git и в переписку.
+// По документации Точки ключ используется напрямую как Bearer-токен, без обмена (нет refresh —
+// когда истечёт срок действия, нужно перевыпустить ключ в приложении банка и обновить property).
+
+const TOCHKA_BASE_URL_ = 'https://enter.tochka.com/uapi';
+const TOCHKA_WEBHOOK_EVENTS_ = ['incomingPayment', 'outgoingPayment', 'incomingSbpPayment', 'incomingSbpB2BPayment', 'acquiringInternetPayment'];
+
+function tochkaProp_(name) {
+  const value = PropertiesService.getScriptProperties().getProperty(name);
+  if (!value) throw new Error('Нет ' + name + ' в Script Properties (Project Settings → Script Properties)');
+  return value;
+}
+
+// Запустите вручную (▶ в редакторе) один раз, чтобы создать вебхук на текущий деплой.
+function registerTochkaWebhook() {
+  const clientId = tochkaProp_('TOCHKA_CLIENT_ID');
+  const jwt = tochkaProp_('TOCHKA_JWT_KEY');
+  const webAppUrl = ScriptApp.getService().getUrl();
+  const resp = UrlFetchApp.fetch(TOCHKA_BASE_URL_ + '/webhook/v1.0/' + encodeURIComponent(clientId), {
+    method: 'put',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + jwt },
+    payload: JSON.stringify({ webhooksList: TOCHKA_WEBHOOK_EVENTS_, url: webAppUrl }),
+    muteHttpExceptions: true,
+  });
+  Logger.log('registerTochkaWebhook -> URL=%s code=%s body=%s', webAppUrl, resp.getResponseCode(), resp.getContentText());
+  return resp.getContentText();
+}
+
+// Проверить, что сейчас зарегистрировано (GET).
+function checkTochkaWebhooks() {
+  const clientId = tochkaProp_('TOCHKA_CLIENT_ID');
+  const jwt = tochkaProp_('TOCHKA_JWT_KEY');
+  const resp = UrlFetchApp.fetch(TOCHKA_BASE_URL_ + '/webhook/v1.0/' + encodeURIComponent(clientId), {
+    method: 'get',
+    headers: { Authorization: 'Bearer ' + jwt },
+    muteHttpExceptions: true,
+  });
+  Logger.log('checkTochkaWebhooks -> code=%s body=%s', resp.getResponseCode(), resp.getContentText());
+  return resp.getContentText();
+}
+
 // ---------------------------------------------------------------------------
 // Озон Банк — разбор писем через Gmail (запускается по таймеру каждые 10 минут)
 // ---------------------------------------------------------------------------
