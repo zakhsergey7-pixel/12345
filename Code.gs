@@ -310,6 +310,10 @@ function parseTochka_(op) {
 // а не из кода — чтобы они не попадали в git и в переписку.
 // По документации Точки ключ используется напрямую как Bearer-токен, без обмена (нет refresh —
 // когда истечёт срок действия, нужно перевыпустить ключ в приложении банка и обновить property).
+// enter.tochka.com отдаёт сертификат российского Минцифры, которому серверы Google не доверяют —
+// добавить свой корневой сертификат в UrlFetchApp нельзя, поэтому проверка сертификата ниже
+// отключена (validateHttpsCertificates: false). Это осознанный компромисс ради обращения именно
+// к enter.tochka.com — не переиспользуйте эти функции для других хостов.
 
 const TOCHKA_BASE_URL_ = 'https://enter.tochka.com/uapi';
 const TOCHKA_WEBHOOK_EVENTS_ = ['incomingPayment', 'outgoingPayment', 'incomingSbpPayment', 'incomingSbpB2BPayment', 'acquiringInternetPayment'];
@@ -331,6 +335,7 @@ function registerTochkaWebhook() {
     headers: { Authorization: 'Bearer ' + jwt },
     payload: JSON.stringify({ webhooksList: TOCHKA_WEBHOOK_EVENTS_, url: webAppUrl }),
     muteHttpExceptions: true,
+    validateHttpsCertificates: false,
   });
   Logger.log('registerTochkaWebhook -> URL=%s code=%s body=%s', webAppUrl, resp.getResponseCode(), resp.getContentText());
   return resp.getContentText();
@@ -344,6 +349,7 @@ function checkTochkaWebhooks() {
     method: 'get',
     headers: { Authorization: 'Bearer ' + jwt },
     muteHttpExceptions: true,
+    validateHttpsCertificates: false,
   });
   Logger.log('checkTochkaWebhooks -> code=%s body=%s', resp.getResponseCode(), resp.getContentText());
   return resp.getContentText();
