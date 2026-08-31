@@ -249,6 +249,12 @@ function jsonOut_(obj) {
 // Лист можно периодически чистить вручную, на работу трекера он не влияет.
 const DEBUG_SHEET_NAME_ = 'Debug';
 
+// Запустите вручную (▶ в редакторе, выбрав эту функцию в списке), чтобы проверить,
+// что запись в лист Debug вообще работает — независимо от вебхуков и передеплоя.
+function testDebugWrite() {
+  logDebug_('manual_test', 'hello ' + new Date());
+}
+
 function logDebug_(label, data) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
