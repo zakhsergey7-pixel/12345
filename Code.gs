@@ -132,6 +132,17 @@ function doGet(e) {
 
 function doPost(e) {
   const rawBody = (e && e.postData && e.postData.contents) || '';
+  console.log('doPost debug: ' + JSON.stringify({
+    hasE: !!e,
+    hasPostData: !!(e && e.postData),
+    postDataType: e && e.postData && e.postData.type,
+    postDataLength: e && e.postData && e.postData.length,
+    rawBodyLength: rawBody.length,
+    parameter: e && e.parameter,
+    parameters: e && e.parameters,
+    contentLength: e && e.contentLength,
+    queryString: e && e.queryString,
+  }));
   let body = null;
   try {
     body = JSON.parse(rawBody);
