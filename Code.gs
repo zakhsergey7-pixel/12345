@@ -131,28 +131,30 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  let body = {};
+  const rawBody = (e && e.postData && e.postData.contents) || '';
+  let body = null;
   try {
-    body = JSON.parse(e.postData.contents);
+    body = JSON.parse(rawBody);
   } catch (err) {
-    // Не JSON — может быть form-encoded вебхук Точки, пробуем распарсить как есть.
-    body = (e && e.parameter) || {};
+    // Не JSON — это вебхук Точки: там в теле "голая" строка JWT (Content-Type: text/plain),
+    // см. handleTochkaWebhook_.
+    body = null;
   }
 
   // 1) Запросы с самого сайта — у них всегда явное поле action + правильный secret.
-  if (body.action) {
+  if (body && body.action) {
     if (body.secret !== SHARED_SECRET) return jsonOut_({ ok: false, error: 'unauthorized' });
     return handleSiteAction_(body);
   }
 
   // 2) «Быстрая запись» — для будущего шортката iPhone: src=quick или просто secret без action.
-  if (body.src === 'quick' || (body.secret && !body.action)) {
+  if (body && (body.src === 'quick' || (body.secret && !body.action))) {
     if (body.secret !== SHARED_SECRET) return jsonOut_({ ok: false, error: 'unauthorized' });
     return handleQuickAdd_(body);
   }
 
-  // 3) Иначе считаем это вебхуком Точка.API (у него своя структура тела, без нашего secret/action).
-  return handleTochkaWebhook_(body);
+  // 3) Иначе считаем это вебхуком Точка.API — тело не JSON, это подписанная JWT-строка.
+  return handleTochkaWebhook_(rawBody);
 }
 
 function handleSiteAction_(body) {
@@ -233,27 +235,55 @@ function jsonOut_(obj) {
 // ---------------------------------------------------------------------------
 // Точка.API — вебхук по операциям счёта ИП
 // ---------------------------------------------------------------------------
-// ПРЕДПОЛОЖЕНИЕ по документации Точка.API, нужно свериться с реальным payload и поправить пути ниже.
-// Обычно Точка присылает объект вида { events: [ { type: 'acquiring'|'operation', operation: {...} } ] }
-// либо одиночную операцию верхнего уровня — обработайте оба варианта при отладке через logEvent.
+// Тело запроса — не JSON, а «голая» подписанная JWT-строка (Content-Type: text/plain).
+// Подпись (RS256) здесь НЕ проверяется — сознательное упрощение для личного одиночного
+// использования (публичный ключ Точки: https://enter.tochka.com/doc/openapi/static/keys/public).
+// Если это станет важно (например, эндпоинт станет достижим извне не только для Точки),
+// нужно добавить проверку подписи перед доверием содержимому.
+// Форма самого payload внутри JWT ещё не подтверждена реальным вебхуком — events/operation
+// ниже это предположение по документации; при первом реальном вызове смотрите Executions в
+// Apps Script (console.log payload) и поправьте разбор под то, что реально пришло.
 
-function handleTochkaWebhook_(body) {
+function handleTochkaWebhook_(rawBody) {
+  let payload = null;
   try {
-    const events = body.events || [body];
+    payload = decodeJwtPayload_(rawBody);
+  } catch (err) {
+    console.error('Tochka webhook: не смог декодировать JWT. err=' + err + ' rawBody=' + rawBody);
+  }
+  if (!payload) {
+    // Точка проверяет доступность URL тестовым вызовом при создании/редактировании вебхука —
+    // отвечаем 200 даже если не смогли разобрать тело, иначе вебхук не создастся.
+    console.error('Tochka webhook: пустой/неразбираемый payload. rawBody=' + rawBody);
+    return jsonOut_({ ok: true, note: 'unparsed' });
+  }
+  console.log('Tochka webhook payload: ' + JSON.stringify(payload));
+  try {
+    const events = payload.events || (payload.Data && payload.Data.events) || [payload];
     const sheet = getSheet_();
     const ids = [];
     events.forEach(function (evt) {
-      const op = evt.operation || evt;
+      const op = evt.operation || evt.Data || evt;
       const parsed = parseTochka_(op);
       if (parsed) ids.push(appendTxn_(sheet, parsed));
     });
     if (ids.length) rebuildDDS_();
     return jsonOut_({ ok: true, ids: ids });
   } catch (err) {
-    // Логируем сырое тело, чтобы можно было свериться с реальным форматом Точки и поправить parseTochka_.
-    console.error('Tochka webhook parse error: ' + err + ' body=' + JSON.stringify(body));
+    console.error('Tochka webhook handling error: ' + err + ' payload=' + JSON.stringify(payload));
     return jsonOut_({ ok: false, error: String(err) });
   }
+}
+
+function decodeJwtPayload_(jwt) {
+  const token = (jwt || '').trim();
+  const parts = token.split('.');
+  if (parts.length < 2) return null;
+  let b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+  while (b64.length % 4) b64 += '=';
+  const bytes = Utilities.base64Decode(b64);
+  const json = Utilities.newBlob(bytes).getDataAsString('UTF-8');
+  return JSON.parse(json);
 }
 
 function parseTochka_(op) {
