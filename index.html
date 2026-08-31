@@ -608,7 +608,12 @@
       render();
       $('#settingsUrl').value = settings.url || '';
       $('#settingsSecret').value = settings.secret || '';
-      if(settings.url && settings.secret){ remoteSync(); }
+      if(settings.url && settings.secret){
+        remoteSync();
+        // Автообновление, пока вкладка открыта — чтобы операции от банковских
+        // вебхуков появлялись сами, без ручного нажатия "Обновить".
+        setInterval(remoteSync, 60000);
+      }
       else { setConn('nosettings'); }
     }
   }
