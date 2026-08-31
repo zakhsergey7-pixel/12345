@@ -32,6 +32,9 @@ function getSheet_() {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
   }
+  // id — всегда текст: иначе Таблицы сами превращают числовые на вид id (например,
+  // paymentId из вебхука Точки) в число и обрезают ведущие нули/точность.
+  sheet.getRange('A:A').setNumberFormat('@');
   return sheet;
 }
 

@@ -209,6 +209,7 @@
   table.txns tr:hover td{background:rgba(255,255,255,.02);}
   td.desc-cell{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .amt{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .amt.income, .tc-amt.income{color:var(--ok);}
   .cat-pill{width:100%; border-radius:20px; border:1px solid transparent; padding:4px 8px; font-size:11.5px; font-weight:600; cursor:pointer;}
   .segmented{display:inline-flex; border:1px solid var(--border); border-radius:20px; overflow:hidden;}
   .segmented button{border:none; border-radius:0; padding:4px 9px; font-size:11px; background:transparent; color:var(--muted);}
@@ -634,7 +635,7 @@
   function mapRemoteRow(row){
     // Ожидаемые поля из листа «Транзакции»: id, Добавлено, Дата операции, Сумма, Описание, Источник, Категория, Метка, ФайлID
     return {
-      id: String(row.id || row.Id || ('r'+Math.random().toString(36).slice(2,10))),
+      id: String(row.id != null && row.id !== '' ? row.id : (row.Id != null && row.Id !== '' ? row.Id : ('r'+Math.random().toString(36).slice(2,10)))),
       date: (row.date || row['Дата операции'] || '').toString().slice(0,10),
       desc: row.desc || row['Описание'] || '(без описания)',
       amount: Number(row.amount != null ? row.amount : row['Сумма']) || 0,
@@ -1132,9 +1133,18 @@
     };
   }
   function filteredTxns(){
+    return filteredTxnsBase(true);
+  }
+  // Список для таблицы/ленты операций — в отличие от filteredTxns(), включает и приходы
+  // (положительные суммы), не только траты. Диаграммы категорий/месяцев и hero-блок
+  // "Личное/Рабочее" остаются только про расходы — приходы туда не имеют смысла добавлять.
+  function filteredTxnsAll(){
+    return filteredTxnsBase(false);
+  }
+  function filteredTxnsBase(expensesOnly){
     const f = currentFilters();
     let list = state.txns.filter(t=>{
-      if(t.amount>=0) return false;
+      if(expensesOnly && t.amount>=0) return false;
       if(f.type!=='all' && t.type!==f.type) return false;
       if(f.bank!=='all' && t.source!==f.bank) return false;
       if(f.from && t.date < f.from) return false;
@@ -1303,8 +1313,9 @@
     renderDonut(txns);
     renderMonthChart(txns);
     renderBankBreakdown(filteredTxnsForBanks());
-    renderTable(txns);
-    renderTxnList(txns);
+    const allTxns = filteredTxnsAll();
+    renderTable(allTxns);
+    renderTxnList(allTxns);
   }
 
   function renderBankBreakdown(txns){
@@ -1509,7 +1520,7 @@
             <button type="button" class="typeBtn ${t.type==='work'?'active-w':''}" data-id="${t.id}" data-act="work">Рабочее</button>
           </div>
         </td>
-        <td class="amt">${fmt(-t.amount)}</td>
+        <td class="amt${t.amount>=0?' income':''}">${t.amount>=0?'+':''}${fmt(t.amount>=0?t.amount:-t.amount)}</td>
       </tr>`;
     }).join('');
     wireRowControls(body);
@@ -1546,7 +1557,7 @@
               <div class="tc-desc">${escapeHtml(t.desc)}</div>
               <div class="tc-meta">${escapeHtml(t.source)} · ${escapeHtml(c.name)}</div>
             </div>
-            <div class="tc-amt">${fmt(-t.amount)}</div>
+            <div class="tc-amt${t.amount>=0?' income':''}">${t.amount>=0?'+':''}${fmt(t.amount>=0?t.amount:-t.amount)}</div>
           </div>
           <div class="tc-bottom">
             <select class="catSel cat-pill" data-id="${t.id}" style="background:${hexToRgba(c.color,.15)}; color:${c.color};">
