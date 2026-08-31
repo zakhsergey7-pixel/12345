@@ -325,15 +325,22 @@ function decodeJwtPayload_(jwt) {
 }
 
 function parseTochka_(op) {
-  // ЧЕРНОВИК — названия полей нужно свериться с реальным вебхуком Точки после подключения JWT-токена.
+  // Сверено с реальным форматом вебхука Точки (пример от их test_send, 31.08.2026):
+  // { SidePayer: {..., amount}, SideRecipient: {..., amount}, purpose, documentNumber,
+  //   paymentId, date, webhookType, customerCode }. Сумма лежит внутри SidePayer/SideRecipient,
+  //   не на верхнем уровне; знак определяем по webhookType.
   if (!op) return null;
-  const amountRaw = op.amount || op.payment_amount || (op.amount_details && op.amount_details.amount);
+  const isOutgoing = op.webhookType === 'outgoingPayment';
+  const side = isOutgoing ? op.SideRecipient : op.SidePayer;
+  const amountRaw = (side && side.amount) || op.amount;
   if (amountRaw == null) return null;
-  const amount = -Math.abs(Number(amountRaw)); // Точка обычно шлёт списания положительным числом
-  const desc = op.purpose || op.description || op.payer_name || '(операция Точка)';
-  const date = op.date || op.operation_date || op.created_at || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const absAmount = Math.abs(Number(amountRaw));
+  const amount = isOutgoing ? -absAmount : absAmount; // incoming* и acquiringInternetPayment — приход
+  const counterparty = side && side.name;
+  const desc = op.purpose || counterparty || '(операция Точка)';
+  const date = op.date || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   return {
-    id: op.operation_id || op.id || Utilities.getUuid(),
+    id: op.paymentId || op.documentNumber || Utilities.getUuid(),
     date: formatDate_(date),
     desc: desc,
     amount: amount,
